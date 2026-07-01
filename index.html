@@ -353,6 +353,7 @@
               <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
               <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
               <option value="3" data-i18n="opt_trig_3">3: Modo Metralla Nativa</option>
+              <option value="4" data-i18n="opt_trig_4">4: Gatillo Rápido</option>
             </select>
           </div>
           <div class="form-item">
@@ -362,6 +363,7 @@
               <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
               <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
               <option value="3" data-i18n="opt_trig_3">3: Modo Metralla Nativa</option>
+              <option value="4" data-i18n="opt_trig_4">4: Gatillo Rápido</option>
             </select>
           </div>
         </div>
@@ -494,21 +496,21 @@
         btn_save: "Guardar en Flash",
         btn_reconnect: "Reconectar",
         
-        audio_title: "Audio & Haptic Feedback Global",
+        audio_title: "Retroalimentación Audio Háptica Global",
         lbl_haptics_gain: "Ganancia Háptica General",
         sub_haptics_gain: "Multiplicador global [1.0 - 2.0]",
-        lbl_buffer: "Longitud de Búfer de Audio Háptico",
-        sub_buffer: "Bytes PCM por paquete BT [16 - 128]",
+        lbl_buffer: "Longitud del Búfer de Audio Háptico",
+        sub_buffer: "Bytes PCM por paquete [16 - 128]",
         
-        dsp_title: "Auto-Haptics",
+        dsp_title: "Auto-Hápticas",
         lbl_dsp_mode: "Modo de Operación Auto-Háptica",
         opt_dsp_0: "0: Deshabilitado (Solo usar nativo)",
         opt_dsp_1: "1: Modo Mezcla (Añadir vibración DSP)",
         opt_dsp_2: "2: Modo Reemplazo (Usar solo DSP)",
         lbl_auto_mute: "Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)",
-        lbl_dsp_gain: "Ganancia Auto Haptics",
+        lbl_dsp_gain: "Ganancia Auto Háptica",
         sub_dsp_gain: "Porcentaje a señal derivada [0 - 200]",
-        lbl_dsp_lp: "Filtro Pasabajo Auto Haptics",
+        lbl_dsp_lp: "Filtro Pasabajo Auto Hápticas",
         sub_dsp_lp: "Corte LP en Hz [20 - 400]",
         lbl_speaker_vol: "Volumen Maestro del Altavoz",
         sub_speaker_vol: "Decibelios [-100 - 0]",
@@ -527,9 +529,9 @@
         lbl_chk_inact: "Deshabilitar Suspensión por Inactividad",
         lbl_chk_po: "Atajo PS + Botón para Apagar",
         lbl_chk_led: "Apagar LED del Dongle",
-        lbl_chk_wake: "Despertar por Mando / Auto-apagado con PC",
+        lbl_chk_wake: "Despertar Host por Mando",
 
-        sec_profiles: "👤 Perfiles de Mando",
+        sec_profiles: "👤 Perfiles del Mando",
         profile_lbl: "Perfil",
         
         trigger_title: "🔫 Modos de Gatillo Adaptativo",
@@ -538,14 +540,15 @@
         opt_trig_0: "0: Juego Nativo",
         opt_trig_1: "1: Modo Rígido",
         opt_trig_2: "2: Modo Disparo",
-        opt_trig_3: "3: Modo Metralla Nativa",
+        opt_trig_3: "3: Modo Metralleta Nativa",
+        opt_trig_4: "4: Modo Gatillo Rápido",
         
-        adv_feedback_title: "⚡ Fuerza Constante (Feedback)",
-        desc_feedback: "Afecta la resistencia base de los gatillos adaptativos (Modo Rígido).",
-        adv_weapon_title: "🎯 Punto de Disparo (Weapon)",
-        desc_weapon: "Define el comportamiento del 'clic' del gatillo (Modos Disparo y Metralla).",
-        adv_vib_title: "📳 Efecto Metralla (Vibration)",
-        desc_vib: "Ajustes para el retroceso automático del Modo Metralla.",
+        adv_feedback_title: "⚡Modo 1: Rígido (Feedback)",
+        desc_feedback: "Afecta la resistencia base de los gatillos adaptativos.",
+        adv_weapon_title: "🎯 Modo 2: Gatillo (Weapon)",
+        desc_weapon: "Define el comportamiento del 'clic' del gatillo.",
+        adv_vib_title: "📳 Modo 3: Efecto Metralleta (Vibration)",
+        desc_vib: "Ajustes para el retroceso automático del Modo Metralleta.",
         
         lbl_fsp: "Punto de Inicio",
         lbl_ff: "Fuerza Aplicada",
@@ -558,7 +561,7 @@
 
         lb_title: "💡 Lightbar",
         lbl_lb_mode: "Comportamiento del Color",
-        opt_lb_0: "0: Control Nativo",
+        opt_lb_0: "0: Controlado por Host (Nativo)",
         opt_lb_1: "1: Apagado Total",
         opt_lb_2: "2: Favorito 0",
         opt_lb_3: "3: Favorito 1",
@@ -566,7 +569,7 @@
         opt_lb_5: "5: Favorito 3",
         opt_lb_6: "6: Nivel de Batería",
         opt_lb_7: "7: Arcoíris",
-        opt_lb_8: "8: Fade entre Favs",
+        opt_lb_8: "8: Fade entre Favoritos",
         lbl_lb_breath: "Efecto Respiración (Sólo para Modo 0 y Favoritos 0 - 3)",
         lbl_lb_matrix: "Matriz de Colores Favoritos",
         
@@ -627,7 +630,7 @@
         lbl_chk_inact: "Disable Auto-Suspend on Idle",
         lbl_chk_po: "Enable PS + Button Shortcut",
         lbl_chk_led: "Turn off Dongle LED entirely",
-        lbl_chk_wake: "Wake Dongle / Auto-off on Host Sleep",
+        lbl_chk_wake: "Wake Host with Dongle",
 
         sec_profiles: "👤 Controller Profiles",
         profile_lbl: "Profile",
@@ -639,12 +642,13 @@
         opt_trig_1: "1: Stiff Mode",
         opt_trig_2: "2: Weapon Click",
         opt_trig_3: "3: Hardware Machine Gun",
+        opt_trig_4: "4: Hair Trigger",
         
-        adv_feedback_title: "⚡ Constant Force (Feedback)",
+        adv_feedback_title: "⚡Mode 1: Constant Force (Feedback)",
         desc_feedback: "Affects the base resistance of the adaptive triggers (Stiff Mode).",
-        adv_weapon_title: "🎯 Weapon Click Point",
-        desc_weapon: "Defines the 'click' behavior of the trigger (Weapon and Machine Gun modes).",
-        adv_vib_title: "📳 Machine Gun Effect (Vibration)",
+        adv_weapon_title: "🎯 Mode 2: Weapon Click Point",
+        desc_weapon: "Defines the 'click' behavior of the trigger (Weapon Mode).",
+        adv_vib_title: "📳 Mode 3: Machine Gun Effect (Vibration)",
         desc_vib: "Settings for the automatic recoil of the Machine Gun mode.",
         
         lbl_fsp: "Start Point",
