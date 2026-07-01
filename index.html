@@ -880,7 +880,7 @@
       } catch (e) { 
         toast(`${t('msg_read_err')} ${e.message}`, false); 
       }
-    }
+    } 
 
     async function readGlobalConfig() {
       const view = await device.receiveFeatureReport(0xF7);
