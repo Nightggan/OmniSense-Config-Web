@@ -395,13 +395,13 @@
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              <span id="currentProfileText">Perfil 0</span>
+              <span id="currentProfileText">Perfil 1</span>
             </button>
             <div id="profileMenu" class="custom-menu">
-              <div class="menu-item profile-item active" data-index="0"><span>Perfil 0</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="1"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="2"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="3"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
             </div>
           </div>
         </div>
@@ -553,7 +553,7 @@
     let device = null;
     let currentLang = 'es';
     let currentProfile = 0; // Estado del perfil seleccionado (0-3)
-
+    let currentProfileOffset = 1;
     const SONY_VID = 0x054C;
     const DS5_PID  = 0x0CE6;
     const DSE_PID  = 0x0DF2;
@@ -798,9 +798,9 @@
         $('btnConnect').textContent = i18n[currentLang].btn_connect;
         $('statusText').textContent = i18n[currentLang].status_disconnected;
       }
-      $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfile}`;
+      $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfileOffset}`;
       document.querySelectorAll('.profile-item span').forEach((span, idx) => {
-        span.textContent = `${t('profile_lbl')} ${idx}`;
+        span.textContent = `${t('profile_lbl')} ${idx+1}`;
       });
     }
 
@@ -857,17 +857,20 @@
         
         const prevProfile = currentProfile;
         currentProfile = index; 
-
+        currentProfileOffset = currentProfile + 1;
         // 1. Actualizar la interfaz gráfica de inmediato
         document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active'));
         e.currentTarget.classList.add('active');
-        $('currentProfileText').textContent = `${t('profile_lbl')} ${index}`;
+        $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfileOffset}`;
         $('profileMenu').classList.remove('show');
 
         // 2. Procesar la comunicación de red
         if(device) {
           try {
             await saveProfileToRAM(prevProfile);
+            await wait(100);
+            await assignProfileIndexToRead(currentProfile);
+            await wait(100);
             await readProfileConfig(currentProfile);
           } catch (err) {
             console.error("Error al cambiar perfil", err);
@@ -898,6 +901,8 @@
         num.addEventListener('input', () => { slider.value = num.value; });
       }
     });
+
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     function setFieldValue(id, val) {
       if ($(id)) $(id).value = val;
@@ -991,12 +996,15 @@
       if (!device) return;
       try {
         await readGlobalConfig();
+        await wait(100);
+        await assignProfileIndexToRead(currentProfile);
+        await wait(100);
         await readProfileConfig(currentProfile);
         toast(t('msg_read_ok'));
       } catch (e) { 
         toast(`${t('msg_read_err')} ${e.message}`, false); 
       }
-    } 
+    }
 
     async function readGlobalConfig() {
       const view = await device.receiveFeatureReport(0xF7);
@@ -1004,7 +1012,7 @@
       logBufferToConsole("IN (0xF7) <- Global Config", 0xF7, data);
       
       let dv = new DataView(data.buffer, data.byteOffset);
-
+      
       setFieldValue('haptics_gain', dv.getFloat32(0, true).toFixed(2));
       setFieldValue('inactive_time', dv.getUint8(4));
       $('disable_inactive_disconnect').checked  = dv.getUint8(5) === 1;
@@ -1023,13 +1031,19 @@
       setFieldValue('hold_mute_time', dv.getUint16(22, true));
     }
 
-    async function readProfileConfig(index) {
-      // 1. Solicitar los datos del perfil enviando el index en el byte 1
-      const reqBuf = new Uint8Array(63);
-      reqBuf[1] = index; // Según especificación: el segundo byte debe ser el perfil
-      await device.sendFeatureReport(0xF5, reqBuf);
-      logBufferToConsole(`OUT (0xF5) -> Petición Perfil ${index}`, 0xF5, reqBuf);
+    async function assignProfileIndexToRead(index){
+      const buf = new ArrayBuffer(2);
+      const dvS = new DataView(buf);
 
+      dvS.setUint8(0, 0x07); // Cmd 0x07: Profile Index Set
+      dvS.setUint8(1, index); // Index to Buffer[1]
+      const reqBuf = new Uint8Array(63);
+      reqBuf.set(new Uint8Array(buf));
+      await device.sendFeatureReport(0xF6, reqBuf);
+      logBufferToConsole(`OUT (0xF6) -> Cmd 0x07 [Petición Perfil] ${index}`, 0xF6, reqBuf);
+      
+    }
+    async function readProfileConfig(index) {
       // 2. Leer la respuesta
       const view = await device.receiveFeatureReport(0xF5);
       const data = new Uint8Array(view.buffer, 1);
@@ -1060,7 +1074,7 @@
       setFieldValue('trigger_break_force', dv.getUint8(20));
       setFieldValue('vibration_start_point', dv.getUint8(21));
       
-      // Ajuste de offsets eliminando end_point
+      // Ajuste de offsets
       setFieldValue('vibration_frequency', dv.getUint8(22));
       setFieldValue('vibration_force', dv.getUint8(23));
       setFieldValue('wall_start_point', dv.getUint8(24));
@@ -1071,6 +1085,7 @@
       if (!device) return;
       try {
         await saveGlobalToRAM();
+        await wait(100);
         await saveProfileToRAM(currentProfile);
         
         // Comando Flash (0x02)
