@@ -302,6 +302,22 @@
             </div>
           </div>
         </div>
+        
+        <div class="card">
+          <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración</h2>
+          <div class="grid">           
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para iniciar</label>
+                <span class="slider-sub" data-i18n="sub_hold_mute">Minutos antes de desconexión BT [5 - 60]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="hold_mute_time_slider" min="0" max="3000" step="50" value="0">
+                <input type="number" id="hold_mute_time" min="0" max="3000" step="50" value="0" class="slider-number">
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="card">
           <h2 class="card-title" data-i18n="sys_title">⚙️ Sistema & Emulación</h2>
@@ -422,11 +438,11 @@
           <div class="grid">
             <div class="form-item">
               <div class="slider-header"><label data-i18n="lbl_fsp">Punto de Inicio</label></div>
-              <div class="slider-row"><input type="range" id="feedback_start_point_slider" min="0" max="255" step="1" value="0"><input type="number" id="feedback_start_point" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="feedback_start_point_slider" min="0" max="255" step="1" value="0"><input type="number" min="0" max="255" id="feedback_start_point" class="slider-number"></div>
             </div>
             <div class="form-item">
               <div class="slider-header"><label data-i18n="lbl_ff">Fuerza Aplicada</label></div>
-              <div class="slider-row"><input type="range" id="feedback_force_slider" min="0" max="255" step="1" value="200"><input type="number" id="feedback_force" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="feedback_force_slider" min="0" max="255" step="1" value="200"><input type="number" min="0" max="255" id="feedback_force" class="slider-number"></div>
             </div>
           </div>
         </div>
@@ -437,15 +453,15 @@
           <div class="grid">
             <div class="form-item">
               <div class="slider-header"><label data-i18n="lbl_tsp">Punto de Inicio</label></div>
-              <div class="slider-row"><input type="range" id="trigger_start_point_slider" min="0" max="255" step="1" value="20"><input type="number" id="trigger_start_point" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="trigger_start_point_slider" min="0" max="255" step="1" value="20"><input type="number" min="0" max="255" id="trigger_start_point" class="slider-number"></div>
             </div>
             <div class="form-item">
               <div class="slider-header"><label data-i18n="lbl_twp">Punto de Resistencia (Muro)</label></div>
-              <div class="slider-row"><input type="range" id="trigger_wall_point_slider" min="0" max="255" step="1" value="45"><input type="number" id="trigger_wall_point" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="trigger_wall_point_slider" min="0" max="255" step="1" value="45"><input type="number" min="0" max="255" id="trigger_wall_point" class="slider-number"></div>
             </div>
             <div class="form-item grid-col-span-2">
               <div class="slider-header"><label data-i18n="lbl_tbf">Fuerza de Quiebre (Break Force)</label></div>
-              <div class="slider-row"><input type="range" id="trigger_break_force_slider" min="0" max="255" step="1" value="255"><input type="number" id="trigger_break_force" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="trigger_break_force_slider" min="0" max="255" step="1" value="255"><input type="number" min="0" max="255" id="trigger_break_force" class="slider-number"></div>
             </div>
           </div>
         </div>
@@ -456,17 +472,28 @@
           <div class="grid">
             <div class="form-item">
               <div class="slider-header"><label data-i18n="lbl_vsp">Inicio de Vibración</label></div>
-              <div class="slider-row"><input type="range" id="vibration_start_point_slider" min="32" max="255" step="1" value="32"><input type="number" id="vibration_start_point" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="vibration_start_point_slider" min="32" max="255" step="1" value="32"><input type="number" min="32" max="255" id="vibration_start_point" class="slider-number"></div>
             </div>
             <div class="form-item">
               <div class="slider-header">
                 <label data-i18n="lbl_vf">Frecuencia de Vibración</label>
               </div>
-              <div class="slider-row"><input type="range" id="vibration_frequency_slider" min="0" max="255" step="1" value="6"><input type="number" id="vibration_frequency" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="vibration_frequency_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_frequency" class="slider-number"></div>
             </div>
             <div class="form-item grid-col-span-2">
               <div class="slider-header"><label data-i18n="lbl_vfo">Fuerza de Vibración</label></div>
-              <div class="slider-row"><input type="range" id="vibration_force_slider" min="0" max="255" step="1" value="6"><input type="number" id="vibration_force" class="slider-number"></div>
+              <div class="slider-row"><input type="range" id="vibration_force_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_force" class="slider-number"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" data-i18n="adv_hai_title">📳 Modo 4: Gatillo rápido (Recorrido corto)</h2>
+          <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_hai">Ajustar largo del recorrido del gatillo.</p>
+          <div class="grid">
+            <div class="form-item">
+              <div class="slider-header"><label data-i18n="lbl_hws">Inicio del muro</label></div>
+              <div class="slider-row"><input type="range" id="wall_start_point_slider" min="60" max="100" step="2" value="50"><input type="number" min="60" max="100" id="wall_start_point" class="slider-number"></div>
             </div>
           </div>
         </div>
@@ -566,7 +593,11 @@
         sub_dsp_lp: "Corte LP en Hz [20 - 400]",
         lbl_speaker_vol: "Volumen Maestro del Altavoz",
         sub_speaker_vol: "Decibelios [-100 - 0]",
-        
+
+        con_title: "Modo Configuración",
+        lbl_hold_mute: "Tiempo para iniciar",
+        sub_hold_mute: "Cuantos milisegundos sosteniendo el botón mute para iniciar modo configuración",
+
         sys_title: "Sistema & Emulación",
         lbl_emu_mode: "Perfil Emulado USB",
         opt_emu_auto: "2: Auto (Por Defecto)",
@@ -601,6 +632,8 @@
         desc_weapon: "Define el comportamiento del 'clic' del gatillo.",
         adv_vib_title: "📳 Modo 3: Metralleta (Vibración del gatillo)",
         desc_vib: "Ajustes para el retroceso automático del Modo Metralleta.",
+        adv_hai_title: "📳 Modo 4: Gatillo Rápido (Recorrido corto)",
+        desc_hai: "Ajustar largo del recorrido del gatillo.",
         
         lbl_fsp: "Punto de Inicio",
         lbl_ff: "Fuerza Aplicada",
@@ -610,6 +643,7 @@
         lbl_vsp: "Inicio de Vibración",
         lbl_vf: "Frecuencia de Vibración",
         lbl_vfo: "Fuerza de Vibración",
+        lbl_hws: "Inicio del Muro",
 
         lb_title: "💡 Lightbar",
         lbl_lb_mode: "Comportamiento del Color",
@@ -670,6 +704,10 @@
         sub_dsp_lp: "LP cutoff in Hz [20 - 400]",
         lbl_speaker_vol: "Master Speaker Volume",
         sub_speaker_vol: "Decibels [-100 - 0]",
+
+        con_title: "Configuration Mode",
+        lbl_hold_mute: "Time to switch",
+        sub_hold_mute: "HHow many milliseconds to hold the mute button to start configuration mode",
         
         sys_title: "System & Emulation",
         lbl_emu_mode: "USB Emulated Profile",
@@ -705,7 +743,8 @@
         desc_weapon: "Defines the 'click' behavior of the trigger.",
         adv_vib_title: "📳 Mode 3: Machine Gun Effect (Vibration)",
         desc_vib: "Settings for the automatic recoil of the Machine Gun mode.",
-        
+        adv_hai_title: "🎯 Mode 4: Hair Trigger (Short Travel)",
+        desc_hai: "Adjust trigger travel length.",
         lbl_fsp: "Start Point",
         lbl_ff: "Applied Force",
         lbl_tsp: "Start Point",
@@ -714,6 +753,7 @@
         lbl_vsp: "Vibration Start Point",
         lbl_vf: "Vibration Frequency",
         lbl_vfo: "Vibration Force",
+        lbl_hws: "Wall Start Point",
 
         lb_title: "💡 Lightbar",
         lbl_lb_mode: "Color Behavior",
@@ -845,9 +885,10 @@
     // ── 4. LÓGICA DE UI Y SLIDERS ──
     const sliderFields = [
       'haptics_gain', 'audio_buffer_length', 'auto_haptics_gain', 'auto_haptics_lowpass_hz', 
+      'hold_mute_time',
       'inactive_time', 'speaker_volume', 'feedback_start_point', 'feedback_force',
       'trigger_start_point', 'trigger_wall_point', 'trigger_break_force',
-      'vibration_start_point', 'vibration_frequency', 'vibration_force'
+      'vibration_start_point', 'vibration_frequency', 'vibration_force', 'wall_start_point'
     ];
     
     sliderFields.forEach(id => {
@@ -912,6 +953,7 @@
       setFieldValue('speaker_volume', -100);
       setFieldValue('controller_mode', 2);
       setFieldValue('polling_rate_mode', 0);
+      setFieldValue('hold_mute_time', 0);
       setFieldValue('inactive_time', 30);
       setFieldValue('poweroff_button', 3);
       $('disable_inactive_disconnect').checked = false;
@@ -939,6 +981,7 @@
       setFieldValue('vibration_start_point', 32);
       setFieldValue('vibration_frequency', 36);
       setFieldValue('vibration_force', 255);
+      setFieldValue('wall_start_point',97);
 
       toast(t('msg_def_ok'), true);
     }
@@ -977,6 +1020,7 @@
       $('wake_enable').checked                  = dv.getUint8(16) === 1;
       setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0));
       $('auto_mute_mode').checked               = dv.getUint8(21) === 1;
+      setFieldValue('hold_mute_time', dv.getUint16(22, true));
     }
 
     async function readProfileConfig(index) {
@@ -1019,6 +1063,7 @@
       // Ajuste de offsets eliminando end_point
       setFieldValue('vibration_frequency', dv.getUint8(22));
       setFieldValue('vibration_force', dv.getUint8(23));
+      setFieldValue('wall_start_point', dv.getUint8(24));
     }
 
     // Proceso completo de guardado: Global -> Profile -> Flash
@@ -1040,7 +1085,7 @@
     }
 
     async function saveGlobalToRAM() {
-      const buf = new ArrayBuffer(24);
+      const buf = new ArrayBuffer(26);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x01); // Cmd 0x01: Global config update
@@ -1059,6 +1104,7 @@
       dv.setUint8(17, $('wake_enable').checked ? 1 : 0);
       dv.setFloat32(18, parseFloat($('speaker_volume').value), true);
       dv.setUint8(22, $('auto_mute_mode').checked ? 1 : 0);
+      dv.setUint16(23, parseInt($('hold_mute_time').value, 10));
 
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
@@ -1067,8 +1113,8 @@
     }
 
     async function saveProfileToRAM(index) {
-      // Buffer ajustado a 26 por la eliminación de vibration_end_point (Cmd + Index + 24 bytes payload)
-      const buf = new ArrayBuffer(26);
+      
+      const buf = new ArrayBuffer(27);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x05); // Cmd 0x05: Profile config update
@@ -1099,6 +1145,8 @@
       // Ajuste de offsets eliminando end_point
       dv.setUint8(24, parseInt($('vibration_frequency').value, 10));
       dv.setUint8(25, parseInt($('vibration_force').value, 10));
+      dv.setUint8(26, parseInt($('wall_start_point').value, 10));
+      
 
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
