@@ -499,6 +499,51 @@
         </div>
 
         <div class="card">
+          <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
+              <select id="gyro_activation_button" style="width: 50%;">
+                <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
+                <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
+                <option value="2" data-i18n="opt_gyro_2">2: L2</option>
+                <option value="3" data-i18n="opt_gyro_3">3: R2</option>
+                <option value="4" data-i18n="opt_gyro_4">4: L1</option>
+                <option value="5" data-i18n="opt_gyro_5">5: R1</option>
+                <option value="6" data-i18n="opt_gyro_6">6: L3</option>
+                <option value="7" data-i18n="opt_gyro_7">7: R3</option>
+                <option value="8" data-i18n="opt_gyro_8">8: Square</option>
+                <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
+                <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
+                <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
+              </select>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
+              </div>
+              <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
+              <div></div>
+              <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
+              </div>
+              <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
+              <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
+              </div>
+              <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
+              <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
           <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
           <div class="grid">
             <div class="form-item">
@@ -645,6 +690,26 @@
         lbl_vfo: "Fuerza de Vibración",
         lbl_hws: "Inicio del Muro",
 
+        lbl_gyro_l: "Botón de Activación",
+        opt_gyro_0: "Deshabilitado",
+        opt_gyro_1: "Habilitado siempre",
+        opt_gyro_2: "L2",
+        opt_gyro_3: "R2",
+        opt_gyro_4: "L1",
+        opt_gyro_5: "R1",
+        opt_gyro_6: "L3",
+        opt_gyro_7: "R3",
+        opt_gyro_8: "Cuadrado",
+        opt_gyro_9: "Cruz",
+        opt_gyro_10: "Círculo",
+        opt_gyro_11: "Triángulo",
+        lbl_agyd: "Zona Muerta Giroscopio a Joystick",
+        lbl_msdps: "Máximos Grados/Segundo",
+        sub_agyd: "Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.",
+        sub_msdps: "Valor máximo de grados por segundo. Este valor implica a que velocidad tendrás que girar el control para llegar a un empuje del 100% del análogo derecho en cualquier dirección.",
+        lbl_gymul: "Multiplicador Giroscopio",
+        sub_gymul: "Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del control.",
+
         lb_title: "💡 Lightbar",
         lbl_lb_mode: "Comportamiento del Color",
         opt_lb_0: "0: Controlado por Host (Nativo)",
@@ -707,7 +772,7 @@
 
         con_title: "Configuration Mode",
         lbl_hold_mute: "Time to switch",
-        sub_hold_mute: "HHow many milliseconds to hold the mute button to start configuration mode",
+        sub_hold_mute: "How many milliseconds to hold the mute button to start the configuration mode",
         
         sys_title: "System & Emulation",
         lbl_emu_mode: "USB Emulated Profile",
@@ -754,6 +819,26 @@
         lbl_vf: "Vibration Frequency",
         lbl_vfo: "Vibration Force",
         lbl_hws: "Wall Start Point",
+
+        lbl_gyro_l: "Activation Button",
+        opt_gyro_0: "Disabled",
+        opt_gyro_1: "Always Enabled",
+        opt_gyro_2: "L2",
+        opt_gyro_3: "R2",
+        opt_gyro_4: "L1",
+        opt_gyro_5: "R1",
+        opt_gyro_6: "L3",
+        opt_gyro_7: "R3",
+        opt_gyro_8: "Square",
+        opt_gyro_9: "Cross",
+        opt_gyro_10: "Circle",
+        opt_gyro_11: "Triangle",
+        lbl_agyd: "Gyro to Joystick Dead Zone",
+        lbl_msdps: "Max Degrees/Second",
+        sub_agyd: "This value determines the minimum output that the joystick will send when sliding it. Ideally, you should adjust it so that the in-game built-in deadzone is accurately compensated. Increase this value until slow movements do not stop or stutter, but instead provide a clean movement. Lower it if small movements are too large.",
+        sub_msdps: "Maximum degrees per second. This value implies the speed at which you will need to rotate the controller to reach a 100% push of the right analog stick in any direction.",
+        lbl_gymul: "Gyro Multiplier",
+        sub_gymul: "This value determines the gyro multiplier. Increase this value to obtain a more sensitive response to controller movement.",
 
         lb_title: "💡 Lightbar",
         lbl_lb_mode: "Color Behavior",
@@ -891,7 +976,8 @@
       'hold_mute_time',
       'inactive_time', 'speaker_volume', 'feedback_start_point', 'feedback_force',
       'trigger_start_point', 'trigger_wall_point', 'trigger_break_force',
-      'vibration_start_point', 'vibration_frequency', 'vibration_force', 'wall_start_point'
+      'vibration_start_point', 'vibration_frequency', 'vibration_force', 'wall_start_point', 'gyro_dead_zone',
+      'max_degrees_per_second', 'gyro_multiplier'
     ];
     
     sliderFields.forEach(id => {
@@ -988,6 +1074,12 @@
       setFieldValue('vibration_force', 255);
       setFieldValue('wall_start_point',97);
 
+      // Nuevos Gyro params
+      setFieldValue('gyro_activation_button', 0);
+      setFieldValue('gyro_dead_zone', 42.5);
+      setFieldValue('max_degrees_per_second', 100);
+      setFieldValue('gyro_multiplier', 1.0);
+
       toast(t('msg_def_ok'), true);
     }
 
@@ -1073,11 +1165,15 @@
       setFieldValue('trigger_wall_point', dv.getUint8(19));
       setFieldValue('trigger_break_force', dv.getUint8(20));
       setFieldValue('vibration_start_point', dv.getUint8(21));
-      
-      // Ajuste de offsets
       setFieldValue('vibration_frequency', dv.getUint8(22));
       setFieldValue('vibration_force', dv.getUint8(23));
       setFieldValue('wall_start_point', dv.getUint8(24));
+
+      // Ajuste de Gyro
+      setFieldValue('gyro_activation_button', dv.getUint8(25));
+      setFieldValue('gyro_dead_zone', dv.getFloat32(26, true));
+      setFieldValue('max_degrees_per_second', dv.getUint16(30, true));
+      setFieldValue('gyro_multiplier', dv.getFloat32(32, true));
     }
 
     // Proceso completo de guardado: Global -> Profile -> Flash
@@ -1100,7 +1196,7 @@
     }
 
     async function saveGlobalToRAM() {
-      const buf = new ArrayBuffer(26);
+      const buf = new ArrayBuffer(25);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x01); // Cmd 0x01: Global config update
@@ -1129,7 +1225,7 @@
 
     async function saveProfileToRAM(index) {
       
-      const buf = new ArrayBuffer(27);
+      const buf = new ArrayBuffer(38);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x05); // Cmd 0x05: Profile config update
@@ -1161,7 +1257,12 @@
       dv.setUint8(24, parseInt($('vibration_frequency').value, 10));
       dv.setUint8(25, parseInt($('vibration_force').value, 10));
       dv.setUint8(26, parseInt($('wall_start_point').value, 10));
-      
+
+      // Ajuste de Gyro
+      dv.setUint8(27, parseInt($('gyro_activation_button').value, 10));
+      dv.setFloat32(28, parseFloat($('gyro_dead_zone').value), true);
+      dv.setUint16(32, parseInt($('max_degrees_per_second').value, 10), true);
+      dv.setFloat32(34, parseFloat($('gyro_multiplier').value), true);
 
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
