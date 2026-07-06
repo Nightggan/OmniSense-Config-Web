@@ -382,6 +382,12 @@
                 <span data-i18n="lbl_chk_wake">Despertar Host por Mando</span>
               </label>
             </div>
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="enable_host_volume_control" />
+                <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -531,6 +537,7 @@
                 <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
               </div>
               <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
+              <div></div>
               <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
             </div>
             <div class="form-item grid-col-span-2">
@@ -538,6 +545,7 @@
                 <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
               </div>
               <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
+              <div></div>
               <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
             </div>
           </div>
@@ -658,6 +666,7 @@
         lbl_chk_po: "Atajo PS + Botón para Apagar",
         lbl_chk_led: "Apagar LED del Dongle",
         lbl_chk_wake: "Despertar Host por Mando",
+        lbl_host_volume: "Controlar volumen del host en lugar del parlante interno (sólo para Windows)",
 
         sec_profiles: "👤 Perfiles de Mando",
         profile_lbl: "Perfil",
@@ -789,7 +798,7 @@
         lbl_chk_po: "Enable PS + Button Shortcut",
         lbl_chk_led: "Turn off Dongle LED entirely",
         lbl_chk_wake: "Wake Host with Dongle",
-
+        lbl_host_volume: "Control Host volume instead of internal speaker (only for Windows)",
         sec_profiles: "👤 Controller Profiles",
         profile_lbl: "Profile",
         
@@ -1051,7 +1060,8 @@
       $('enable_poweroff_shortcut').checked = true;
       $('disable_pico_led').checked = false;
       $('wake_enable').checked = false;
-      $('auto_mute_mode').checked = false;
+      $('enable_host_volume_control').checked = true;
+      $('auto_mute_mode').checked = true;
 
       // Perfil
       setFieldValue('trigger_left_mode', 0);
@@ -1121,6 +1131,8 @@
       setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0));
       $('auto_mute_mode').checked               = dv.getUint8(21) === 1;
       setFieldValue('hold_mute_time', dv.getUint16(22, true));
+      $('enable_host_volume_control').checked = dv.getUint8(24) === 1;
+      
     }
 
     async function assignProfileIndexToRead(index){
@@ -1196,7 +1208,7 @@
     }
 
     async function saveGlobalToRAM() {
-      const buf = new ArrayBuffer(25);
+      const buf = new ArrayBuffer(26);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x01); // Cmd 0x01: Global config update
@@ -1216,7 +1228,8 @@
       dv.setFloat32(18, parseFloat($('speaker_volume').value), true);
       dv.setUint8(22, $('auto_mute_mode').checked ? 1 : 0);
       dv.setUint16(23, parseInt($('hold_mute_time').value, 10));
-
+      dv.setUint8(25, $('enable_host_volume_control').checked ? 1 : 0);
+      
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
       await device.sendFeatureReport(0xF6, reqBuf);
@@ -1293,7 +1306,18 @@
         const filters = [ { vendorId: SONY_VID, productId: DS5_PID }, { vendorId: SONY_VID, productId: DSE_PID } ];
         const devices = await navigator.hid.requestDevice({ filters });
         if (!devices.length) return;
-        device = devices[0];
+        
+        // --- NUEVA LÓGICA DE SELECCIÓN ---
+        // Como ahora es un dispositivo compuesto, el array trae 2 dispositivos.
+        // Filtramos para elegir el dispositivo que NO sea el de volumen (Usage Page 12 / 0x0C)
+        let selectedDevice = devices.find(d => 
+          d.collections && d.collections.some(c => c.usagePage !== 12)
+        );
+        
+        // Fallback por si acaso
+        device = selectedDevice || devices[0];
+        // ---------------------------------
+
         await device.open();
         const label = `${device.productName} (${device.vendorId.toString(16).toUpperCase()}:${device.productId.toString(16).toUpperCase()})`;
         setConnected(true, label);
