@@ -308,7 +308,7 @@
           <div class="grid">           
             <div class="form-item grid-col-span-2">
               <div class="slider-header">
-                <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para iniciar</label>
+                <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para entrar en modo</label>
                 <span class="slider-sub" data-i18n="sub_hold_mute">Minutos antes de desconexión BT [5 - 60]</span>
               </div>
               <div class="slider-row">
@@ -350,18 +350,6 @@
               </div>
             </div>
 
-            <div class="form-item grid-col-span-2">
-              <label for="poweroff_button" data-i18n="lbl_po_btn">Botón Físico de Apagado (Combinado con PS)</label>
-              <select id="poweroff_button">
-                <option value="0" data-i18n="opt_btn_sq">Cuadrado</option>
-                <option value="1" data-i18n="opt_btn_cr">Cruz</option>
-                <option value="2" data-i18n="opt_btn_ci">Círculo</option>
-                <option value="3" data-i18n="opt_btn_tr">Triángulo</option>
-                <option value="4">L1</option><option value="5">R1</option>
-                <option value="6">Create</option><option value="7">Options</option>
-                <option value="8">Mute Mic</option>
-              </select>
-            </div>
             <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between; margin-top:0.5rem;">
               <label class="checkbox-container">
                 <input type="checkbox" id="disable_inactive_disconnect" />
@@ -369,7 +357,7 @@
               </label>
               <label class="checkbox-container">
                 <input type="checkbox" id="enable_poweroff_shortcut" />
-                <span data-i18n="lbl_chk_po">Atajo PS + Botón para Apagar</span>
+                <span data-i18n="lbl_chk_po">Activar atajo para Apagar</span>
               </label>
             </div>
             <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
@@ -648,7 +636,7 @@
         sub_speaker_vol: "Decibelios [-100 - 0]",
 
         con_title: "Modo Configuración",
-        lbl_hold_mute: "Tiempo para iniciar",
+        lbl_hold_mute: "Tiempo para entrar en modo",
         sub_hold_mute: "Cuantos milisegundos sosteniendo el botón mute para iniciar modo configuración",
 
         sys_title: "Sistema & Emulación",
@@ -663,7 +651,7 @@
         lbl_po_btn: "Botón Físico de Apagado (Combinado con PS)",
         opt_btn_sq: "Cuadrado", opt_btn_cr: "Cruz", opt_btn_ci: "Círculo", opt_btn_tr: "Triángulo",
         lbl_chk_inact: "Deshabilitar Suspensión por Inactividad",
-        lbl_chk_po: "Atajo PS + Botón para Apagar",
+        lbl_chk_po: "Activar atajo para Apagar",
         lbl_chk_led: "Apagar LED del Dongle",
         lbl_chk_wake: "Despertar Host por Mando",
         lbl_host_volume: "Controlar volumen del host en lugar del parlante interno (sólo para Windows)",
@@ -795,7 +783,7 @@
         lbl_po_btn: "Physical Power-Off Button (Combined with PS)",
         opt_btn_sq: "Square", opt_btn_cr: "Cross", opt_btn_ci: "Circle", opt_btn_tr: "Triangle",
         lbl_chk_inact: "Disable Auto-Suspend on Idle",
-        lbl_chk_po: "Enable PS + Button Shortcut",
+        lbl_chk_po: "Enable Power-Off Shortcut",
         lbl_chk_led: "Turn off Dongle LED entirely",
         lbl_chk_wake: "Wake Host with Dongle",
         lbl_host_volume: "Control Host volume instead of internal speaker (only for Windows)",
@@ -1055,7 +1043,6 @@
       setFieldValue('polling_rate_mode', 0);
       setFieldValue('hold_mute_time', 0);
       setFieldValue('inactive_time', 30);
-      setFieldValue('poweroff_button', 3);
       $('disable_inactive_disconnect').checked = false;
       $('enable_poweroff_shortcut').checked = true;
       $('disable_pico_led').checked = false;
@@ -1126,12 +1113,11 @@
       setFieldValue('auto_haptics_gain', dv.getUint8(11));
       setFieldValue('auto_haptics_lowpass_hz', dv.getUint16(12, true));
       $('enable_poweroff_shortcut').checked     = dv.getUint8(14) === 1;
-      setFieldValue('poweroff_button', dv.getUint8(15));
-      $('wake_enable').checked                  = dv.getUint8(16) === 1;
-      setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0));
-      $('auto_mute_mode').checked               = dv.getUint8(21) === 1;
-      setFieldValue('hold_mute_time', dv.getUint16(22, true));
-      $('enable_host_volume_control').checked = dv.getUint8(24) === 1;
+      $('wake_enable').checked                  = dv.getUint8(15) === 1;
+      setFieldValue('speaker_volume', dv.getFloat32(16, true).toFixed(0));
+      $('auto_mute_mode').checked               = dv.getUint8(20) === 1;
+      setFieldValue('hold_mute_time', dv.getUint16(21, true));
+      $('enable_host_volume_control').checked = dv.getUint8(23) === 1;
       
     }
 
@@ -1208,7 +1194,7 @@
     }
 
     async function saveGlobalToRAM() {
-      const buf = new ArrayBuffer(26);
+      const buf = new ArrayBuffer(25);
       const dv = new DataView(buf);
 
       dv.setUint8(0, 0x01); // Cmd 0x01: Global config update
@@ -1223,12 +1209,11 @@
       dv.setUint8(12, parseInt($('auto_haptics_gain').value, 10));
       dv.setUint16(13, parseInt($('auto_haptics_lowpass_hz').value, 10), true);
       dv.setUint8(15, $('enable_poweroff_shortcut').checked ? 1 : 0);
-      dv.setUint8(16, parseInt($('poweroff_button').value, 10));
-      dv.setUint8(17, $('wake_enable').checked ? 1 : 0);
-      dv.setFloat32(18, parseFloat($('speaker_volume').value), true);
-      dv.setUint8(22, $('auto_mute_mode').checked ? 1 : 0);
-      dv.setUint16(23, parseInt($('hold_mute_time').value, 10));
-      dv.setUint8(25, $('enable_host_volume_control').checked ? 1 : 0);
+      dv.setUint8(16, $('wake_enable').checked ? 1 : 0);
+      dv.setFloat32(17, parseFloat($('speaker_volume').value), true);
+      dv.setUint8(21, $('auto_mute_mode').checked ? 1 : 0);
+      dv.setUint16(22, parseInt($('hold_mute_time').value, 10), true);
+      dv.setUint8(24, $('enable_host_volume_control').checked ? 1 : 0);
       
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
