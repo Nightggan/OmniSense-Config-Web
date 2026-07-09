@@ -133,6 +133,32 @@
       color: #f8fafc;
       box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
     }
+
+    .tab-trigger-general {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-trigger-general:hover {
+      color: #cbd5e1;
+    }
+    .tab-trigger-general.active {
+      background-color: var(--card);
+      color: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    }
+
     .tab-content {
       display: none;
       flex-direction: column;
@@ -140,6 +166,20 @@
       animation: fadeInTab 0.2s ease-out;
     }
     .tab-content.active {
+      display: flex;
+    }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-content-general {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInTab 0.2s ease-out;
+    }
+    .tab-content-general.active {
       display: flex;
     }
     @keyframes fadeInTab {
@@ -215,15 +255,25 @@
     </div>
 
     <div id="configForm" style="display:none;flex-direction:column;gap:1.5rem;">
-      
       <div class="tabs-list">
         <button class="tab-trigger active" data-tab="tabGlobal" data-i18n="tab_global">Configuración Global</button>
         <button class="tab-trigger" data-tab="tabProfiles" data-i18n="tab_profiles">Configuración de Perfiles</button>
+        <button class="tab-trigger" data-tab="tabInfo" data-i18n="tab_info">Información</button>
       </div>
+      
 
       <div id="tabGlobal" class="tab-content active">
+        <div class="tabs-list">
+          <button class="tab-trigger-general active" data-tab="tabHaptics" data-i18n="tab_haptics">Hápticas</button>
+          <button class="tab-trigger-general" data-tab="tabConfigMode" data-i18n="tab_config_mode">Modo Configuración</button>
+          <button class="tab-trigger-general" data-tab="tabAudio" data-i18n="tab_audio">Audio</button>
+          <button class="tab-trigger-general" data-tab="tabSystem" data-i18n="tab_system">Sistema</button>
+        </div>
+      </div>
+
+      <div id="tabHaptics" class="tab-content-general active">
         <div class="card">
-          <h2 class="card-title" data-i18n="audio_title">🔊 Retroalimentación Audio Háptica Global</h2>
+          <h2 class="card-title" data-i18n="haptics_title">🔊 Retroalimentación Audio Háptica Global</h2>
           <div class="grid">
             <div class="form-item grid-col-span-2">
               <div class="slider-header">
@@ -261,13 +311,6 @@
               </select>
             </div>
 
-            <div class="form-item-row grid-col-span-2" style="margin-bottom: 0.5rem;">
-              <label class="checkbox-container">
-                <input type="checkbox" id="auto_mute_mode" />
-                <span data-i18n="lbl_auto_mute">Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)</span>
-              </label>
-            </div>
-
             <div class="form-item grid-col-span-2">
               <div class="slider-header">
                 <label for="auto_haptics_gain" data-i18n="lbl_dsp_gain">Ganancia Auto Háptica</label>
@@ -289,22 +332,12 @@
                 <input type="number" id="auto_haptics_lowpass_hz" min="20" max="400" step="1" value="80" class="slider-number">
               </div>
             </div>
-
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header">
-                <label for="speaker_volume" data-i18n="lbl_speaker_vol">Volumen Maestro del Altavoz</label>
-                <span class="slider-sub" data-i18n="sub_speaker_vol">Decibelios [-100 - 0]</span>
-              </div>
-              <div class="slider-row">
-                <input type="range" id="speaker_volume_slider" min="-100" max="0" step="1" value="-100">
-                <input type="number" id="speaker_volume" min="-100" max="0" step="1" value="-100" class="slider-number">
-              </div>
-            </div>
           </div>
         </div>
-        
+      </div>
+      <div id="tabConfigMode" class="tab-content-general">
         <div class="card">
-          <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración</h2>
+          <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración por Control</h2>
           <div class="grid">           
             <div class="form-item grid-col-span-2">
               <div class="slider-header">
@@ -318,7 +351,51 @@
             </div>
           </div>
         </div>
+      </div>
+      <div id="tabAudio" class="tab-content-general">
+        <div class="card">
+          <h2 class="card-title" data-i18n="sound_title">🔊 Configuracion de sonido</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="speaker_volume" data-i18n="lbl_speaker_vol">Volumen Maestro del Altavoz</label>
+                <span class="slider-sub" data-i18n="sub_speaker_vol">Decibelios [-100 - 0]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="speaker_volume_slider" min="0" max="100" step="1" value="0">
+                <input type="number" id="speaker_volume" min="0" max="100" step="1" value="0" class="slider-number">
+              </div>
+            </div>
+            
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="headset_volume" data-i18n="lbl_headset_vol">Volumen Maestro de Audífonos</label>
+                <span class="slider-sub" data-i18n="sub_speaker_vol">[0 - 100]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="headset_volume_slider" min="0" max="100" step="1" value="0">
+                <input type="number" id="headset_volume" min="0" max="100" step="1" value="0" class="slider-number">
+              </div>
+            </div>
 
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="enable_host_volume_control" />
+                <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
+              </label>
+            </div>
+
+            <div class="form-item-row grid-col-span-2" style="margin-bottom: 0.5rem;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="auto_mute_mode" />
+                <span data-i18n="lbl_auto_mute">Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="tabSystem" class="tab-content-general">
         <div class="card">
           <h2 class="card-title" data-i18n="sys_title">⚙️ Sistema & Emulación</h2>
           <div class="grid">
@@ -372,220 +449,221 @@
             </div>
             <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
               <label class="checkbox-container">
-                <input type="checkbox" id="enable_host_volume_control" />
-                <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
+                <input type="checkbox" id="enable_host_sleep" />
+                <span data-i18n="lbl_sleep_host">Activar atajo para Suspender Host (Sólo Windows)</span>
               </label>
             </div>
           </div>
         </div>
-      </div>
-
-      <div id="tabProfiles" class="tab-content">
-        
-        <div class="profile-separator">
-          <div class="custom-dropdown-container">
-            <button id="profileBtn" class="pill-btn" style="background:#0f172a; border-color:#38bdf8;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              <span id="currentProfileText">Perfil 1</span>
-            </button>
-            <div id="profileMenu" class="custom-menu">
-              <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="trigger_title">🔫 Modos de Gatillo Adaptativo</h2>
-          <div class="grid">
-            <div class="form-item">
-              <label for="trigger_left_mode" data-i18n="lbl_trigger_l">Gatillo Izquierdo (L2)</label>
-              <select id="trigger_left_mode">
-                <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
-                <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
-                <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
-                <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
-                <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
-              </select>
-            </div>
-            <div class="form-item">
-              <label for="trigger_right_mode" data-i18n="lbl_trigger_r">Gatillo Derecho (R2)</label>
-              <select id="trigger_right_mode">
-                <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
-                <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
-                <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
-                <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
-                <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="adv_feedback_title">⚡ Modo 1: Rígido (Fuerza Constante)</h2>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_feedback">Afecta la resistencia base de los gatillos adaptativos.</p>
-          <div class="grid">
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_fsp">Punto de Inicio</label></div>
-              <div class="slider-row"><input type="range" id="feedback_start_point_slider" min="0" max="255" step="1" value="0"><input type="number" min="0" max="255" id="feedback_start_point" class="slider-number"></div>
-            </div>
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_ff">Fuerza Aplicada</label></div>
-              <div class="slider-row"><input type="range" id="feedback_force_slider" min="0" max="255" step="1" value="200"><input type="number" min="0" max="255" id="feedback_force" class="slider-number"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="adv_weapon_title">🎯 Modo 2: Disparo (Gatillo de arma)</h2>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_weapon">Define el comportamiento del 'clic' del gatillo.</p>
-          <div class="grid">
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_tsp">Punto de Inicio</label></div>
-              <div class="slider-row"><input type="range" id="trigger_start_point_slider" min="0" max="255" step="1" value="20"><input type="number" min="0" max="255" id="trigger_start_point" class="slider-number"></div>
-            </div>
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_twp">Punto de Resistencia (Muro)</label></div>
-              <div class="slider-row"><input type="range" id="trigger_wall_point_slider" min="0" max="255" step="1" value="45"><input type="number" min="0" max="255" id="trigger_wall_point" class="slider-number"></div>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header"><label data-i18n="lbl_tbf">Fuerza de Quiebre (Break Force)</label></div>
-              <div class="slider-row"><input type="range" id="trigger_break_force_slider" min="0" max="255" step="1" value="255"><input type="number" min="0" max="255" id="trigger_break_force" class="slider-number"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="adv_vib_title">📳 Modo 3: Metralleta (Vibración del gatillo)</h2>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_vib">Ajustes para el retroceso automático del Modo Metralleta.</p>
-          <div class="grid">
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_vsp">Inicio de Vibración</label></div>
-              <div class="slider-row"><input type="range" id="vibration_start_point_slider" min="32" max="255" step="1" value="32"><input type="number" min="32" max="255" id="vibration_start_point" class="slider-number"></div>
-            </div>
-            <div class="form-item">
-              <div class="slider-header">
-                <label data-i18n="lbl_vf">Frecuencia de Vibración</label>
-              </div>
-              <div class="slider-row"><input type="range" id="vibration_frequency_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_frequency" class="slider-number"></div>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header"><label data-i18n="lbl_vfo">Fuerza de Vibración</label></div>
-              <div class="slider-row"><input type="range" id="vibration_force_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_force" class="slider-number"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="adv_hai_title">📳 Modo 4: Gatillo rápido (Recorrido corto)</h2>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_hai">Ajustar largo del recorrido del gatillo.</p>
-          <div class="grid">
-            <div class="form-item">
-              <div class="slider-header"><label data-i18n="lbl_hws">Inicio del muro</label></div>
-              <div class="slider-row"><input type="range" id="wall_start_point_slider" min="60" max="100" step="2" value="50"><input type="number" min="60" max="100" id="wall_start_point" class="slider-number"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
-          <div class="grid">
-            <div class="form-item grid-col-span-2">
-              <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
-              <select id="gyro_activation_button" style="width: 50%;">
-                <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
-                <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
-                <option value="2" data-i18n="opt_gyro_2">2: L2</option>
-                <option value="3" data-i18n="opt_gyro_3">3: R2</option>
-                <option value="4" data-i18n="opt_gyro_4">4: L1</option>
-                <option value="5" data-i18n="opt_gyro_5">5: R1</option>
-                <option value="6" data-i18n="opt_gyro_6">6: L3</option>
-                <option value="7" data-i18n="opt_gyro_7">7: R3</option>
-                <option value="8" data-i18n="opt_gyro_8">8: Square</option>
-                <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
-                <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
-                <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
-              </select>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header">
-                <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
-              </div>
-              <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
-              <div></div>
-              <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header">
-                <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
-              </div>
-              <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
-              <div></div>
-              <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <div class="slider-header">
-                <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
-              </div>
-              <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
-              <div></div>
-              <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
-          <div class="grid">
-            <div class="form-item">
-              <label for="lightbar_mode" data-i18n="lbl_lb_mode">Comportamiento del Color</label>
-              <select id="lightbar_mode">
-                <option value="0" data-i18n="opt_lb_0">0: Controlado por Host (Nativo)</option>
-                <option value="1" data-i18n="opt_lb_1">1: Apagado Total</option>
-                <option value="2" data-i18n="opt_lb_2">2: Favorito 0</option>
-                <option value="3" data-i18n="opt_lb_3">3: Favorito 1</option>
-                <option value="4" data-i18n="opt_lb_4">4: Favorito 2</option>
-                <option value="5" data-i18n="opt_lb_5">5: Favorito 3</option>
-                <option value="6" data-i18n="opt_lb_6">6: Nivel de Batería</option>
-                <option value="7" data-i18n="opt_lb_7">7: Arcoíris</option>
-                <option value="8" data-i18n="opt_lb_8">8: Desvanecimiento entre Favoritos</option>
-              </select>
-            </div>
-            <div class="form-item grid-col-span-2" style="justify-content:center;">
-              <label class="checkbox-container">
-                <input type="checkbox" id="lightbar_breathing" />
-                <span data-i18n="lbl_lb_breath">Efecto Respiración (Sólo para Modo 0 y Favoritos 0 - 3)</span>
-              </label>
-            </div>
-            <div class="form-item grid-col-span-2">
-              <label data-i18n="lbl_lb_matrix">Matriz de Colores Favoritos</label>
-              <div class="fav-color-grid">
-                <div class="fav-color-item"><label>FAV 0</label><input type="color" id="fav_color_0" value="#00ddff" /></div>
-                <div class="fav-color-item"><label>FAV 1</label><input type="color" id="fav_color_1" value="#ff0011" /></div>
-                <div class="fav-color-item"><label>FAV 2</label><input type="color" id="fav_color_2" value="#bfff00" /></div>
-                <div class="fav-color-item"><label>FAV 3</label><input type="color" id="fav_color_3" value="#ffffff" /></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="card">
-        <h2 class="card-title" data-i18n="log_title">🖥️ Monitor WebHID</h2>
-        <textarea id="hexLog" class="hex-console" readonly placeholder="Los buffers transmitidos aparecerán aquí en formato hexadecimal..."></textarea>
       </div>
       
-      <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem; margin-top: 0.5rem;" data-i18n="btn_save">Guardar en Flash</button>
+      
+        <div id="tabProfiles" class="tab-content">
+          
+          <div class="profile-separator">
+            <div class="custom-dropdown-container">
+              <button id="profileBtn" class="pill-btn" style="background:#0f172a; border-color:#38bdf8;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span id="currentProfileText">Perfil 1</span>
+              </button>
+              <div id="profileMenu" class="custom-menu">
+                <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              </div>
+            </div>
+          </div>
 
+          <div class="card">
+            <h2 class="card-title" data-i18n="trigger_title">🔫 Modos de Gatillo Adaptativo</h2>
+            <div class="grid">
+              <div class="form-item">
+                <label for="trigger_left_mode" data-i18n="lbl_trigger_l">Gatillo Izquierdo (L2)</label>
+                <select id="trigger_left_mode">
+                  <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
+                  <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
+                  <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
+                  <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
+                  <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label for="trigger_right_mode" data-i18n="lbl_trigger_r">Gatillo Derecho (R2)</label>
+                <select id="trigger_right_mode">
+                  <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
+                  <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
+                  <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
+                  <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
+                  <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="adv_feedback_title">⚡ Modo 1: Rígido (Fuerza Constante)</h2>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_feedback">Afecta la resistencia base de los gatillos adaptativos.</p>
+            <div class="grid">
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_fsp">Punto de Inicio</label></div>
+                <div class="slider-row"><input type="range" id="feedback_start_point_slider" min="0" max="255" step="1" value="0"><input type="number" min="0" max="255" id="feedback_start_point" class="slider-number"></div>
+              </div>
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_ff">Fuerza Aplicada</label></div>
+                <div class="slider-row"><input type="range" id="feedback_force_slider" min="0" max="255" step="1" value="200"><input type="number" min="0" max="255" id="feedback_force" class="slider-number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="adv_weapon_title">🎯 Modo 2: Disparo (Gatillo de arma)</h2>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_weapon">Define el comportamiento del 'clic' del gatillo.</p>
+            <div class="grid">
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_tsp">Punto de Inicio</label></div>
+                <div class="slider-row"><input type="range" id="trigger_start_point_slider" min="0" max="255" step="1" value="20"><input type="number" min="0" max="255" id="trigger_start_point" class="slider-number"></div>
+              </div>
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_twp">Punto de Resistencia (Muro)</label></div>
+                <div class="slider-row"><input type="range" id="trigger_wall_point_slider" min="0" max="255" step="1" value="45"><input type="number" min="0" max="255" id="trigger_wall_point" class="slider-number"></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header"><label data-i18n="lbl_tbf">Fuerza de Quiebre (Break Force)</label></div>
+                <div class="slider-row"><input type="range" id="trigger_break_force_slider" min="0" max="255" step="1" value="255"><input type="number" min="0" max="255" id="trigger_break_force" class="slider-number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="adv_vib_title">📳 Modo 3: Metralleta (Vibración del gatillo)</h2>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_vib">Ajustes para el retroceso automático del Modo Metralleta.</p>
+            <div class="grid">
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_vsp">Inicio de Vibración</label></div>
+                <div class="slider-row"><input type="range" id="vibration_start_point_slider" min="32" max="255" step="1" value="32"><input type="number" min="32" max="255" id="vibration_start_point" class="slider-number"></div>
+              </div>
+              <div class="form-item">
+                <div class="slider-header">
+                  <label data-i18n="lbl_vf">Frecuencia de Vibración</label>
+                </div>
+                <div class="slider-row"><input type="range" id="vibration_frequency_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_frequency" class="slider-number"></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header"><label data-i18n="lbl_vfo">Fuerza de Vibración</label></div>
+                <div class="slider-row"><input type="range" id="vibration_force_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_force" class="slider-number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="adv_hai_title">📳 Modo 4: Gatillo rápido (Recorrido corto)</h2>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_hai">Ajustar largo del recorrido del gatillo.</p>
+            <div class="grid">
+              <div class="form-item">
+                <div class="slider-header"><label data-i18n="lbl_hws">Inicio del muro</label></div>
+                <div class="slider-row"><input type="range" id="wall_start_point_slider" min="60" max="100" step="2" value="50"><input type="number" min="60" max="100" id="wall_start_point" class="slider-number"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
+            <div class="grid">
+              <div class="form-item grid-col-span-2">
+                <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
+                <select id="gyro_activation_button" style="width: 50%;">
+                  <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
+                  <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
+                  <option value="2" data-i18n="opt_gyro_2">2: L2</option>
+                  <option value="3" data-i18n="opt_gyro_3">3: R2</option>
+                  <option value="4" data-i18n="opt_gyro_4">4: L1</option>
+                  <option value="5" data-i18n="opt_gyro_5">5: R1</option>
+                  <option value="6" data-i18n="opt_gyro_6">6: L3</option>
+                  <option value="7" data-i18n="opt_gyro_7">7: R3</option>
+                  <option value="8" data-i18n="opt_gyro_8">8: Square</option>
+                  <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
+                  <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
+                  <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
+                </select>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
+                </div>
+                <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
+                </div>
+                <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
+                </div>
+                <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
+            <div class="grid">
+              <div class="form-item">
+                <label for="lightbar_mode" data-i18n="lbl_lb_mode">Comportamiento del Color</label>
+                <select id="lightbar_mode">
+                  <option value="0" data-i18n="opt_lb_0">0: Controlado por Host (Nativo)</option>
+                  <option value="1" data-i18n="opt_lb_1">1: Apagado Total</option>
+                  <option value="2" data-i18n="opt_lb_2">2: Favorito 0</option>
+                  <option value="3" data-i18n="opt_lb_3">3: Favorito 1</option>
+                  <option value="4" data-i18n="opt_lb_4">4: Favorito 2</option>
+                  <option value="5" data-i18n="opt_lb_5">5: Favorito 3</option>
+                  <option value="6" data-i18n="opt_lb_6">6: Nivel de Batería</option>
+                  <option value="7" data-i18n="opt_lb_7">7: Arcoíris</option>
+                  <option value="8" data-i18n="opt_lb_8">8: Desvanecimiento entre Favoritos</option>
+                </select>
+              </div>
+              <div class="form-item grid-col-span-2" style="justify-content:center;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="lightbar_breathing" />
+                  <span data-i18n="lbl_lb_breath">Efecto Respiración (Sólo para Modo 0 y Favoritos 0 - 3)</span>
+                </label>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <label data-i18n="lbl_lb_matrix">Matriz de Colores Favoritos</label>
+                <div class="fav-color-grid">
+                  <div class="fav-color-item"><label>FAV 0</label><input type="color" id="fav_color_0" value="#00ddff" /></div>
+                  <div class="fav-color-item"><label>FAV 1</label><input type="color" id="fav_color_1" value="#ff0011" /></div>
+                  <div class="fav-color-item"><label>FAV 2</label><input type="color" id="fav_color_2" value="#bfff00" /></div>
+                  <div class="fav-color-item"><label>FAV 3</label><input type="color" id="fav_color_3" value="#ffffff" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" data-i18n="log_title">🖥️ Monitor WebHID</h2>
+          <textarea id="hexLog" class="hex-console" readonly placeholder="Los buffers transmitidos aparecerán aquí en formato hexadecimal..."></textarea>
+        </div>
+        
+        <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem; margin-top: 0.5rem;" data-i18n="btn_save">Guardar en Flash</button>
+
+      
     </div>
-  </div>
-
+    </div>
   <div id="toast" class="toast"></div>
 
   <script>
@@ -613,10 +691,15 @@
         btn_save: "Guardar en Flash",
         btn_reconnect: "Reconectar",
         
-        tab_global: "Configuración Global",
-        tab_profiles: "Configuración de Perfiles",
-
-        audio_title: "Retroalimentación Audio Háptica Global",
+        tab_global: "General",
+        tab_profiles: "Perfiles",
+        tab_info: "Información",
+        tab_haptics: "Hápticas",
+        tab_config_mode: "Modo Configuración",
+        tab_audio: "Audio",
+        tab_system: "Sistema",
+        haptics_title: "Retroalimentación Háptica Global",
+        sound_title: "Configuración de Sonido Global",
         lbl_haptics_gain: "Ganancia Háptica General",
         sub_haptics_gain: "Multiplicador global [1.0 - 2.0]",
         lbl_buffer: "Longitud del Búfer de Audio Háptico",
@@ -627,16 +710,16 @@
         opt_dsp_0: "0: Deshabilitado (Solo usar nativo)",
         opt_dsp_1: "1: Modo Mezcla (Añadir vibración DSP)",
         opt_dsp_2: "2: Modo Reemplazo (Usar solo DSP)",
-        lbl_auto_mute: "Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)",
+        lbl_auto_mute: "Silenciar Altavoz del Mando Automáticamente en modo audio-hápticas 1 y 2",
         lbl_dsp_gain: "Ganancia Auto Háptica",
         sub_dsp_gain: "Porcentaje a señal derivada [0 - 200]",
         lbl_dsp_lp: "Filtro Pasabajo Auto Hápticas",
         sub_dsp_lp: "Corte LP en Hz [20 - 400]",
         lbl_speaker_vol: "Volumen Maestro del Altavoz",
-        sub_speaker_vol: "Decibelios [-100 - 0]",
-
+        sub_speaker_vol: "[0 - 100]",
+        lbl_headset_vol: "Volumen Maestro de Audífonos",
         con_title: "Modo Configuración",
-        lbl_hold_mute: "Tiempo para entrar en modo",
+        lbl_hold_mute: "Tiempo para cambiar de modo",
         sub_hold_mute: "Cuantos milisegundos sosteniendo el botón mute para iniciar modo configuración",
 
         sys_title: "Sistema & Emulación",
@@ -648,12 +731,13 @@
         opt_poll_2: "1000Hz - Real Time",
         lbl_inactive: "Tiempo de Apagado por Inactividad",
         sub_inactive: "Minutos antes de desconexión BT [5 - 60]",
-        lbl_po_btn: "Botón Físico de Apagado (Combinado con PS)",
+        lbl_po_btn: "Activar atajo para apagar DS",
         opt_btn_sq: "Cuadrado", opt_btn_cr: "Cruz", opt_btn_ci: "Círculo", opt_btn_tr: "Triángulo",
         lbl_chk_inact: "Deshabilitar Suspensión por Inactividad",
         lbl_chk_po: "Activar atajo para Apagar",
         lbl_chk_led: "Apagar LED del Dongle",
         lbl_chk_wake: "Despertar Host por Mando",
+        lbl_sleep_host: "Activar atajo para Suspender Host (Sólo Windows)",
         lbl_host_volume: "Controlar volumen del host en lugar del parlante interno (sólo para Windows)",
 
         sec_profiles: "👤 Perfiles de Mando",
@@ -745,10 +829,15 @@
         btn_save: "Save to Flash",
         btn_reconnect: "Reconnect",
         
-        tab_global: "Global Configuration",
-        tab_profiles: "Profiles Configuration",
-
-        audio_title: "Global Audio & Haptic Feedback",
+        tab_global: "General",
+        tab_profiles: "Profiles",
+        tab_info: "Information",
+        tab_haptics: "Haptics",
+        tab_config_mode: "Config Mode",
+        tab_audio: "Audio",
+        tab_system: "System",
+        haptics_title: "Global Haptic Feedback",
+        sound_title: "Global Sound Settings",
         lbl_haptics_gain: "Global Haptics Gain",
         sub_haptics_gain: "Global multiplier [1.0 - 2.0]",
         lbl_buffer: "Haptics Audio Buffer Length",
@@ -759,16 +848,16 @@
         opt_dsp_0: "0: Disabled (Use native only)",
         opt_dsp_1: "1: Mix Mode (Add DSP feedback)",
         opt_dsp_2: "2: Replace Mode (Use DSP only)",
-        lbl_auto_mute: "Auto-Mute Controller Speaker in Auto-Haptics Modes 1 and 2",
+        lbl_auto_mute: "Auto Mute Controller Speaker in Auto-Haptics Modes 1 and 2",
         lbl_dsp_gain: "Auto Haptics Gain",
         sub_dsp_gain: "Percent applied to derived signal [0 - 200]",
         lbl_dsp_lp: "Auto Haptics Lowpass Filter",
         sub_dsp_lp: "LP cutoff in Hz [20 - 400]",
         lbl_speaker_vol: "Master Speaker Volume",
-        sub_speaker_vol: "Decibels [-100 - 0]",
-
+        sub_speaker_vol: "[0 - 100]",
+        lbl_headset_vol: "Master Headset Volume",
         con_title: "Configuration Mode",
-        lbl_hold_mute: "Time to switch",
+        lbl_hold_mute: "Time to switch mode",
         sub_hold_mute: "How many milliseconds to hold the mute button to start the configuration mode",
         
         sys_title: "System & Emulation",
@@ -780,12 +869,13 @@
         opt_poll_2: "1000Hz - Real Time",
         lbl_inactive: "Idle Power-Off Time",
         sub_inactive: "Minutes before BT disconnect [5 - 60]",
-        lbl_po_btn: "Physical Power-Off Button (Combined with PS)",
+        lbl_po_btn: "Enable DS Power-Off Shortcut",
         opt_btn_sq: "Square", opt_btn_cr: "Cross", opt_btn_ci: "Circle", opt_btn_tr: "Triangle",
         lbl_chk_inact: "Disable Auto-Suspend on Idle",
         lbl_chk_po: "Enable Power-Off Shortcut",
         lbl_chk_led: "Turn off Dongle LED entirely",
         lbl_chk_wake: "Wake Host with Dongle",
+        lbl_sleep_host: "Enable Sleep Host Shortcut (only for Windows)",
         lbl_host_volume: "Control Host volume instead of internal speaker (only for Windows)",
         sec_profiles: "👤 Controller Profiles",
         profile_lbl: "Profile",
@@ -920,6 +1010,20 @@
       });
     });
 
+    // Pestañas General (Tabs)
+    document.querySelectorAll('.tab-trigger-general').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Quitar active a todos los botones y contenidos
+        document.querySelectorAll('.tab-trigger-general').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content-general').forEach(c => c.classList.remove('active'));
+        
+        // Poner active al seleccionado
+        e.currentTarget.classList.add('active');
+        const targetId = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
     // Dropdown Perfil
     $('profileBtn').addEventListener('click', (e) => { 
       e.stopPropagation(); 
@@ -971,7 +1075,7 @@
     const sliderFields = [
       'haptics_gain', 'audio_buffer_length', 'auto_haptics_gain', 'auto_haptics_lowpass_hz', 
       'hold_mute_time',
-      'inactive_time', 'speaker_volume', 'feedback_start_point', 'feedback_force',
+      'inactive_time', 'speaker_volume', 'headset_volume', 'feedback_start_point', 'feedback_force',
       'trigger_start_point', 'trigger_wall_point', 'trigger_break_force',
       'vibration_start_point', 'vibration_frequency', 'vibration_force', 'wall_start_point', 'gyro_dead_zone',
       'max_degrees_per_second', 'gyro_multiplier'
@@ -1038,13 +1142,15 @@
       setFieldValue('auto_haptics_enable', 1);
       setFieldValue('auto_haptics_gain', 100);
       setFieldValue('auto_haptics_lowpass_hz', 80);
-      setFieldValue('speaker_volume', -100);
+      setFieldValue('speaker_volume', 0);
+      setFieldValue('headset_volume', 0);
       setFieldValue('controller_mode', 2);
       setFieldValue('polling_rate_mode', 0);
       setFieldValue('hold_mute_time', 0);
       setFieldValue('inactive_time', 30);
       $('disable_inactive_disconnect').checked = false;
       $('enable_poweroff_shortcut').checked = true;
+      $('enable_host_sleep').checked = true;
       $('disable_pico_led').checked = false;
       $('wake_enable').checked = false;
       $('enable_host_volume_control').checked = true;
@@ -1114,10 +1220,12 @@
       setFieldValue('auto_haptics_lowpass_hz', dv.getUint16(12, true));
       $('enable_poweroff_shortcut').checked     = dv.getUint8(14) === 1;
       $('wake_enable').checked                  = dv.getUint8(15) === 1;
-      setFieldValue('speaker_volume', dv.getFloat32(16, true).toFixed(0));
-      $('auto_mute_mode').checked               = dv.getUint8(20) === 1;
-      setFieldValue('hold_mute_time', dv.getUint16(21, true));
-      $('enable_host_volume_control').checked = dv.getUint8(23) === 1;
+      $('enable_host_sleep').checked     = dv.getUint8(16) === 1;
+      setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0) + 100);
+      setFieldValue('headset_volume', dv.getFloat32(21, true).toFixed(0) + 100);
+      $('auto_mute_mode').checked               = dv.getUint8(25) === 1;
+      setFieldValue('hold_mute_time', dv.getUint16(26, true));
+      $('enable_host_volume_control').checked = dv.getUint8(28) === 1;
       
     }
 
@@ -1210,10 +1318,12 @@
       dv.setUint16(13, parseInt($('auto_haptics_lowpass_hz').value, 10), true);
       dv.setUint8(15, $('enable_poweroff_shortcut').checked ? 1 : 0);
       dv.setUint8(16, $('wake_enable').checked ? 1 : 0);
-      dv.setFloat32(17, parseFloat($('speaker_volume').value), true);
-      dv.setUint8(21, $('auto_mute_mode').checked ? 1 : 0);
-      dv.setUint16(22, parseInt($('hold_mute_time').value, 10), true);
-      dv.setUint8(24, $('enable_host_volume_control').checked ? 1 : 0);
+      dv.setUint8(17, $('enable_host_sleep').checked ? 1 : 0);
+      dv.setFloat32(18, parseFloat($('speaker_volume').value), true);
+      dv.setFloat32(22, parseFloat($('headset_volume').value), true);
+      dv.setUint8(26, $('auto_mute_mode').checked ? 1 : 0);
+      dv.setUint16(27, parseInt($('hold_mute_time').value, 10), true);
+      dv.setUint8(29, $('enable_host_volume_control').checked ? 1 : 0);
       
       const reqBuf = new Uint8Array(63);
       reqBuf.set(new Uint8Array(buf));
