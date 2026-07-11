@@ -31,8 +31,8 @@
       font-family: var(--font-main) !important;
     }
     
-    .container{width:100%;max-width:50rem;display:flex;flex-direction:column;gap:1.5rem}
-    .card{background-color:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);padding:1.5rem}
+    .container{width:min(1000px,calc(100% - 32px));display:flex;flex-direction:column;gap:0.2rem}
+    .card{background-color:var(--card);color:var(--card-foreground);border:0px solid var(--border);border-radius:var(--radius);padding:1.5rem}
     .card-clear{padding-top:1.5rem;padding-bottom:1.5rem}
     .card-title{font-size:1.25rem;font-weight:600;margin:0 0 1.5rem 0;display:flex;align-items:center;gap:.5rem}
     .grid{display:grid;grid-template-columns:1fr;gap:1.25rem}
@@ -270,6 +270,112 @@
       gap: 1rem;
       margin-bottom: 0.5rem;
     }
+
+    /* ── INTERFAZ GRÁFICA INTERACTIVA ── */
+    .img-container {
+      position: relative;
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    
+    .controller-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      pointer-events: none; /* La imagen no estorba al ratón */
+    }
+    
+    .svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+    
+    /* Efecto "Glow" en las zonas interactivas */
+    .hotspot {
+      fill: transparent;
+      stroke: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      pointer-events: all;
+    }
+    .hotspot:hover {
+      fill: rgba(56, 189, 248, 0.3); /* Fondo azul semi-transparente */
+      stroke: #38bdf8;               /* Borde azul brillante */
+      stroke-width: 3px;
+    }
+
+    /* ── VENTANAS EMERGENTES (MODALES) ── */
+    .modal-overlay {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 17, 32, 0.85); /* Fondo oscuro borroso */
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto; /* Scroll si el contenido es muy largo */
+      padding: 1.5rem;
+      position: relative;
+    }
+    .btn-close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .btn-close-modal:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+
+    /* ── ETIQUETAS DE INFORMACIÓN FLOTANTES ── */
+    .info-label {
+      position: absolute;
+      color: #f8fafc;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      pointer-events: none; /* Para que no interfieran con el clic */
+      transform: translate(-50%, -50%); /* Centra la etiqueta en su coordenada (x,y) */
+      white-space: nowrap;
+      z-index: 20;
+    }
+    /* Clase auxiliar para cuando un atajo está activo (Verde) */
+    .info-label.active-state {
+      color: #10b981;
+    }
+    /* Clase auxiliar para cuando está inactivo (Rojo) */
+    .info-label.inactive-state {
+      color: #ef4444;
+    }
   </style>
 </head>
 <body>
@@ -336,257 +442,65 @@
         </div>
       </div>
     </div>
-
+    <!-- Nueva UI -->
     <div id="configForm" style="display:none;flex-direction:column;gap:1.5rem;">
       
+      <!-- PESTAÑAS PRINCIPALES -->
       <div class="tabs-list">
-          <button class="tab-trigger active" data-tab="tabGlobal" data-i18n="tab_global">Configuración Global</button>
-          <button class="tab-trigger" data-tab="tabProfiles" data-i18n="tab_profiles">Configuración de Perfiles</button>
-          <button class="tab-trigger" data-tab="tabInfo" data-i18n="tab_info">Información</button>  
-      </div>
-      
-      <div class="header-bar-tabs">
+          <button class="tab-trigger active" data-tab="tabGeneralUI" data-i18n="tab_global">General</button>
+          <button class="tab-trigger" data-tab="tabProfilesUI" data-i18n="tab_profiles">Perfiles</button>
+          <button class="tab-trigger" data-tab="tabInfoUI" data-i18n="tab_info">Información</button>  
       </div>
 
-      <div id="tabGlobal" class="tab-content active">
-        <div class="grid-col-span-2">
-          <div>
-            <h2 class="sub-title" style="align-self: center; width: 100%;" data-i18n="global_config_title">Ajuste de Perfiles</h2>
-          </div>
-        </div>
-        <div class="tabs-list">
-          <button class="tab-trigger-general active" data-tab="tabHaptics" data-i18n="tab_haptics">Hápticas</button>
-          <button class="tab-trigger-general" data-tab="tabAudio" data-i18n="tab_audio">Audio</button>
-          <button class="tab-trigger-general" data-tab="tabSystem" data-i18n="tab_system">Sistema</button>
-        </div>
-        <div id="tabHaptics" class="tab-content-general active">
-          <div class="card">
-            <h2 class="card-title" data-i18n="haptics_title">🔊 Retroalimentación Audio Háptica Global</h2>
-            <div class="grid">
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="haptics_gain" data-i18n="lbl_haptics_gain">Ganancia Háptica General</label>
-                  <span class="slider-sub" data-i18n="sub_haptics_gain">Multiplicador global [1.0 - 2.0]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="haptics_gain_slider" min="1.0" max="2.0" step="0.05" value="1.50">
-                  <input type="number" id="haptics_gain" min="1.0" max="2.0" step="0.05" value="1.50" class="slider-number">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2 class="card-title" data-i18n="dsp_title">🤖 Auto-Hápticas DSP</h2>
-            <div class="grid">
-              <div class="form-item grid-col-span-2">
-                <label for="auto_haptics_enable" data-i18n="lbl_dsp_mode">Modo de Operación Auto-Háptica</label>
-                <select id="auto_haptics_enable">
-                  <option value="0" data-i18n="opt_dsp_0">Deshabilitado (Solo usar nativo)</option>
-                  <option value="1" data-i18n="opt_dsp_1">1: Modo Mezcla (Añadir vibración DSP)</option>
-                  <option value="2" data-i18n="opt_dsp_2">2: Modo Reemplazo (Usar solo DSP)</option>
-                </select>
-              </div>
-
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="auto_haptics_gain" data-i18n="lbl_dsp_gain">Ganancia Auto Háptica</label>
-                  <span class="slider-sub" data-i18n="sub_dsp_gain">Porcentaje a señal derivada [0 - 200]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="auto_haptics_gain_slider" min="0" max="200" step="1" value="100">
-                  <input type="number" id="auto_haptics_gain" min="0" max="200" step="1" value="100" class="slider-number">
-                </div>
-              </div>
-
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="auto_haptics_lowpass_hz" data-i18n="lbl_dsp_lp">Filtro Pasabajo Auto Hápticas</label>
-                  <span class="slider-sub" data-i18n="sub_dsp_lp">Corte LP en Hz [20 - 400]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="auto_haptics_lowpass_hz_slider" min="20" max="400" step="1" value="80">
-                  <input type="number" id="auto_haptics_lowpass_hz" min="20" max="400" step="1" value="80" class="slider-number">
-                </div>
-              </div>
-
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="audio_buffer_length" data-i18n="lbl_buffer">Longitud del Búfer de Audio Háptico</label>
-                  <span class="slider-sub" data-i18n="sub_buffer">Bytes PCM por paquete [16 - 128]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="audio_buffer_length_slider" min="16" max="128" step="1" value="64">
-                  <input type="number" id="audio_buffer_length" min="16" max="128" step="1" value="64" class="slider-number">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-        <div id="tabAudio" class="tab-content-general">
-          <div class="card">
-            <h2 class="card-title" data-i18n="sound_title">🔊 Configuracion de sonido</h2>
-            <div class="grid">
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="speaker_volume" data-i18n="lbl_speaker_vol">Volumen Maestro del Altavoz</label>
-                  <span class="slider-sub" data-i18n="sub_speaker_vol">Decibelios [-100 - 0]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="speaker_volume_slider" min="0" max="100" step="1" value="0">
-                  <input type="number" id="speaker_volume" min="0" max="100" step="1" value="0" class="slider-number">
-                </div>
-              </div>
-              
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="headset_volume" data-i18n="lbl_headset_vol">Volumen Maestro de Audífonos</label>
-                  <span class="slider-sub" data-i18n="sub_speaker_vol">[0 - 100]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="headset_volume_slider" min="0" max="100" step="1" value="0">
-                  <input type="number" id="headset_volume" min="0" max="100" step="1" value="0" class="slider-number">
-                </div>
-              </div>
-
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="enable_host_volume_control" />
-                  <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
-                </label>
-              </div>
-
-              <div class="form-item-row grid-col-span-2" style="margin-bottom: 0.5rem;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="auto_mute_mode" />
-                  <span data-i18n="lbl_auto_mute">Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)</span>
-                </label>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div id="tabSystem" class="tab-content-general">
-          <div class="card">
-            <h2 class="card-title" data-i18n="sys_title">⚙️ Sistema & Emulación</h2>
-            <div class="grid">
-              <div class="form-item">
-                <label for="controller_mode" data-i18n="lbl_emu_mode">Perfil Emulado USB</label>
-                <select id="controller_mode">
-                  <option value="0">0: DualSense</option>
-                  <option value="1">1: DualSense Edge</option>
-                  <option value="2" data-i18n="opt_emu_auto">2: Auto (Por Defecto)</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="polling_rate_mode" data-i18n="lbl_poll">Frecuencia USB (Polling Rate)</label>
-                <select id="polling_rate_mode">
-                  <option value="0" data-i18n="opt_poll_0">250Hz - Balanceado</option>
-                  <option value="1" data-i18n="opt_poll_1">500Hz - Competitivo</option>
-                  <option value="2" data-i18n="opt_poll_2">1000Hz - Real Time</option>
-                </select>
-              </div>
-              
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="inactive_time" data-i18n="lbl_inactive">Tiempo de Apagado por Inactividad</label>
-                  <span class="slider-sub" data-i18n="sub_inactive">Minutos antes de desconexión BT [5 - 60]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="inactive_time_slider" min="5" max="60" step="1" value="30">
-                  <input type="number" id="inactive_time" min="5" max="60" step="1" value="30" class="slider-number">
-                </div>
-              </div>
-
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between; margin-top:0.5rem;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="disable_inactive_disconnect" />
-                  <span data-i18n="lbl_chk_inact">Deshabilitar Suspensión por Inactividad</span>
-                </label>
-                
-              </div>
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="disable_pico_led" />
-                  <span data-i18n="lbl_chk_led">Apagar LED del Dongle</span>
-                </label>
-                <label class="checkbox-container">
-                  <input type="checkbox" id="wake_enable" />
-                  <span data-i18n="lbl_chk_wake">Despertar Host por Mando</span>
-                </label>
-              </div>
-              
-            </div>
-          </div>
-          <div class="card">
-            <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración por Control</h2>
-            <div class="grid">            
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para entrar en modo</label>
-                  <span class="slider-sub" data-i18n="sub_hold_mute">Minutos antes de desconexión BT [5 - 60]</span>
-                </div>
-                <div class="slider-row">
-                  <input type="range" id="hold_mute_time_slider" min="0" max="3000" step="50" value="0">
-                  <input type="number" id="hold_mute_time" min="0" max="3000" step="50" value="0" class="slider-number">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <h2 class="card-title" data-i18n="shortc_title">⚙️ Atajos de sistema</h2>
-            <div class="grid">            
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="enable_host_sleep" />
-                  <span data-i18n="lbl_sleep_host">Activar atajo para Suspender Host (Sólo Windows)</span>
-                </label>
-              </div>
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="enable_poweroff_shortcut" />
-                  <span data-i18n="lbl_chk_po">Activar atajo para Apagar</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="tabProfiles" class="tab-content">
+      <!-- ============================================== -->
+      <!-- PESTAÑA 1: GENERAL (Hápticas, Audio, Sistema) -->
+      <!-- ============================================== -->
+      <div id="tabGeneralUI" class="tab-content active">
+        <h2 class="sub-title" style="text-align: center;">Configuración Global</h2>
         
-        <div class="grid-col-span-2">
-          <div>
-            <h2 class="sub-title" style="align-self: center; width: 100%;" data-i18n="profile_config_selected_title">Ajuste de Perfiles</h2>
-          </div>
-        </div>
-        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
-          
-          <div style="display: flex; align-items: center; min-height: 40px;">
+        <div class="img-container">
+          <img src="DSGlobal.png" class="controller-img" alt="Controlador">
+          <svg class="svg-overlay" viewBox="0 0 2000 1302" preserveAspectRatio="xMidYMid meet">
             
+            <!-- ZONA: Parte inferior (Hápticas / DSP) -->
+            <!-- Pega aquí los números de coords="" de image-map.net -->
+            <polygon class="hotspot" data-target="modal-global-haptics" points="750,315,738,306,718,302,679,304,623,315,552,331,533,364,511,412,467,532,451,594,434,719,430,823,432,892,446,949,460,982,478,1004,497,1014,515,1021,531,1009,543,990,570,914,587,853,600,825,927,825,928,1124,831,1124,819,1131,817,1147,817,1168,815,1189,826,1198,844,1200,1185,1202,1194,1193,1192,1134,1181,1124,1137,1124,1072,1122,1070,823,1393,821,1404,848,1418,883,1430,922,1446,965,1457,991,1466,1007,1481,1018,1504,1011,1527,993,1547,958,1559,917,1564,876,1572,821,1568,767,1561,707,1557,659,1550,606,1536,565,1522,514,1508,466,1494,435,1480,396,1467,366,1455,346,1446,330,1405,318,1330,306,1294,300,1273,304,1254,304,1243,314,1234,346,1222,410,1211,466,1209,493,1216,521,1241,558,1282,608,1312,654,1337,696,1356,733,1375,776,1390,807,1383,814,1057,814,1059,1122,939,1124,941,813,603,813,635,747,662,693,701,627,746,565,775,532,785,509,787,475,773,406,759,341" />    
+            
+            <!-- ZONA: Parlante del Control (Audio) -->
+            <polygon class="hotspot" data-target="modal-global-audio" points="1001,134,1185,134,1190,147,1190,203,1181,208,1068,210,1070,588,1050,588,1033,588,946,588,946,562,946,553,1059,553,1056,210,830,210,819,207,817,194,817,141,824,132" />
+            
+            <!-- ZONA: Botón PS / Cuerpo central (Sistema y Emulación) -->
+            <polygon class="hotspot" data-target="modal-global-system" points="789,477,805,519,821,534,840,542,858,544,1135,544,1158,542,1176,534,1188,523,1199,503,1204,481,1213,516,1223,535,1262,583,1307,645,1352,726,1383,793,1425,901,1450,975,1466,1007,1481,1021,1441,1028,1420,1030,1398,1016,1338,873,1312,800,1291,776,1266,765,1216,763,1158,763,1109,767,1045,767,951,767,884,767,828,767,769,761,746,763,723,768,704,777,683,806,655,874,633,929,610,984,598,1012,587,1023,570,1028,550,1026,519,1019,533,1005,543,986,557,943,577,880,603,813,637,737,642,731,344,733,345,422,109,422,100,415,98,403,96,352,105,346,462,346,471,353,471,385,471,412,462,420,397,420,358,422,356,717,648,719,672,673,711,608,748,560,769,535,780,521,784,498" />
+          </svg>
+          <!-- Etiquetas dinámicas posicionales. Ajusta 'top' y 'left' (%) para cuadrarlos en la imagen -->
+          <div class="info-label" style="top: 29.5%; left: 14%;"><label data-i18n="sys_button_label">Sistema</label></div>
+          <div class="info-label" style="top: 13.3%;left: 50%;"><label data-i18n="aud_button_label">Audio</label></div>
+          <div class="info-label" style="top: 89.2%;left: 50%;"><label data-i18n="hap_button_label">Hápticas</label></div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- PESTAÑA 2: PERFILES (Gatillos, Lightbar, Gyro) -->
+      <!-- ============================================== -->
+      <div id="tabProfilesUI" class="tab-content">
+        <h2 class="sub-title" style="text-align: center;">Ajuste de Perfiles</h2>
+        
+        <!-- CABECERA DEL PERFIL (Igual a la que hicimos antes) -->
+        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
+          <div style="display: flex; align-items: center; min-height: 40px;">
             <div id="readModeContainer" style="display: flex; align-items: center; gap: 0.75rem;">
               <h2 id="profileNameDisplay" class="card-title" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.02em;">Perfil 1</h2>
-              <button id="btnEditProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #64748b; cursor: pointer; display: flex; align-items: center; transition: color 0.2s;" title="Editar Nombre" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">
+              <button id="btnEditProfileName" style="background:transparent; border:none; color:#64748b; cursor:pointer;" title="Editar Nombre">
                 <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
               </button>
             </div>
-
-            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border-radius: var(--radius); border: 1px solid #38bdf8; padding: 0.25rem 0.5rem;">
-              <input type="text" id="inputProfileName" maxlength="18" autocomplete="off" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px; padding: 0; font-family: var(--font-main);" placeholder="Nombre...">
-              
-              <button id="btnSaveProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #10b981; cursor: pointer; display: flex; align-items: center;" title="Guardar">
-                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-              </button>
-              
-              <button id="btnCancelProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #ef4444; cursor: pointer; display: flex; align-items: center;" title="Cancelar">
-                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
-              </button>
+            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border: 1px solid #38bdf8; border-radius: 0.5rem; padding: 0.25rem 0.5rem;">
+              <input type="text" id="inputProfileName" maxlength="18" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px;">
+              <button id="btnSaveProfileName" style="background:transparent; border:none; color:#10b981; cursor:pointer;">✔️</button>
+              <button id="btnCancelProfileName" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">✖️</button>
             </div>
-            
           </div>
-
+          <!-- ZONA: Selector de Perfiles -->
           <div class="custom-dropdown-container">
             <button id="profileBtn" class="pill-btn" style="background:#0f172a; border-color:#38bdf8; font-size: 1rem; padding: 0.6rem 1.2rem;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
@@ -603,14 +517,276 @@
             </div>
           </div>
         </div>
-        <div class="tabs-list-green">
-          <button class="tab-trigger-profile active" data-tab="tabTriggers" data-i18n="tab_triggers">Gatillos</button>
-          <button class="tab-trigger-profile" data-tab="tabGyro" data-i18n="tab_gyro">Giroscopio</button>
-          <button class="tab-trigger-profile" data-tab="tabLightbar" data-i18n="tab_lightbar">Lightbar</button>
+
+        <div class="img-container">
+          <img src="DSProfiles.png" class="controller-img" alt="Controlador">
+          <svg class="svg-overlay" viewBox="0 0 2000 1302" preserveAspectRatio="xMidYMid meet">
+            
+            <!-- ZONA: Gatillo Izquierdo L2 -->
+            <polygon class="hotspot" data-target="modal-profile-triggers" points="150,50 250,50 220,100 120,100" />
+            
+            <!-- ZONA: Gatillo Derecho R2 -->
+            <polygon class="hotspot" data-target="modal-profile-triggers" points="750,50 850,50 880,100 780,100" />
+            
+            <!-- ZONA: Touchpad (Lightbar) -->
+            <polygon class="hotspot" data-target="modal-profile-lightbar" points="320,80 680,80 650,250 350,250" />
+            
+            <!-- ZONA: Empuñaduras / Costados (Giroscopio) -->
+            <polygon class="hotspot" data-target="modal-profile-gyro" points="166,464,117,595,104,638,76,652,30,613,4,517,3,413,17,314,52,179,107,52,260,26,286,43,319,181,314,216,262,288,216,358" />
+            <polygon class="hotspot" data-target="modal-profile-gyro" points="737,22,887,51,952,206,978,318,992,424,991,514,983,574,961,616,915,652,895,640,860,549,810,422,724,277,685,225,676,188,690,111,704,48,719,30" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- PESTAÑA 3: INFORMACIÓN Y ATAJOS (Modo Lectura) -->
+      <!-- ============================================== -->
+      <div id="tabInfoUI" class="tab-content">
+        <h2 class="sub-title" style="text-align: center;">Atajos e Información del Sistema</h2>
+        
+        <div class="img-container">
+          <img src="DSShortcuts.png" class="controller-img" style="opacity: 0.6;" alt="Controlador Info">
+          
+          <!-- Etiquetas dinámicas posicionales. Ajusta 'top' y 'left' (%) para cuadrarlos en la imagen -->
+          <div class="info-label" style="top: 25%; left: 15%;">D-Pad: Cambiar Perfil</div>
+          <div class="info-label" style="top: 20%; left: 30%;">Create: Lightbar Mode</div>
+          <div class="info-label" style="top: 20%; left: 70%;">Options: Breathing FX</div>
+          <div class="info-label" id="lbl-triangle" style="top: 22%; left: 85%;">Triángulo: Apagar</div>
+          <div class="info-label" id="lbl-circle" style="top: 35%; left: 92%;">Círculo: Dormir Host</div>
+          <div class="info-label" style="top: 48%; left: 85%;">Cuadrado: Mute Audio</div>
+          <div class="info-label" style="top: 55%; left: 50%;">Mute: Modo Configuración</div>
+          <div class="info-label" id="lbl-left-stick" style="top: 60%; left: 25%;">LS (Arriba/Abajo): Volumen</div>
+          <div class="info-label" style="top: 60%; left: 75%;">RS (Arriba/Abajo): Fuerza Háptica</div>
+          <div class="info-label" style="top: 10%; left: 18%;">L1/R1: Modos Gatillo</div>
         </div>
 
-        <div id="tabTriggers" class="tab-content-profile active">
-          <div class="card">
+        <!-- Monitor HID en la parte inferior -->
+        <div class="card" style="margin-top: 1rem;">
+          <h2 class="card-title" data-i18n="log_title">🖥️ Monitor WebHID</h2>
+          <textarea id="hexLog" class="hex-console" readonly placeholder="Buffers transmitidos..."></textarea>
+        </div>
+      </div>
+      
+      <!-- BOTON GUARDAR -->
+      <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem;" data-i18n="btn_save">Guardar en Flash</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ZONA DE MODALES (INVISIBLES HASTA HACER CLIC)  -->
+    <!-- ============================================== -->
+
+    <!-- Modal: Hápticas Globales -->
+    <div id="modal-global-haptics" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="haptics_title">🔊 Retroalimentación Audio Háptica Global</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="haptics_gain" data-i18n="lbl_haptics_gain">Ganancia Háptica General</label>
+                <span class="slider-sub" data-i18n="sub_haptics_gain">Multiplicador global [1.0 - 2.0]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="haptics_gain_slider" min="1.0" max="2.0" step="0.05" value="1.50">
+                <input type="number" id="haptics_gain" min="1.0" max="2.0" step="0.05" value="1.50" class="slider-number">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" data-i18n="dsp_title">🤖 Auto-Hápticas DSP</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <label for="auto_haptics_enable" data-i18n="lbl_dsp_mode">Modo de Operación Auto-Háptica</label>
+              <select id="auto_haptics_enable">
+                <option value="0" data-i18n="opt_dsp_0">Deshabilitado (Solo usar nativo)</option>
+                <option value="1" data-i18n="opt_dsp_1">1: Modo Mezcla (Añadir vibración DSP)</option>
+                <option value="2" data-i18n="opt_dsp_2">2: Modo Reemplazo (Usar solo DSP)</option>
+              </select>
+            </div>
+
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="auto_haptics_gain" data-i18n="lbl_dsp_gain">Ganancia Auto Háptica</label>
+                <span class="slider-sub" data-i18n="sub_dsp_gain">Porcentaje a señal derivada [0 - 200]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="auto_haptics_gain_slider" min="0" max="200" step="1" value="100">
+                <input type="number" id="auto_haptics_gain" min="0" max="200" step="1" value="100" class="slider-number">
+              </div>
+            </div>
+
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="auto_haptics_lowpass_hz" data-i18n="lbl_dsp_lp">Filtro Pasabajo Auto Hápticas</label>
+                <span class="slider-sub" data-i18n="sub_dsp_lp">Corte LP en Hz [20 - 400]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="auto_haptics_lowpass_hz_slider" min="20" max="400" step="1" value="80">
+                <input type="number" id="auto_haptics_lowpass_hz" min="20" max="400" step="1" value="80" class="slider-number">
+              </div>
+            </div>
+
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="audio_buffer_length" data-i18n="lbl_buffer">Longitud del Búfer de Audio Háptico</label>
+                <span class="slider-sub" data-i18n="sub_buffer">Bytes PCM por paquete [16 - 128]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="audio_buffer_length_slider" min="16" max="128" step="1" value="64">
+                <input type="number" id="audio_buffer_length" min="16" max="128" step="1" value="64" class="slider-number">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Audio Global -->
+    <div id="modal-global-audio" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="sound_title">🔊 Configuracion de sonido</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="speaker_volume" data-i18n="lbl_speaker_vol">Volumen Maestro del Altavoz</label>
+                <span class="slider-sub" data-i18n="sub_speaker_vol">Decibelios [-100 - 0]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="speaker_volume_slider" min="0" max="100" step="1" value="0">
+                <input type="number" id="speaker_volume" min="0" max="100" step="1" value="0" class="slider-number">
+              </div>
+            </div>
+            
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="headset_volume" data-i18n="lbl_headset_vol">Volumen Maestro de Audífonos</label>
+                <span class="slider-sub" data-i18n="sub_speaker_vol">[0 - 100]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="headset_volume_slider" min="0" max="100" step="1" value="0">
+                <input type="number" id="headset_volume" min="0" max="100" step="1" value="0" class="slider-number">
+              </div>
+            </div>
+
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="enable_host_volume_control" />
+                <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
+              </label>
+            </div>
+
+            <div class="form-item-row grid-col-span-2" style="margin-bottom: 0.5rem;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="auto_mute_mode" />
+                <span data-i18n="lbl_auto_mute">Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Sistema -->
+    <div id="modal-global-system" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="sys_title">⚙️ Sistema & Emulación</h2>
+          <div class="grid">
+            <div class="form-item">
+              <label for="controller_mode" data-i18n="lbl_emu_mode">Perfil Emulado USB</label>
+              <select id="controller_mode">
+                <option value="0">0: DualSense</option>
+                <option value="1">1: DualSense Edge</option>
+                <option value="2" data-i18n="opt_emu_auto">2: Auto (Por Defecto)</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label for="polling_rate_mode" data-i18n="lbl_poll">Frecuencia USB (Polling Rate)</label>
+              <select id="polling_rate_mode">
+                <option value="0" data-i18n="opt_poll_0">250Hz - Balanceado</option>
+                <option value="1" data-i18n="opt_poll_1">500Hz - Competitivo</option>
+                <option value="2" data-i18n="opt_poll_2">1000Hz - Real Time</option>
+              </select>
+            </div>
+            
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="inactive_time" data-i18n="lbl_inactive">Tiempo de Apagado por Inactividad</label>
+                <span class="slider-sub" data-i18n="sub_inactive">Minutos antes de desconexión BT [5 - 60]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="inactive_time_slider" min="5" max="60" step="1" value="30">
+                <input type="number" id="inactive_time" min="5" max="60" step="1" value="30" class="slider-number">
+              </div>
+            </div>
+
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between; margin-top:0.5rem;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="disable_inactive_disconnect" />
+                <span data-i18n="lbl_chk_inact">Deshabilitar Suspensión por Inactividad</span>
+              </label>
+              
+            </div>
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="disable_pico_led" />
+                <span data-i18n="lbl_chk_led">Apagar LED del Dongle</span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="wake_enable" />
+                <span data-i18n="lbl_chk_wake">Despertar Host por Mando</span>
+              </label>
+            </div>
+            
+          </div>
+        </div>
+        <div class="card">
+          <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración por Control</h2>
+          <div class="grid">            
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para entrar en modo</label>
+                <span class="slider-sub" data-i18n="sub_hold_mute">Minutos antes de desconexión BT [5 - 60]</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="hold_mute_time_slider" min="0" max="3000" step="50" value="0">
+                <input type="number" id="hold_mute_time" min="0" max="3000" step="50" value="0" class="slider-number">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h2 class="card-title" data-i18n="shortc_title">⚙️ Atajos de sistema</h2>
+          <div class="grid">            
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="enable_host_sleep" />
+                <span data-i18n="lbl_sleep_host">Activar atajo para Suspender Host (Sólo Windows)</span>
+              </label>
+            </div>
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="enable_poweroff_shortcut" />
+                <span data-i18n="lbl_chk_po">Activar atajo para Apagar</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Gatillos (Perfil) -->
+    <div id="modal-profile-triggers" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
             <h2 class="card-title" data-i18n="trigger_title">🔫 Modos de Gatillo Adaptativo</h2>
             <div class="grid">
               <div class="form-item">
@@ -765,121 +941,115 @@
               </div>
             </div>
           </div>
-          
-        </div>
         
-        <div id="tabGyro" class="tab-content-profile">
-          <div class="card">
-            <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
-            <div class="grid">
-              <div class="form-item grid-col-span-2">
-                <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
-                <select id="gyro_activation_button" style="width: 50%;">
-                  <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
-                  <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
-                  <option value="2" data-i18n="opt_gyro_2">2: L2</option>
-                  <option value="3" data-i18n="opt_gyro_3">3: R2</option>
-                  <option value="4" data-i18n="opt_gyro_4">4: L1</option>
-                  <option value="5" data-i18n="opt_gyro_5">5: R1</option>
-                  <option value="6" data-i18n="opt_gyro_6">6: L3</option>
-                  <option value="7" data-i18n="opt_gyro_7">7: R3</option>
-                  <option value="8" data-i18n="opt_gyro_8">8: Square</option>
-                  <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
-                  <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
-                  <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
-                </select>
-              </div>
+      </div>
+    </div>
 
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
-                </div>
-                <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
-                <div></div>
-                <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
-              </div>
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
-                </div>
-                <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
-                <div></div>
-                <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
-              </div>
-              <div class="form-item grid-col-span-2">
-                <div class="slider-header">
-                  <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
-                </div>
-                <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
-                <div></div>
-                <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
-              </div>
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="invert_gyro_x" />
-                  <span data-i18n="lbl_gyro_invx">Invertir Eje X</span>
-                </label>
-              </div>
-              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="invert_gyro_y" />
-                  <span data-i18n="lbl_gyro_invy">Despertar Host por Mando</span>
-                </label>
+    <!-- Modal: Lightbar (Perfil) -->
+    <div id="modal-profile-lightbar" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
+          <div class="grid">
+            <div class="form-item">
+              <label for="lightbar_mode" data-i18n="lbl_lb_mode">Comportamiento del Color</label>
+              <select id="lightbar_mode">
+                <option value="0" data-i18n="opt_lb_0">0: Controlado por Host (Nativo)</option>
+                <option value="1" data-i18n="opt_lb_1">1: Apagado Total</option>
+                <option value="2" data-i18n="opt_lb_2">2: Favorito 1</option>
+                <option value="3" data-i18n="opt_lb_3">3: Favorito 2</option>
+                <option value="4" data-i18n="opt_lb_4">4: Favorito 3</option>
+                <option value="5" data-i18n="opt_lb_5">5: Favorito 4</option>
+                <option value="6" data-i18n="opt_lb_6">6: Nivel de Batería</option>
+                <option value="7" data-i18n="opt_lb_7">7: Arcoíris</option>
+                <option value="8" data-i18n="opt_lb_8">8: Desvanecimiento entre Favoritos</option>
+              </select>
+            </div>
+            <div class="form-item grid-col-span-2" style="justify-content:center;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="lightbar_breathing" />
+                <span data-i18n="lbl_lb_breath">Efecto Respiración (Sólo para Modo 0 y Favoritos 1 - 4)</span>
+              </label>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <label data-i18n="lbl_lb_matrix">Matriz de Colores Favoritos</label>
+              <div class="fav-color-grid">
+                <div class="fav-color-item"><label>FAV 0</label><input type="color" id="fav_color_0" value="#00ddff" /></div>
+                <div class="fav-color-item"><label>FAV 1</label><input type="color" id="fav_color_1" value="#ff0011" /></div>
+                <div class="fav-color-item"><label>FAV 2</label><input type="color" id="fav_color_2" value="#bfff00" /></div>
+                <div class="fav-color-item"><label>FAV 3</label><input type="color" id="fav_color_3" value="#ffffff" /></div>
               </div>
             </div>
           </div>
         </div>
-        
+      </div>
+    </div>
 
-        <div id="tabLightbar" class="tab-content-profile">
-          <div class="card">
-            <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
-            <div class="grid">
-              <div class="form-item">
-                <label for="lightbar_mode" data-i18n="lbl_lb_mode">Comportamiento del Color</label>
-                <select id="lightbar_mode">
-                  <option value="0" data-i18n="opt_lb_0">0: Controlado por Host (Nativo)</option>
-                  <option value="1" data-i18n="opt_lb_1">1: Apagado Total</option>
-                  <option value="2" data-i18n="opt_lb_2">2: Favorito 1</option>
-                  <option value="3" data-i18n="opt_lb_3">3: Favorito 2</option>
-                  <option value="4" data-i18n="opt_lb_4">4: Favorito 3</option>
-                  <option value="5" data-i18n="opt_lb_5">5: Favorito 4</option>
-                  <option value="6" data-i18n="opt_lb_6">6: Nivel de Batería</option>
-                  <option value="7" data-i18n="opt_lb_7">7: Arcoíris</option>
-                  <option value="8" data-i18n="opt_lb_8">8: Desvanecimiento entre Favoritos</option>
-                </select>
+    <!-- Modal: Giroscopio (Perfil) -->
+    <div id="modal-profile-gyro" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
+              <select id="gyro_activation_button" style="width: 50%;">
+                <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
+                <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
+                <option value="2" data-i18n="opt_gyro_2">2: L2</option>
+                <option value="3" data-i18n="opt_gyro_3">3: R2</option>
+                <option value="4" data-i18n="opt_gyro_4">4: L1</option>
+                <option value="5" data-i18n="opt_gyro_5">5: R1</option>
+                <option value="6" data-i18n="opt_gyro_6">6: L3</option>
+                <option value="7" data-i18n="opt_gyro_7">7: R3</option>
+                <option value="8" data-i18n="opt_gyro_8">8: Square</option>
+                <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
+                <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
+                <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
+              </select>
+            </div>
+
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
               </div>
-              <div class="form-item grid-col-span-2" style="justify-content:center;">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="lightbar_breathing" />
-                  <span data-i18n="lbl_lb_breath">Efecto Respiración (Sólo para Modo 0 y Favoritos 1 - 4)</span>
-                </label>
+              <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
+              <div></div>
+              <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
               </div>
-              <div class="form-item grid-col-span-2">
-                <label data-i18n="lbl_lb_matrix">Matriz de Colores Favoritos</label>
-                <div class="fav-color-grid">
-                  <div class="fav-color-item"><label>FAV 0</label><input type="color" id="fav_color_0" value="#00ddff" /></div>
-                  <div class="fav-color-item"><label>FAV 1</label><input type="color" id="fav_color_1" value="#ff0011" /></div>
-                  <div class="fav-color-item"><label>FAV 2</label><input type="color" id="fav_color_2" value="#bfff00" /></div>
-                  <div class="fav-color-item"><label>FAV 3</label><input type="color" id="fav_color_3" value="#ffffff" /></div>
-                </div>
+              <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
+              <div></div>
+              <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
+            </div>
+            <div class="form-item grid-col-span-2">
+              <div class="slider-header">
+                <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
               </div>
+              <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
+              <div></div>
+              <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
+            </div>
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="invert_gyro_x" />
+                <span data-i18n="lbl_gyro_invx">Invertir Eje X</span>
+              </label>
+            </div>
+            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="invert_gyro_y" />
+                <span data-i18n="lbl_gyro_invy">Despertar Host por Mando</span>
+              </label>
             </div>
           </div>
         </div>
-
-        
-
       </div>
-
-      <div class="card">
-        <h2 class="card-title" data-i18n="log_title">🖥️ Monitor WebHID</h2>
-        <textarea id="hexLog" class="hex-console" readonly placeholder="Los buffers transmitidos aparecerán aquí en formato hexadecimal..."></textarea>
-      </div>
-      
-      <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem; margin-top: 0.5rem;" data-i18n="btn_save">Guardar en Flash</button>
-
-      
     </div>
       
   <div id="toast" class="toast"></div>
@@ -939,6 +1109,9 @@
         lbl_hold_mute: "Tiempo para cambiar de modo",
         sub_hold_mute: "Cuantos milisegundos sosteniendo el botón mute para iniciar modo configuración",
 
+        sys_button_label: "Sistema",
+        aud_button_label: "Audio",
+        hap_button_label: "Hápticas",
         sys_title: "⚙️ Sistema & Emulación",
         lbl_emu_mode: "Perfil Emulado USB",
         opt_emu_auto: "2: Auto (Por Defecto)",
@@ -1090,6 +1263,9 @@
         lbl_hold_mute: "Time to switch mode",
         sub_hold_mute: "How many milliseconds to hold the mute button to start the configuration mode",
         
+        sys_button_label: "System",
+        aud_button_label: "Audio",
+        hap_button_label: "Haptics",
         sys_title: "⚙️ System & Emulation",
         lbl_emu_mode: "USB Emulated Profile",
         opt_emu_auto: "2: Auto (Default)",
@@ -1567,7 +1743,7 @@
       $('auto_mute_mode').checked               = dv.getUint8(25) === 1;
       setFieldValue('hold_mute_time', dv.getUint16(26, true));
       $('enable_host_volume_control').checked = dv.getUint8(28) === 1;
-      
+      updateInfoTabLabels();
     }
 
     async function assignProfileIndexToRead(index){
@@ -1791,6 +1967,81 @@
 
     // Inicializar idioma en la primera carga
     setLanguage('es');
+
+    // ── GESTIÓN DE LAS VENTANAS EMERGENTES (MODALES) ──
+    const modalOverlays = document.querySelectorAll('.modal-overlay');
+    const hotspots = document.querySelectorAll('.hotspot');
+    const closeBtns = document.querySelectorAll('.btn-close-modal');
+
+    // Al hacer clic en una zona brillante de la imagen, abrir su modal
+    hotspots.forEach(spot => {
+      spot.addEventListener('click', (e) => {
+        const targetId = e.currentTarget.getAttribute('data-target');
+        const modal = document.getElementById(targetId);
+        if(modal) {
+          modal.classList.add('active');
+        }
+      });
+    });
+
+    // Cerrar modal con la "X"
+    closeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.currentTarget.closest('.modal-overlay').classList.remove('active');
+        updateInfoTabLabels(); // Actualizamos la info al cerrar por si cambió algo
+      });
+    });
+
+    // Cerrar modal al hacer clic en el fondo oscuro
+    modalOverlays.forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if(e.target === modal) {
+          modal.classList.remove('active');
+          updateInfoTabLabels(); // Actualizamos la info
+        }
+      });
+    });
+
+    // ── LÓGICA DINÁMICA DE LA PESTAÑA INFORMACIÓN ──
+    function updateInfoTabLabels() {
+      // 1. Atajo Triángulo (Apagar Host)
+      const chkPoweroff = $('enable_poweroff_shortcut').checked;
+      const lblTriangle = $('lbl-triangle');
+      if (chkPoweroff) {
+        lblTriangle.textContent = "Triángulo: Apagar (ON)";
+        lblTriangle.className = "info-label active-state";
+      } else {
+        lblTriangle.textContent = "Triángulo: Apagar (OFF)";
+        lblTriangle.className = "info-label inactive-state";
+      }
+
+      // 2. Atajo Círculo (Dormir Host)
+      const chkSleep = $('enable_host_sleep').checked;
+      const lblCircle = $('lbl-circle');
+      if (chkSleep) {
+        lblCircle.textContent = "Círculo: Dormir Host (ON)";
+        lblCircle.className = "info-label active-state";
+      } else {
+        lblCircle.textContent = "Círculo: Dormir Host (OFF)";
+        lblCircle.className = "info-label inactive-state";
+      }
+
+      // 3. Joystick Izquierdo (Volumen Host vs Mando)
+      const chkHostVol = $('enable_host_volume_control').checked;
+      const lblStick = $('lbl-left-stick');
+      if (chkHostVol) {
+        lblStick.textContent = "LS: Volumen (HOST WINDOWS)";
+        lblStick.style.borderColor = "#38bdf8"; // Azul
+        lblStick.style.color = "#38bdf8";
+      } else {
+        lblStick.textContent = "LS: Volumen (MANDO)";
+        lblStick.style.borderColor = "#f59e0b"; // Naranja
+        lblStick.style.color = "#f59e0b";
+      }
+    }
+
+    // Inyectar updateInfoTabLabels al final de tu función de lectura de WebHID
+    // Busca tu función readGlobalConfig() y añádele updateInfoTabLabels() al final.
   </script>
 </body>
 </html>
