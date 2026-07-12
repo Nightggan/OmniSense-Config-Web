@@ -368,6 +368,18 @@
       white-space: nowrap;
       z-index: 20;
     }
+    .info-label-clickable {
+      position: absolute;
+      color: #f8fafc;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      pointer-events: auto; /* Permite que la etiqueta sea clicable */
+      transform: translate(-50%, -50%); /* Centra la etiqueta en su coordenada (x,y) */
+      white-space: nowrap;
+      z-index: 20;
+    }
     /* Clase auxiliar para cuando un atajo está activo (Verde) */
     .info-label.active-state {
       color: #10b981;
@@ -456,7 +468,7 @@
       <!-- PESTAÑA 1: GENERAL (Hápticas, Audio, Sistema) -->
       <!-- ============================================== -->
       <div id="tabGeneralUI" class="tab-content active">
-        <h2 class="sub-title" style="text-align: center;">Configuración Global</h2>
+        <!-- <h2 class="sub-title" style="text-align: center;">Configuración Global</h2> -->
         
         <div class="img-container">
           <img src="DSGlobal.png" class="controller-img" alt="Controlador">
@@ -483,58 +495,46 @@
       <!-- PESTAÑA 2: PERFILES (Gatillos, Lightbar, Gyro) -->
       <!-- ============================================== -->
       <div id="tabProfilesUI" class="tab-content">
-        <h2 class="sub-title" style="text-align: center;">Ajuste de Perfiles</h2>
+        <!--<h2 class="sub-title" style="text-align: center;">Ajuste de Perfiles</h2> -->
         
-        <!-- CABECERA DEL PERFIL (Igual a la que hicimos antes) -->
-        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
-          <div style="display: flex; align-items: center; min-height: 40px;">
-            <div id="readModeContainer" style="display: flex; align-items: center; gap: 0.75rem;">
-              <h2 id="profileNameDisplay" class="card-title" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.02em;">Perfil 1</h2>
-              <button id="btnEditProfileName" style="background:transparent; border:none; color:#64748b; cursor:pointer;" title="Editar Nombre">
-                <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-              </button>
-            </div>
-            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border: 1px solid #38bdf8; border-radius: 0.5rem; padding: 0.25rem 0.5rem;">
-              <input type="text" id="inputProfileName" maxlength="18" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px;">
-              <button id="btnSaveProfileName" style="background:transparent; border:none; color:#10b981; cursor:pointer;">✔️</button>
-              <button id="btnCancelProfileName" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">✖️</button>
-            </div>
-          </div>
-          <!-- ZONA: Selector de Perfiles -->
-          <div class="custom-dropdown-container">
-            <button id="profileBtn" class="pill-btn" style="background:#0f172a; border-color:#38bdf8; font-size: 1rem; padding: 0.6rem 1.2rem;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              <span id="currentProfileText">Perfil 1</span>
-            </button>
-            <div id="profileMenu" class="custom-menu">
-              <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-              <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            </div>
-          </div>
-        </div>
+        
 
         <div class="img-container">
           <img src="DSProfiles.png" class="controller-img" alt="Controlador">
           <svg class="svg-overlay" viewBox="0 0 2000 1302" preserveAspectRatio="xMidYMid meet">
             
             <!-- ZONA: Gatillo Izquierdo L2 -->
-            <polygon class="hotspot" data-target="modal-profile-triggers" points="150,50 250,50 220,100 120,100" />
+            <polygon class="hotspot" data-target="modal-profile-triggers" points="610,102,964,104,971,113,971,170,964,178,785,180,785,223,651,224,651,277,674,274,693,276,709,279,715,283,718,299,692,300,663,304,610,314,570,323,572,307,591,293,609,284,628,279,644,272,644,217,780,216,780,178,605,178,596,170,596,108" />
             
             <!-- ZONA: Gatillo Derecho R2 -->
-            <polygon class="hotspot" data-target="modal-profile-triggers" points="750,50 850,50 880,100 780,100" />
+            <polygon class="hotspot" data-target="modal-profile-triggers" points="1047,102,1397,104,1404,113,1404,171,1397,178,1218,178,1218,217,1354,217,1356,276,1372,281,1390,288,1409,297,1423,306,1427,322,1393,314,1349,307,1315,302,1289,299,1280,300,1284,279,1303,276,1319,274,1335,274,1347,274,1347,223,1213,223,1213,178,1036,178,1027,170,1029,108,1038,102" />
             
             <!-- ZONA: Touchpad (Lightbar) -->
-            <polygon class="hotspot" data-target="modal-profile-lightbar" points="320,80 680,80 650,250 350,250" />
+            <polygon class="hotspot" data-target="modal-profile-lightbar" points="1649,102,1918,104,1927,111,1925,170,1918,178,1653,178,1653,537,1167,537,1158,542,1126,544,997,546,858,544,833,539,808,523,796,500,785,466,761,332,762,322,771,314,777,343,794,440,801,473,810,493,817,505,828,518,844,525,875,528,914,528,948,525,1066,525,1133,526,1153,523,1169,512,1186,498,1195,475,1209,413,1227,316,1234,327,1236,337,1232,359,1216,436,1208,473,1202,493,1197,507,1190,519,1179,525,1642,525,1639,180,1469,178,1462,170,1460,110,1467,102" />
             
             <!-- ZONA: Empuñaduras / Costados (Giroscopio) -->
-            <polygon class="hotspot" data-target="modal-profile-gyro" points="166,464,117,595,104,638,76,652,30,613,4,517,3,413,17,314,52,179,107,52,260,26,286,43,319,181,314,216,262,288,216,358" />
-            <polygon class="hotspot" data-target="modal-profile-gyro" points="737,22,887,51,952,206,978,318,992,424,991,514,983,574,961,616,915,652,895,640,860,549,810,422,724,277,685,225,676,188,690,111,704,48,719,30" />
+            <polygon class="hotspot" data-target="modal-profile-gyro" points="670,834,665,846,658,871,646,896,635,927,626,952,614,973,598,1012,586,1023,570,1026,543,1023,520,1018,531,1007,540,993,547,977,568,917,586,866,602,821,616,786,639,738,665,691,692,645,711,615,738,579,759,553,775,534,784,518,787,503,789,489,798,505,805,521,817,532,830,539,842,542,856,546,1140,544,1153,542,1167,537,1176,532,1188,521,1197,507,1208,486,1208,500,1211,512,1216,525,1223,535,1234,548,1252,567,1264,583,1273,595,1287,613,1301,636,1317,662,1340,700,1351,724,1365,753,1381,786,1413,862,1430,915,1441,950,1450,979,1458,998,1466,1009,1478,1018,1458,1025,1432,1026,1416,1026,1402,1018,1390,995,1372,954,1354,905,1340,867,1333,850,1326,839,1317,811,1308,793,1291,777,1268,765,1169,763,1059,767,1017,768,951,765,909,765,872,763,837,763,807,761,782,760,761,760,739,763,720,768,704,777,693,788,681,806,672,829,974,829,974,1132,934,1132,821,1132,814,1139,814,1200,821,1208,1179,1208,1188,1201,1188,1139,1178,1132,1031,1132,1034,836,1324,836,1326,829,1024,829,1024,1132,966,1132,966,836" />
+
+            <!-- ZONA: Botones DPAD (Perfiles) -->
+            <polygon class="hotspot" data-target="modal-profile-profiles" points="640,397,662,397,674,406,672,449,683,461,716,459,731,465,736,479,736,511,729,519,716,521,685,519,672,530,674,571,665,581,648,585,623,583,612,574,610,549,614,530,602,519,563,523,550,514,549,496,356,496,354,300,167,299,160,291,160,231,167,223,356,223,354,178,38,178,29,173,31,110,42,102,397,104,405,115,405,168,398,178,365,178,365,223,395,226,404,231,404,291,397,299,365,300,365,484,549,484,550,470,561,459,602,463,614,449,610,408,621,399" />
           </svg>
+          <!-- Etiquetas dinámicas posicionales. Ajusta 'top' y 'left' (%) para cuadrarlos en la imagen -->
+          <!-- Gatillo Izquierdo -->
+          <div class="info-label" style="top: 10.5%;left: 39%;"><label id="lbl-left-trigger">Gatillo Izquierdo</label></div>
+
+          <!-- Gatillo Derecho -->
+          <div class="info-label" style="top: 10.5%;left: 60.6%;"><label id="lbl-right-trigger">Gatillo Derecho</label></div>
+
+          <!-- Giroscopio -->
+          <div class="info-label" style="top: 90%;left: 50%;"><label id="lbl-gyro">Giroscopio</label></div>
+
+          <!-- Lightbar -->
+          <div class="info-label" style="top: 10.5%;left: 84.9%;"><label id="lbl-lightbar">Lightbar</label></div>
+
+          <!-- Perfiles -->
+          <div class="info-label" style="top: 20%;left: 14%;"><label id="currentProfileText">Perfiles</label></div>
+          <div class="info-label" style="top: 10.5%;left: 10.9%;"><label id="lbl-profile-name">Perfil de Juego 1</label></div>
+          
         </div>
       </div>
 
@@ -986,6 +986,39 @@
       </div>
     </div>
 
+    <!-- Modal: Profile Selection (Perfil) -->
+    <div id="modal-profile-profiles" class="modal-overlay">
+      <div class="modal-content">
+        <button class="btn-close-modal">✖</button>
+        <!-- CABECERA DEL PERFIL (Igual a la que hicimos antes) -->
+        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
+          <div style="display: flex; align-items: center; min-height: 40px;">
+            <div id="readModeContainer" style="display: flex; align-items: center; gap: 0.75rem;">
+              <h2 id="profileNameDisplay" class="card-title" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.02em;">Perfil 1</h2>
+              <button id="btnEditProfileName" style="background:transparent; border:none; color:#64748b; cursor:pointer;" title="Editar Nombre">
+                <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+              </button>
+            </div>
+            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border: 1px solid #38bdf8; border-radius: 0.5rem; padding: 0.25rem 0.5rem;">
+              <input type="text" id="inputProfileName" maxlength="18" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px;">
+              <button id="btnSaveProfileName" style="background:transparent; border:none; color:#10b981; cursor:pointer;">✔️</button>
+              <button id="btnCancelProfileName" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">✖️</button>
+            </div>
+          </div>
+        </div>
+        <!-- ZONA: Selector de Perfiles -->
+        
+          
+          
+            <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          
+        
+      </div>
+    </div>
+    
     <!-- Modal: Giroscopio (Perfil) -->
     <div id="modal-profile-gyro" class="modal-overlay">
       <div class="modal-content">
@@ -1112,6 +1145,10 @@
         sys_button_label: "Sistema",
         aud_button_label: "Audio",
         hap_button_label: "Hápticas",
+        lft_trigger_button_label: "Gatillo Izquierdo",
+        rgt_trigger_button_label: "Gatillo Derecho",
+        gyro_button_label: "Giroscopio",
+        lbr_button_label: "Lightbar",
         sys_title: "⚙️ Sistema & Emulación",
         lbl_emu_mode: "Perfil Emulado USB",
         opt_emu_auto: "2: Auto (Por Defecto)",
@@ -1266,6 +1303,10 @@
         sys_button_label: "System",
         aud_button_label: "Audio",
         hap_button_label: "Haptics",
+        lft_trigger_button_label: "Left Trigger",
+        rgt_trigger_button_label: "Right Trigger",
+        gyro_button_label: "Gyroscope",
+        lbr_button_label: "Lightbar",
         sys_title: "⚙️ System & Emulation",
         lbl_emu_mode: "USB Emulated Profile",
         opt_emu_auto: "2: Auto (Default)",
@@ -1397,6 +1438,7 @@
       document.querySelectorAll('.profile-item span').forEach((span, idx) => {
         span.textContent = `${t('profile_lbl')} ${idx+1}`;
       });
+      updateInfoTabLabels();
     }
 
     const t = (key) => i18n[currentLang][key] || key;
@@ -1476,11 +1518,11 @@
     });
 
     // Dropdown Perfil
-    $('profileBtn').addEventListener('click', (e) => { 
+    /*$('profileBtn').addEventListener('click', (e) => { 
       e.stopPropagation(); 
       $('profileMenu').classList.toggle('show'); 
       $('langMenu').classList.remove('show'); 
-    });
+    });*/
     
     document.querySelectorAll('.profile-item').forEach(item => {
       item.addEventListener('click', async (e) => {
@@ -1499,7 +1541,7 @@
         document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active'));
         e.currentTarget.classList.add('active');
         $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfileOffset}`;
-        $('profileMenu').classList.remove('show');
+        //$('profileMenu').classList.remove('show');
 
         // 2. Procesar la comunicación de red
         if(device) {
@@ -1546,6 +1588,7 @@
         
         editContainer.style.display = 'none';
         readContainer.style.display = 'flex'; // Volvemos a mostrar el H2
+      updateInfoTabLabels();
     };
 
     const cancelNameChange = () => {
@@ -1598,6 +1641,25 @@
         num.addEventListener('input', () => { slider.value = num.value; });
       }
     });
+
+    function getSelectedOptionText(selectId) {
+      const select = $(selectId);
+      if (!select) return '';
+      const selectedOption = select.selectedOptions && select.selectedOptions[0];
+      return ((selectedOption && selectedOption.textContent) ? selectedOption.textContent : select.value).trim();
+    }
+
+    function syncTriggerLabel(labelId, selectId) {
+      const label = $(labelId);
+      if (!label) return;
+      label.textContent = getSelectedOptionText(selectId);
+    }
+
+    function syncProfileNameLabel() {
+      const label = $('lbl-profile-name');
+      if (!label) return;
+      label.textContent = lblProfileName ? lblProfileName.textContent : '';
+    }
 
     const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -1699,6 +1761,7 @@
       $('invert_gyro_y').checked = false;      
       // Reseteo visual de nombre
       lblProfileName.innerText = `Perfil de Juego ${currentProfileOffset}`;
+      updateInfoTabLabels();
 
       toast(t('msg_def_ok'), true);
     }
@@ -1807,6 +1870,7 @@
       setFieldValue('trigger_rumble_mode', dv.getUint8(41));
       
       lblProfileName.innerText = readProfileNameFromDevice(dv, 42);
+      updateInfoTabLabels();
     }
 
     // Proceso completo de guardado: Global -> Profile -> Flash
@@ -2004,6 +2068,11 @@
 
     // ── LÓGICA DINÁMICA DE LA PESTAÑA INFORMACIÓN ──
     function updateInfoTabLabels() {
+      syncProfileNameLabel();
+      syncTriggerLabel('lbl-left-trigger', 'trigger_left_mode');
+      syncTriggerLabel('lbl-right-trigger', 'trigger_right_mode');
+      syncTriggerLabel('lbl-gyro', 'gyro_activation_button');
+      syncTriggerLabel('lbl-lightbar', 'lightbar_mode');
       // 1. Atajo Triángulo (Apagar Host)
       const chkPoweroff = $('enable_poweroff_shortcut').checked;
       const lblTriangle = $('lbl-triangle');
@@ -2039,6 +2108,11 @@
         lblStick.style.color = "#f59e0b";
       }
     }
+
+    $('trigger_left_mode').addEventListener('change', updateInfoTabLabels);
+    $('trigger_right_mode').addEventListener('change', updateInfoTabLabels);
+    $('gyro_activation_button').addEventListener('change', updateInfoTabLabels);
+    $('lightbar_mode').addEventListener('change', updateInfoTabLabels);
 
     // Inyectar updateInfoTabLabels al final de tu función de lectura de WebHID
     // Busca tu función readGlobalConfig() y añádele updateInfoTabLabels() al final.
