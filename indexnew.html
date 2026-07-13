@@ -11,7 +11,7 @@
   <style>
     /* ── Upstream CSS ─────────────────────── */
     @layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000}}}@layer tables{@media (max-width:480px){.responsive-table{display:block;width:100%}.responsive-table tbody,.responsive-table td,.responsive-table tr{display:block;width:100%}.responsive-table tr{margin-bottom:1rem;border:1px solid #334155;border-radius:.375rem;padding:.5rem}.responsive-table td{text-align:right;padding-left:50%;position:relative}.responsive-table td:before{content:attr(data-label);position:absolute;left:.5rem;width:45%;text-align:left;font-weight:600;color:#94a3b8}}}
-    :root{--background:#0b1120;--foreground:#f8fafc;--card:#1e293b;--card-foreground:#f8fafc;--popover:#0b1120;--popover-foreground:#f8fafc;--primary:#3b82f6;--primary-foreground:#f8fafc;--secondary:#334155;--secondary-foreground:#f8fafc;--muted:#334155;--muted-foreground:#94a3b8;--accent:#334155;--accent-foreground:#f8fafc;--destructive:#ef4444;--destructive-foreground:#f8fafc;--border:#334155;--input:#334155;--ring:#1d4ed8;--radius:.5rem; --font-main: 'Space Grotesk', sans-serif; --accent-sec: #22C55E; --accent-sec-hover: #4ADE80; --accent-sec-border: #15803D;}
+    :root{--background:#0b1120;--foreground:#f8fafc;--card:#1e293b;--card-foreground:#f8fafc;--popover:#0b1120;--popover-foreground:#f8fafc;--primary:#475569;--primary-foreground:#f8fafc;--secondary:#334155;--secondary-foreground:#f8fafc;--muted:#334155;--muted-foreground:#94a3b8;--accent:#334155;--accent-foreground:#f8fafc;--destructive:#ef4444;--destructive-foreground:#f8fafc;--border:#334155;--input:#334155;--ring:#1d4ed8;--radius:.5rem; --font-main: 'Space Grotesk', sans-serif; --accent-sec: #22C55E; --accent-sec-hover: #4ADE80; --accent-sec-border: #15803D;}
     * {
       box-sizing: border-box;
       border-color: var(--border);
@@ -44,12 +44,12 @@
     input[type=number]:focus,select:focus{border-color:var(--primary);}
     input[type=checkbox]{height:1rem;width:1rem;accent-color:var(--primary);}
     .checkbox-container{display:flex;align-items:center;gap:.5rem;user-select:none;cursor:pointer}
-    .btn-container{display:flex;flex-wrap:wrap;gap:.75rem}
+    .btn-container{display:flex;flex-wrap:wrap;border-bottom:2px solid var(--border); width:100%;margin-bottom:1rem}
     button{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);font-size:.875rem;font-weight:500;padding:.5rem 1rem;cursor:pointer;outline:none;transition:all .15s ease;border:1px solid transparent}
-    .btn-primary{background-color:var(--primary);color:var(--primary-foreground)}
-    .btn-primary:hover{background-color:#2563eb}
-    .btn-secondary{background-color:var(--secondary);color:var(--secondary-foreground);border-color:var(--border)}
-    .btn-secondary:hover{background-color:#475569}
+    .btn-primary{background-color:transparent;color:var(--primary-foreground);width:20%;border-bottom: 2px solid transparent;border-radius: 0rem;}
+    .btn-primary:hover{color:var(--accent-sec-hover);border-bottom: 2px solid var(--accent-sec);border-radius: 0rem;}
+    .btn-secondary{background-color:transparent;color:var(--primary-foreground);border-bottom: 2px solid transparent;border-radius: 0rem;}
+    .btn-secondary:hover{color:var(--accent-sec-hover);border-bottom: 2px solid var(--accent-sec);border-radius: 0rem;}
     .btn-destructive{background-color:var(--destructive);color:var(--destructive-foreground)}
     .btn-destructive:hover{background-color:#dc2626}
     .toast{position:fixed;bottom:1.5rem;right:1.5rem;background-color:#10b981;color:#fff;padding:.75rem 1.25rem;border-radius:var(--radius);box-shadow:0 4px 6px rgba(0,0,0,.1);display:none;z-index:50;font-size:.875rem;font-weight:500}
@@ -125,13 +125,12 @@
       align-items: center;
       justify-content: center;
       white-space: nowrap;
-      border-radius: 0.375rem;
       padding: 0.5rem 1rem;
       font-size: 0.875rem;
       font-weight: 600;
       color: #94a3b8;
       background: transparent;
-      border: none;
+      border-bottom: 2px solid #22C55E;
       cursor: pointer;
       transition: all 0.2s ease;
         
@@ -223,13 +222,13 @@
       display: none;
       flex-direction: column;
       gap: 1.5rem;
-      animation: fadeInTab 0.2s ease-out;
+      animation: fadeInTab 0s ease-out;
     }
     .tab-content.active {
       display: flex;
     }
     @keyframes fadeInTab {
-      from { opacity: 0; transform: translateY(2px); }
+      from { opacity: 0; transform: translateY(0px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -368,9 +367,11 @@
       white-space: nowrap;
       z-index: 20;
     }
-    .info-label-clickable {
+    .info-label-dark {
       position: absolute;
       color: #f8fafc;
+      background-color: #1e293b;
+      border: 1px solid #334155;
       padding: 0.4rem 0.8rem;
       border-radius: 0.375rem;
       font-size: 0.75rem;
@@ -397,6 +398,9 @@
       <div class="title-group">
         <span class="super-title">WEBHID</span>
         <h1 class="main-title" data-i18n="app_title">OmniSense Dongle</h1>
+      </div>
+      <div style="margin:0 0 0.4rem 0; align-self:flex-end; width: 100%;">
+        <span id="statusText" style="font-weight:500;color:#94a3b8;" data-i18n="status_disconnected">Desconectado</span>
       </div>
       
       <div class="header-controls">
@@ -429,39 +433,39 @@
       </div>
     </div>
 
-    <div id="reconnectWarning" class="warning-banner" data-i18n="warn_reconnect">
+    <!--<div id="reconnectWarning" class="warning-banner" data-i18n="warn_reconnect">
       ⚠️ Configuración guardada en la Flash. Debes reconectar el adaptador para aplicar los cambios globales de emulación de audio/mandos.
-    </div>
+    </div>-->
 
-    <div class="card">
-      <div class="grid" style="grid-template-columns: auto 1fr; align-items: center;">
+    
+      <!--<div class="grid" style="grid-template-columns: auto 1fr; align-items: center;">
         <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">
           <h2 class="card-title"  data-i18n="status_title">🔌 Estado del Dongle</h2>
         </div>
         <div style="margin:0 0 1.5rem 0;">
           <span id="statusText" style="font-weight:500;color:#94a3b8;" data-i18n="status_disconnected">Desconectado</span>
         </div>
-      </div>
+      </div>-->
       
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
         
         <div class="btn-container">
           <button id="btnConnect" class="btn-primary" data-i18n="btn_connect">Conectar</button>
-          <button id="btnRead" class="btn-secondary" style="display:none" data-i18n="btn_read">Leer Config</button>
-          <button id="btnDefaults" class="btn-secondary" style="display:none" data-i18n="btn_defaults">Por Defecto</button>
+          <button id="btnRead" class="btn-primary" style="display:none" data-i18n="btn_read">Leer Config</button>
+          <button id="btnDefaults" class="btn-primary" style="display:none" data-i18n="btn_defaults">Por Defecto</button>
           <button id="btnSave" class="btn-primary" style="display:none" data-i18n="btn_save">Guardar en Flash</button>
-          <button id="btnReconnect" class="btn-destructive" style="display:none" data-i18n="btn_reconnect">Forzar Reconexión</button>
+          <button id="btnReconnect" class="btn-primary" style="display:none" data-i18n="btn_reconnect">Forzar Reconexión</button>
         </div>
       </div>
-    </div>
+    
     <!-- Nueva UI -->
     <div id="configForm" style="display:none;flex-direction:column;gap:1.5rem;">
       
       <!-- PESTAÑAS PRINCIPALES -->
-      <div class="tabs-list">
-          <button class="tab-trigger active" data-tab="tabGeneralUI" data-i18n="tab_global">General</button>
-          <button class="tab-trigger" data-tab="tabProfilesUI" data-i18n="tab_profiles">Perfiles</button>
-          <button class="tab-trigger" data-tab="tabInfoUI" data-i18n="tab_info">Información</button>  
+      <div class="btn-container">
+          <button class="tab-trigger active" style="border-radius: 0; "data-tab="tabGeneralUI" data-i18n="tab_global">General</button>
+          <button class="tab-trigger" style="border-radius: 0; "data-tab="tabProfilesUI" data-i18n="tab_profiles">Perfiles</button>
+          <button class="tab-trigger" style="border-radius: 0; "data-tab="tabInfoUI" data-i18n="tab_info">Información</button>  
       </div>
 
       <!-- ============================================== -->
@@ -503,11 +507,8 @@
           <img src="DSProfiles.png" class="controller-img" alt="Controlador">
           <svg class="svg-overlay" viewBox="0 0 2000 1302" preserveAspectRatio="xMidYMid meet">
             
-            <!-- ZONA: Gatillo Izquierdo L2 -->
-            <polygon class="hotspot" data-target="modal-profile-triggers" points="610,102,964,104,971,113,971,170,964,178,785,180,785,223,651,224,651,277,674,274,693,276,709,279,715,283,718,299,692,300,663,304,610,314,570,323,572,307,591,293,609,284,628,279,644,272,644,217,780,216,780,178,605,178,596,170,596,108" />
-            
-            <!-- ZONA: Gatillo Derecho R2 -->
-            <polygon class="hotspot" data-target="modal-profile-triggers" points="1047,102,1397,104,1404,113,1404,171,1397,178,1218,178,1218,217,1354,217,1356,276,1372,281,1390,288,1409,297,1423,306,1427,322,1393,314,1349,307,1315,302,1289,299,1280,300,1284,279,1303,276,1319,274,1335,274,1347,274,1347,223,1213,223,1213,178,1036,178,1027,170,1029,108,1038,102" />
+            <!-- ZONA: Gatillos L2/R2 -->
+            <polygon class="hotspot" data-target="modal-profile-triggers" points="570,322,572,307,589,295,607,286,621,283,633,279,644,276,644,216,778,216,777,177,603,177,598,171,596,111,605,104,962,104,969,111,969,134,1029,134,1029,110,1036,104,1397,104,1402,113,1402,171,1395,177,1220,177,1220,216,1354,216,1356,277,1372,283,1391,290,1409,299,1425,307,1425,322,1388,313,1352,306,1314,300,1296,299,1280,297,1285,281,1305,277,1324,276,1347,276,1345,226,1213,224,1213,177,1034,177,1029,170,1029,145,969,145,969,170,964,177,787,177,787,224,653,226,653,274,672,276,688,276,706,279,713,284,715,299,695,299,667,302,644,306,616,311,593,316" />
             
             <!-- ZONA: Touchpad (Lightbar) -->
             <polygon class="hotspot" data-target="modal-profile-lightbar" points="1649,102,1918,104,1927,111,1925,170,1918,178,1653,178,1653,537,1167,537,1158,542,1126,544,997,546,858,544,833,539,808,523,796,500,785,466,761,332,762,322,771,314,777,343,794,440,801,473,810,493,817,505,828,518,844,525,875,528,914,528,948,525,1066,525,1133,526,1153,523,1169,512,1186,498,1195,475,1209,413,1227,316,1234,327,1236,337,1232,359,1216,436,1208,473,1202,493,1197,507,1190,519,1179,525,1642,525,1639,180,1469,178,1462,170,1460,110,1467,102" />
@@ -518,7 +519,7 @@
             <!-- ZONA: Botones DPAD (Perfiles) -->
             <polygon class="hotspot" data-target="modal-profile-profiles" points="640,397,662,397,674,406,672,449,683,461,716,459,731,465,736,479,736,511,729,519,716,521,685,519,672,530,674,571,665,581,648,585,623,583,612,574,610,549,614,530,602,519,563,523,550,514,549,496,356,496,354,300,167,299,160,291,160,231,167,223,356,223,354,178,38,178,29,173,31,110,42,102,397,104,405,115,405,168,398,178,365,178,365,223,395,226,404,231,404,291,397,299,365,300,365,484,549,484,550,470,561,459,602,463,614,449,610,408,621,399" />
           </svg>
-          <!-- Etiquetas dinámicas posicionales. Ajusta 'top' y 'left' (%) para cuadrarlos en la imagen -->
+          <!-- Etiquetas dinámicas posicionales.-->
           <!-- Gatillo Izquierdo -->
           <div class="info-label" style="top: 10.5%;left: 39%;"><label id="lbl-left-trigger">Gatillo Izquierdo</label></div>
 
@@ -534,6 +535,17 @@
           <!-- Perfiles -->
           <div class="info-label" style="top: 20%;left: 14%;"><label id="currentProfileText">Perfiles</label></div>
           <div class="info-label" style="top: 10.5%;left: 10.9%;"><label id="lbl-profile-name">Perfil de Juego 1</label></div>
+
+
+          <!-- Etiquetas que siguen el cursor -->
+          <!-- Gatillos-->
+          <div id="follow-label-triggers" class="info-label-dark" style="top: 10.5%;left: 60.6%;display:none;"><label data-i18n="triggers_label">Gatillos</label></div>
+
+          <!-- Giroscopio -->
+          <div id="follow-label-gyro" class="info-label-dark" style="top: 90%;left: 50%;display:none;"><label data-i18n="gyro_button_label">Giroscopio</label></div>
+
+          <!-- Lightbar -->
+          <div id="follow-label-lightbar" class="info-label-dark" style="top: 10.5%;left: 84.9%;display:none;"><label data-i18n="lbr_button_label">Lightbar</label></div>
           
         </div>
       </div>
@@ -988,34 +1000,34 @@
 
     <!-- Modal: Profile Selection (Perfil) -->
     <div id="modal-profile-profiles" class="modal-overlay">
-      <div class="modal-content">
+      <div class="modal-content" style="min-height: 15rem;">
         <button class="btn-close-modal">✖</button>
         <!-- CABECERA DEL PERFIL (Igual a la que hicimos antes) -->
-        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
-          <div style="display: flex; align-items: center; min-height: 40px;">
-            <div id="readModeContainer" style="display: flex; align-items: center; gap: 0.75rem;">
-              <h2 id="profileNameDisplay" class="card-title" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.02em;">Perfil 1</h2>
+        <div class="profile-separator card" style="width: 100%; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
+          <div style="width: 100%; display: flex; align-items: center; min-height: 3rem;">
+            <div id="readModeContainer" style=" width: 100%; display: flex; align-items: center; gap: 0.75rem;">
+              <h2 id="profileNameDisplay" class="card-title" style="width:90%; font-size: 1.8rem; letter-spacing: -0.02em; margin: 0;">Perfil 1</h2>
               <button id="btnEditProfileName" style="background:transparent; border:none; color:#64748b; cursor:pointer;" title="Editar Nombre">
                 <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
               </button>
             </div>
-            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border: 1px solid #38bdf8; border-radius: 0.5rem; padding: 0.25rem 0.5rem;">
-              <input type="text" id="inputProfileName" maxlength="18" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px;">
-              <button id="btnSaveProfileName" style="background:transparent; border:none; color:#10b981; cursor:pointer;">✔️</button>
-              <button id="btnCancelProfileName" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">✖️</button>
+            <div id="profileNameEditContainer" style="width: 100%; display: none; align-items: center; gap: 0.5rem; background: #0f172a; border: 1px solid #38bdf8; border-radius: 0.5rem; padding: 0.25rem 0.5rem;">
+              <input type="text" id="inputProfileName" maxlength="18" style="width: 80%; background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700;">
+              <button id="btnSaveProfileName" style="width: 10%; background:transparent; border:none; color:#10b981; cursor:pointer;">✔️</button>
+              <button id="btnCancelProfileName" style="width: 10%; background:transparent; border:none; color:#ef4444; cursor:pointer;">✖️</button>
             </div>
           </div>
         </div>
         <!-- ZONA: Selector de Perfiles -->
-        
+        <div class="profile-separator card" style="width: 100%; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
+          <div class="profile-menu" style="width: 100%; display: flex; flex-direction: row; align-items: center; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem;">        
           
-          
-            <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-          
-        
+            <div style="width: 25%;" class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div style="width: 25%;" class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div style="width: 25%;" class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div style="width: 25%;" class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -1084,6 +1096,26 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal: Confirmación de acciones -->
+    <div id="modal-confirm-action" class="modal-overlay">
+      <div class="modal-content" style="max-width: 480px;">
+        <button id="btn-close-confirm" class="btn-close-modal">✖</button>
+        <div class="card" style="padding-top:2rem;">
+          <div style="gap:1rem;">
+            <div class="form-item grid-col-span-2">
+              <label id="confirmActionMessage" data-i18n="msg_confirm_flash" style="display: block; text-align: center; font-size:0.95rem; line-height:1.5; color:#e2e8f0;">
+                ¿Estás seguro de que deseas sobrescribir la configuración actual en la Flash? Esto no se puede deshacer.
+              </label>
+            </div>
+            <div style="width: 100%; display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:1rem;">
+              <button id="btnConfirmNo" class="btn-secondary" data-i18n="msg_no">No</button>
+              <button id="btnConfirmYes" class="btn-secondary" data-i18n="msg_yes">Sí</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
       
   <div id="toast" class="toast"></div>
 
@@ -1103,7 +1135,7 @@
       es: {
         app_title: "OmniSense Dongle",
         warn_reconnect: "Configuración guardada en la Flash",
-        status_title: "Estado del Dongle",
+        status_title: "Estado ",
         status_disconnected: "Desconectado",
         btn_connect: "Conectar",
         btn_disconnect: "Desconectar",
@@ -1145,6 +1177,7 @@
         sys_button_label: "Sistema",
         aud_button_label: "Audio",
         hap_button_label: "Hápticas",
+        triggers_label: "Gatillos",
         lft_trigger_button_label: "Gatillo Izquierdo",
         rgt_trigger_button_label: "Gatillo Derecho",
         gyro_button_label: "Giroscopio",
@@ -1256,12 +1289,19 @@
         msg_save_err: "Error al salvar en Flash:",
         msg_recon_ok: "Orden de reconexión USB despachada.",
         msg_recon_err: "Fallo al reconectar:",
-        msg_def_ok: "Valores por defecto cargados. Haz clic en 'Guardar en Flash' para aplicarlos."
+        msg_def_ok: "Valores por defecto cargados. Haz clic en 'Guardar en Flash' para aplicarlos.",
+        msg_confirm_flash: "¿Estás seguro de que deseas sobrescribir la configuración actual en la Flash? Esto no se puede deshacer.",
+        msg_confirm_def: "¿Estás seguro de que deseas cargar los valores por defecto? Se perderán los cambios no guardados.",
+        msg_confirm_recon: "¿Estás seguro de que deseas reconectar el dongle? Se perderán los cambios no guardados.",
+        msg_confirm_disconnect: "¿Estás seguro de que deseas desconectar el dongle? Se perderán los cambios no guardados.",
+        msg_confirm_read: "¿Estás seguro de que deseas leer la configuración del dongle? Se perderán los cambios no guardados.",
+        msg_yes: "Sí",
+        msg_no: "No"
       },
       en: {
         app_title: "OmniSense Dongle",
         warn_reconnect: "Settings saved to Flash",
-        status_title: "Dongle Status",
+        status_title: "Status ",
         status_disconnected: "Disconnected",
         btn_connect: "Connect",
         btn_disconnect: "Disconnect",
@@ -1303,6 +1343,7 @@
         sys_button_label: "System",
         aud_button_label: "Audio",
         hap_button_label: "Haptics",
+        triggers_label: "Triggers",
         lft_trigger_button_label: "Left Trigger",
         rgt_trigger_button_label: "Right Trigger",
         gyro_button_label: "Gyroscope",
@@ -1415,7 +1456,14 @@
         msg_save_err: "Error saving to Flash:",
         msg_recon_ok: "USB Reconnect command dispatched.",
         msg_recon_err: "Failed to reconnect:",
-        msg_def_ok: "Default values loaded. Click 'Save to Flash' to apply them."
+        msg_def_ok: "Default values loaded. Click 'Save to Flash' to apply them.",
+        msg_confirm_flash: "¿Are you sure you want to overwrite the current configuration in Flash? This cannot be undone.",
+        msg_confirm_def: "¿Are you sure you want to load the default values? Unsaved changes will be lost.",
+        msg_confirm_recon: "¿Are you sure you want to reconnect the dongle? Unsaved changes will be lost.",
+        msg_confirm_disconnect: "¿Are you sure you want to disconnect the dongle? Unsaved changes will be lost.",
+        msg_confirm_read: "¿Are you sure you want to read the dongle configuration? Unsaved changes will be lost.",
+        msg_yes: "Yes",
+        msg_no: "No"
       }
     };
 
@@ -1442,6 +1490,47 @@
     }
 
     const t = (key) => i18n[currentLang][key] || key;
+
+    function askConfirmation(i18nKey) {
+      return new Promise((resolve) => {
+        const modal = $('modal-confirm-action');
+        const msgLabel = $('confirmActionMessage');
+        const yesBtn = $('btnConfirmYes');
+        const noBtn = $('btnConfirmNo');
+        const closeBtn = $('btn-close-confirm');
+
+        const cleanup = () => {
+          yesBtn.removeEventListener('click', onYes);
+          noBtn.removeEventListener('click', onNo);
+          closeBtn.removeEventListener('click', onNo);
+          modal.removeEventListener('click', onOverlay);
+        };
+
+        const finish = (result) => {
+          cleanup();
+          modal.classList.remove('active');
+          resolve(result);
+        };
+
+        const onYes = () => finish(true);
+        const onNo = () => finish(false);
+        const onOverlay = (e) => {
+          if (e.target === modal) finish(false);
+        };
+
+        msgLabel.setAttribute('data-i18n', i18nKey);
+        msgLabel.textContent = t(i18nKey);
+        yesBtn.textContent = t('msg_yes');
+        noBtn.textContent = t('msg_no');
+
+        yesBtn.addEventListener('click', onYes);
+        noBtn.addEventListener('click', onNo);
+        closeBtn.addEventListener('click', onNo);
+        modal.addEventListener('click', onOverlay);
+
+        modal.classList.add('active');
+      });
+    }
 
     // Dropdown Idioma
     $('langBtn').addEventListener('click', (e) => { 
@@ -1689,7 +1778,7 @@
       $('btnSave').style.display = inlineStyle;
       $('btnReconnect').style.display = inlineStyle;
       
-      if (!conn) { $('reconnectWarning').style.display = 'none'; $('hexLog').value = ''; }
+      if (!conn) { $('hexLog').value = ''; }
     }
 
     const hexToRgb = hex => {
@@ -1888,7 +1977,7 @@
         logBufferToConsole("OUT (0xF6) -> Cmd 0x02 [Guardar a Flash]", 0xF6, flashBuf);
 
         toast(t('msg_save_ok'));
-        $('reconnectWarning').style.display = 'block';
+        //$('reconnectWarning').style.display = 'block';
       } catch (e) { toast(`${t('msg_save_err')} ${e.message}`, false); }
     }
 
@@ -1987,13 +2076,15 @@
         await device.sendFeatureReport(0xF6, reqBuf);
         logBufferToConsole("OUT (0xF6) -> Cmd 0x03 [Reconexión]", 0xF6, reqBuf);
         toast(t('msg_recon_ok'));
-        $('reconnectWarning').style.display = 'none';
+        //$('reconnectWarning').style.display = 'none';
       } catch (e) { toast(`${t('msg_recon_err')} ${e.message}`, false); }
     }
 
     // ── 6. CONEXIÓN INICIAL ──
     $('btnConnect').addEventListener('click', async () => {
       if (device) {
+        const confirmedDisconnect = await askConfirmation('msg_confirm_disconnect');
+        if (!confirmedDisconnect) return;
         await device.close(); device = null; setConnected(false); return;
       }
       if (!navigator.hid) {
@@ -2023,11 +2114,26 @@
       } catch (e) { toast(`${t('msg_conn_fail')} ${e.message}`, false); }
     });
 
-    $('btnRead').addEventListener('click', readConfig);
-    $('btnDefaults').addEventListener('click', setDefaults); 
-    $('btnSave').addEventListener('click', saveConfig);
-    $('btnSaveBottom').addEventListener('click', saveConfig); 
-    $('btnReconnect').addEventListener('click', forceReconnect);
+    $('btnRead').addEventListener('click', async () => {
+      const confirmed = await askConfirmation('msg_confirm_read');
+      if (confirmed) await readConfig();
+    });
+    $('btnDefaults').addEventListener('click', async () => {
+      const confirmed = await askConfirmation('msg_confirm_def');
+      if (confirmed) setDefaults();
+    });
+    $('btnSave').addEventListener('click', async () => {
+      const confirmed = await askConfirmation('msg_confirm_flash');
+      if (confirmed) await saveConfig();
+    });
+    $('btnSaveBottom').addEventListener('click', async () => {
+      const confirmed = await askConfirmation('msg_confirm_flash');
+      if (confirmed) await saveConfig();
+    });
+    $('btnReconnect').addEventListener('click', async () => {
+      const confirmed = await askConfirmation('msg_confirm_recon');
+      if (confirmed) await forceReconnect();
+    });
 
     // Inicializar idioma en la primera carga
     setLanguage('es');
@@ -2037,15 +2143,110 @@
     const hotspots = document.querySelectorAll('.hotspot');
     const closeBtns = document.querySelectorAll('.btn-close-modal');
 
+    // Etiquetas que siguen el cursor en zonas de la pestaña Perfiles
+    const followLabelMap = {
+      'modal-profile-triggers': $('follow-label-triggers'),
+      'modal-profile-gyro': $('follow-label-gyro'),
+      'modal-profile-lightbar': $('follow-label-lightbar')
+    };
+
+    function hideAllFollowLabels() {
+      Object.values(followLabelMap).forEach(label => {
+        if (label) label.style.display = 'none';
+      });
+    }
+
+    function moveFollowLabel(labelEl, event) {
+      if (!labelEl) return;
+      const container = labelEl.closest('.img-container');
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      labelEl.style.display = 'block';
+
+      const cursorX = event.clientX - rect.left;
+      const cursorY = event.clientY - rect.top;
+
+      // Offset base para que la etiqueta no quede debajo del puntero
+      const cursorOffsetX = 18;
+      const cursorOffsetY = -14;
+      const safePadding = 8;
+
+      let drawX = cursorX + cursorOffsetX;
+      let drawY = cursorY + cursorOffsetY;
+
+      // Si se aproxima al borde derecho, mostrarla al lado izquierdo del cursor
+      if (drawX + labelEl.offsetWidth / 2 > rect.width - safePadding) {
+        drawX = cursorX - cursorOffsetX;
+      }
+
+      // Si se aproxima al borde superior, mostrarla por debajo del cursor
+      if (drawY - labelEl.offsetHeight / 2 < safePadding) {
+        drawY = cursorY + Math.abs(cursorOffsetY);
+      }
+
+      // Clamp final para no salir de la imagen
+      drawX = Math.max(safePadding, Math.min(rect.width - safePadding, drawX));
+      drawY = Math.max(safePadding, Math.min(rect.height - safePadding, drawY));
+
+      const x = (drawX / rect.width) * 103;
+      const y = (drawY / rect.height) * 92;
+
+      labelEl.style.left = `${x}%`;
+      labelEl.style.top = `${y}%`;
+    }
+
+    function showOnlyFollowLabel(activeLabel, event) {
+      Object.values(followLabelMap).forEach(label => {
+        if (!label) return;
+        if (label === activeLabel) moveFollowLabel(label, event);
+        else label.style.display = 'none';
+      });
+    }
+
     // Al hacer clic en una zona brillante de la imagen, abrir su modal
     hotspots.forEach(spot => {
+      const targetId = spot.getAttribute('data-target');
+      const followLabel = followLabelMap[targetId];
+
+      if (followLabel) {
+        spot.addEventListener('mouseenter', (e) => {
+          showOnlyFollowLabel(followLabel, e);
+        });
+
+        spot.addEventListener('mousemove', (e) => {
+          showOnlyFollowLabel(followLabel, e);
+        });
+
+        spot.addEventListener('mouseleave', () => {
+          followLabel.style.display = 'none';
+        });
+      }
+
       spot.addEventListener('click', (e) => {
+        hideAllFollowLabels();
         const targetId = e.currentTarget.getAttribute('data-target');
         const modal = document.getElementById(targetId);
         if(modal) {
           modal.classList.add('active');
         }
       });
+    });
+
+    // Si el puntero no está sobre una zona con etiqueta dinámica, se ocultan todas.
+    document.addEventListener('mousemove', (e) => {
+      const hoveredSpot = e.target.closest('.hotspot');
+      if (!hoveredSpot) {
+        hideAllFollowLabels();
+        return;
+      }
+      const targetId = hoveredSpot.getAttribute('data-target');
+      const followLabel = followLabelMap[targetId];
+      if (!followLabel) {
+        hideAllFollowLabels();
+        return;
+      }
+      showOnlyFollowLabel(followLabel, e);
     });
 
     // Cerrar modal con la "X"
