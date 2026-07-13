@@ -46,10 +46,11 @@
     .checkbox-container{display:flex;align-items:center;gap:.5rem;user-select:none;cursor:pointer}
     .btn-container{display:flex;flex-wrap:wrap;border-bottom:2px solid var(--border); width:100%;margin-bottom:1rem}
     button{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);font-size:.875rem;font-weight:500;padding:.5rem 1rem;cursor:pointer;outline:none;transition:all .15s ease;border:1px solid transparent}
-    .btn-primary{background-color:transparent;color:var(--primary-foreground);width:20%;border-bottom: 2px solid transparent;border-radius: 0rem;}
+    .btn-primary{background-color:transparent;color:var(--primary-foreground);border-bottom: 2px solid transparent;border-radius: 0rem;}
     .btn-primary:hover{color:var(--accent-sec-hover);border-bottom: 2px solid var(--accent-sec);border-radius: 0rem;}
-    .btn-secondary{background-color:transparent;color:var(--primary-foreground);border-bottom: 2px solid transparent;border-radius: 0rem;}
-    .btn-secondary:hover{color:var(--accent-sec-hover);border-bottom: 2px solid var(--accent-sec);border-radius: 0rem;}
+    .btn-primary.active{color:var(--accent-sec-hover);border-bottom: 2px solid var(--accent-sec);border-radius: 0rem;}
+    .btn-secondary{background-color:var(--primary);color:var(--primary-foreground);border-radius: 0.375rem;}
+    .btn-secondary:hover{background-color:var(--muted-foreground);border-radius: 0.375rem;}
     .btn-destructive{background-color:var(--destructive);color:var(--destructive-foreground)}
     .btn-destructive:hover{background-color:#dc2626}
     .toast{position:fixed;bottom:1.5rem;right:1.5rem;background-color:#10b981;color:#fff;padding:.75rem 1.25rem;border-radius:var(--radius);box-shadow:0 4px 6px rgba(0,0,0,.1);display:none;z-index:50;font-size:.875rem;font-weight:500}
@@ -411,17 +412,17 @@
               <line x1="2" y1="12" x2="22" y2="12"></line>
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
-            <span id="currentLangText">ES</span>
+            <span id="currentLangText">EN</span>
           </button>
           <div id="langMenu" class="custom-menu">
-            <div class="menu-item lang-item active" data-lang="es">
+            <div class="menu-item lang-item" data-lang="es">
               <span>Español</span>
               <div class="menu-item-right">
                 <span>ES</span>
                 <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
               </div>
             </div>
-            <div class="menu-item lang-item" data-lang="en">
+            <div class="menu-item lang-item active" data-lang="en">
               <span>English</span>
               <div class="menu-item-right">
                 <span>EN</span>
@@ -450,11 +451,12 @@
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
         
         <div class="btn-container">
-          <button id="btnConnect" class="btn-primary" data-i18n="btn_connect">Conectar</button>
-          <button id="btnRead" class="btn-primary" style="display:none" data-i18n="btn_read">Leer Config</button>
-          <button id="btnDefaults" class="btn-primary" style="display:none" data-i18n="btn_defaults">Por Defecto</button>
-          <button id="btnSave" class="btn-primary" style="display:none" data-i18n="btn_save">Guardar en Flash</button>
-          <button id="btnReconnect" class="btn-primary" style="display:none" data-i18n="btn_reconnect">Forzar Reconexión</button>
+          <button id="btnConnect" class="btn-primary" style= "flex: 1;" data-i18n="btn_connect">Conectar</button>
+          <button id="btnRead" class="btn-primary" style="flex: 1; display:none" data-i18n="btn_read">Leer Config</button>
+          <button id="btnJson" class="btn-primary" style="flex: 1; display:none" data-i18n="btn_json">Importar / Exportar JSON</button>
+          <button id="btnDefaults" class="btn-primary" style="flex: 1; display:none" data-i18n="btn_defaults">Por Defecto</button>
+          <button id="btnSave" class="btn-primary" style="flex: 1; display:none" data-i18n="btn_save">Guardar en Flash</button>
+          <button id="btnReconnect" class="btn-primary" style="flex: 1; display:none" data-i18n="btn_reconnect">Forzar Reconexión</button>
         </div>
       </div>
     
@@ -554,22 +556,67 @@
       <!-- PESTAÑA 3: INFORMACIÓN Y ATAJOS (Modo Lectura) -->
       <!-- ============================================== -->
       <div id="tabInfoUI" class="tab-content">
-        <h2 class="sub-title" style="text-align: center;">Atajos e Información del Sistema</h2>
-        
+                
         <div class="img-container">
-          <img src="DSShortcuts.png" class="controller-img" style="opacity: 0.6;" alt="Controlador Info">
+          <img src="DSShortcuts.png" class="controller-img" alt="Controlador Info">
+          <svg class="svg-overlay" viewBox="0 0 2000 1302" preserveAspectRatio="xMidYMid meet">
+            <!-- L1 -->
+            <polygon class="hotspot" points="467,55,826,55,833,62,833,122,826,129,653,129,653,274,670,274,697,276,713,283,716,299,690,300,653,306,616,313,570,322,572,307,587,297,603,288,619,283,642,276,642,129,469,129,460,122,460,64" />
+            <!-- R1 -->
+            <polygon class="hotspot" points="1529,55,1536,62,1536,124,1529,127,1354,127,1356,277,1370,281,1388,288,1404,295,1425,309,1427,322,1393,316,1351,307,1299,299,1280,300,1284,281,1301,277,1321,274,1347,277,1347,127,1170,127,1165,125,1163,60,1172,55" />
+            <!-- Options-->
+            <polygon class="hotspot" points="1178,164,1183,170,1185,231,1178,237,1003,237,1003,360,1255,360,1257,348,1264,341,1273,343,1278,352,1271,385,1268,389,1259,390,1250,382,1252,367,994,367,994,237,817,237,812,233,812,170,819,164" />
+            <!-- Create -->
+            <polygon class="hotspot" points="117, 164, 476, 164, 481, 171, 481, 233, 475, 237, 298, 238, 298, 361, 718, 362, 717, 351, 721, 343, 727, 340, 733, 340, 739, 344, 742, 350, 748, 378, 747, 383, 744, 387, 739, 391, 732, 390, 726, 388, 723, 384, 722, 378, 719, 368, 291, 366, 291, 238, 113, 237, 109, 231, 109, 167" />
+            <!-- Triangle -->
+            <polygon data-target="shortcut-triangle" class="hotspot" points="1546, 164, 1887, 164, 1892, 171, 1892, 233, 1887, 237, 1709, 238, 1709, 409, 1390, 410, 1386, 424, 1380, 432, 1372, 438, 1363, 442, 1350, 442, 1335, 437, 1327, 431, 1321, 421, 1318, 410, 1319, 399, 1325, 387, 1335, 377, 1342, 374, 1355, 371, 1365, 374, 1375, 378, 1383, 385, 1388, 395, 1390, 403, 1703, 404, 1703, 238, 1525, 237, 1520, 231, 1521, 168, 1526, 164" />
+            <!-- Circle -->
+            <polygon data-target="shortcut-circle" class="hotspot" points="1607, 455, 1966, 455, 1973, 461, 1972, 523, 1967, 529, 1605, 530, 1601, 523, 1601, 496, 1474, 496, 1469, 509, 1463, 517, 1452, 524, 1442, 526, 1431, 526, 1419, 521, 1411, 515, 1405, 505, 1403, 493, 1404, 481, 1411, 467, 1421, 459, 1432, 455, 1444, 456, 1455, 460, 1465, 468, 1472, 477, 1474, 490, 1601, 490, 1600, 460" />
+            <!-- Square -->
+            <polygon data-target="shortcut-square" class="hotspot" points="1605, 608, 1968, 607, 1973, 614, 1972, 677, 1968, 680, 1605, 681, 1600, 673, 1600, 646, 1267, 646, 1267, 527, 1256, 524, 1248, 519, 1239, 511, 1235, 502, 1233, 490, 1237, 475, 1243, 466, 1251, 458, 1260, 455, 1271, 454, 1281, 456, 1292, 461, 1299, 469, 1305, 479, 1306, 488, 1306, 496, 1302, 506, 1296, 514, 1289, 521, 1281, 526, 1272, 527, 1273, 641, 1600, 641, 1600, 613" />
+            <!-- DPAD -->
+            <polygon class="hotspot" points="44, 607, 210, 608, 211, 487, 550, 488, 551, 472, 556, 465, 562, 461, 601, 464, 616, 448, 613, 413, 615, 406, 620, 401, 626, 400, 663, 399, 667, 405, 672, 411, 670, 449, 685, 466, 724, 461, 729, 466, 734, 471, 735, 512, 731, 516, 726, 520, 686, 518, 668, 532, 673, 573, 671, 576, 666, 581, 621, 581, 614, 577, 614, 571, 617, 535, 600, 518, 565, 521, 557, 517, 553, 512, 551, 493, 216, 493, 215, 608, 395, 608, 400, 612, 401, 675, 395, 680, 34, 682, 29, 677, 30, 611, 36, 607" />
+            <!-- Mute -->
+            <polygon data-target="shortcut-mute" class="hotspot" points="820, 989, 996, 988, 995, 714, 979, 714, 973, 711, 972, 705, 978, 702, 1019, 702, 1025, 705, 1025, 711, 1019, 714, 1002, 714, 1002, 988, 1179, 988, 1185, 993, 1185, 1057, 1180, 1061, 817, 1062, 812, 1055, 813, 993" />
+            <!-- LS -->
+            <polygon data-target="shortcut-lstick" class="hotspot" points="34, 1060, 395, 1061, 401, 1066, 401, 1093, 727, 1095, 726, 699, 744, 666, 741, 653, 742, 641, 745, 627, 748, 617, 752, 608, 756, 602, 763, 595, 771, 588, 781, 581, 791, 577, 801, 574, 812, 573, 821, 573, 831, 574, 840, 578, 850, 580, 861, 587, 867, 593, 872, 600, 879, 607, 884, 618, 888, 630, 889, 640, 889, 653, 887, 666, 882, 677, 878, 687, 870, 696, 862, 703, 854, 709, 846, 713, 830, 718, 819, 719, 807, 719, 794, 716, 786, 714, 771, 705, 764, 698, 756, 690, 733, 711, 734, 1101, 401, 1099, 401, 1129, 396, 1134, 31, 1133, 28, 1128, 28, 1064" />
+            <!-- RS -->
+            <polygon class="hotspot" points="1267, 712, 1241, 688, 1235, 696, 1228, 703, 1220, 709, 1211, 713, 1203, 716, 1193, 719, 1180, 720, 1166, 718, 1155, 714, 1144, 709, 1133, 701, 1123, 693, 1115, 679, 1110, 664, 1108, 651, 1108, 639, 1111, 625, 1116, 612, 1124, 601, 1132, 591, 1142, 583, 1155, 577, 1165, 574, 1176, 573, 1186, 573, 1199, 574, 1209, 578, 1220, 583, 1229, 589, 1237, 596, 1246, 608, 1250, 618, 1254, 631, 1254, 646, 1254, 659, 1253, 669, 1273, 700, 1273, 1094, 1599, 1095, 1600, 1065, 1605, 1060, 1966, 1060, 1972, 1067, 1973, 1128, 1967, 1134, 1604, 1135, 1599, 1128, 1599, 1101, 1266, 1101" />
+          </svg>
           
-          <!-- Etiquetas dinámicas posicionales. Ajusta 'top' y 'left' (%) para cuadrarlos en la imagen -->
-          <div class="info-label" style="top: 25%; left: 15%;">D-Pad: Cambiar Perfil</div>
-          <div class="info-label" style="top: 20%; left: 30%;">Create: Lightbar Mode</div>
-          <div class="info-label" style="top: 20%; left: 70%;">Options: Breathing FX</div>
-          <div class="info-label" id="lbl-triangle" style="top: 22%; left: 85%;">Triángulo: Apagar</div>
-          <div class="info-label" id="lbl-circle" style="top: 35%; left: 92%;">Círculo: Dormir Host</div>
-          <div class="info-label" style="top: 48%; left: 85%;">Cuadrado: Mute Audio</div>
-          <div class="info-label" style="top: 55%; left: 50%;">Mute: Modo Configuración</div>
-          <div class="info-label" id="lbl-left-stick" style="top: 60%; left: 25%;">LS (Arriba/Abajo): Volumen</div>
-          <div class="info-label" style="top: 60%; left: 75%;">RS (Arriba/Abajo): Fuerza Háptica</div>
-          <div class="info-label" style="top: 10%; left: 18%;">L1/R1: Modos Gatillo</div>
+          <div class="info-label" style="top: 49.4%; left: 10.5%;"><label data-i18n="lbl_dpad_shortcut">D-Pad: Profile Switch</label></div>
+          <div class="info-label" style="top: 33%; left: 32.15%;"><label>P1</label></div>
+          <div class="info-label" style="top: 37.7%; left: 35.2%;"><label>P2</label></div>
+          <div class="info-label" style="top: 42.4%; left: 32.15%;"><label>P3</label></div>
+          <div class="info-label" style="top: 37.7%; left: 29.3%;"><label>P4</label></div>
+          <div class="info-label" style="top: 15.5%; left: 15%;"><label data-i18n="lbl_create_shortcut">Create: Lightbar Mode</label></div>
+          <div class="info-label" style="top: 15.5%; left: 50%;"><label data-i18n="lbl_options_shortcut">Options: Breathing FX</label></div>
+          <div class="info-label" style="top: 15.5%; left: 85.4%;"><label id="lbl-triangle" data-i18n="lbl_triangle_shortcut">Triangle: Power Off</label></div>
+          <div class="info-label" style="top: 38%; left: 89.4%;"><label id="lbl-circle" data-i18n="lbl_circle_shortcut">Circle: Sleep Host</label></div>
+          <div class="info-label" style="top: 49.4%; left: 89.4%;"><label id="lbl-square" data-i18n="lbl_square_shortcut">Square: Mute Audio</label></div>
+          <div class="info-label" style="top: 78.7%; left: 50%;"><label data-i18n="lbl_mute_shortcut">Mute: Configuration Mode</label></div>
+          <div class="info-label" style="top: 84.2%; left: 10.5%;"><label id="lbl-left-stick" data-i18n="lbl_ls_shortcut">LS (Up/Down): Volume</label></div>
+          <div class="info-label" style="top: 84.2%; left: 89.5%;"><label data-i18n="lbl_rs_shortcut">RS (Up/Down): Haptic Feedback</label></div>
+          <div class="info-label" style="top: 7%; left: 32.15%;"><label data-i18n="lbl_l1_shortcut">L1: Left Trigger Modes</label></div>
+          <div class="info-label" style="top: 7%; left: 67.85%;"><label data-i18n="lbl_r1_shortcut">R1: Right Trigger Modes</label></div>
+
+          <!-- Etiquetas que siguen el cursor -->
+          <!-- Supender Host -->
+          <div id="follow-label-circle" class="info-label-dark" style="top: 10.5%;left: 60.6%;display:none;"><label id="lbl-sleep-host-status">Deshabilitado</label></div>
+
+          <!-- Apagar Control -->
+          <div id="follow-label-triangle" class="info-label-dark" style="top: 10.5%;left: 60.6%;display:none;"><label id="lbl-turn-off-controller-status">Deshabilitado</label></div>
+
+          <!-- Mute Audio Host/Controller -->
+          <div id="follow-label-square" class="info-label-dark" style="top: 10.5%;left: 60.6%;display:none;"><label id="lbl-mute-audio-status">Deshabilitado</label></div>
+
+          <!-- Volume Audio Host/Controller -->
+          <div id="follow-label-lstick" class="info-label-dark" style="top: 10.5%;left: 60.6%;display:none;"><label id="lbl-volume-status">Deshabilitado</label></div>
+
+          <!-- Ingresar a modo configuración -->
+          <div id="follow-label-mute" class="info-label-dark" style="top: 90%;left: 50%;display:none;"><label id="lbl-config-mode-hold">Presionar y mantener por x ms</label></div>
+          
+          
         </div>
 
         <!-- Monitor HID en la parte inferior -->
@@ -580,7 +627,7 @@
       </div>
       
       <!-- BOTON GUARDAR -->
-      <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem;" data-i18n="btn_save">Guardar en Flash</button>
+      <!--<button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem;" data-i18n="btn_save">Guardar en Flash</button>-->
     </div>
 
     <!-- ============================================== -->
@@ -1116,6 +1163,38 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal: Exportación / Importación JSON -->
+    <div id="modal-json-config" class="modal-overlay">
+      <div class="modal-content" style="max-width: 720px;">
+        <button class="btn-close-modal">✖</button>
+        <div class="card">
+          <h2 class="card-title" data-i18n="json_title">📦 Exportar / Importar JSON</h2>
+          <div class="grid">
+            <div class="form-item grid-col-span-2">
+              <!--<label data-i18n="json_mode_label">Modo</label>-->
+              <div class="btn-container">
+                <button id="btnJsonModeExport" class="btn-primary active" type="button" data-i18n="json_export_tab">Exportar</button>
+                <button id="btnJsonModeImport" class="btn-primary" type="button" data-i18n="json_import_tab">Importar</button>
+              </div>
+            </div>
+
+            <div id="jsonExportPanel" class="form-item grid-col-span-2">
+              <p data-i18n="json_export_desc">Lee la configuración del dispositivo y descarga un archivo JSON con la configuración global y los 4 perfiles.</p>
+              <button id="btnGenerateJson" class="btn-secondary" type="button" data-i18n="json_export_action">Exportar JSON</button>
+            </div>
+
+            <div id="jsonImportPanel" class="form-item grid-col-span-2" style="display:none;">
+              <label for="jsonFileInput" data-i18n="json_import_file">Cargar archivo JSON</label>
+              <input id="jsonFileInput" type="file" accept=".json,application/json" style="padding:0.75rem;background:#0f172a;border:1px solid var(--border);border-radius:0.75rem;color:#e2e8f0;">
+              <textarea id="jsonFilePreview" class="hex-console" readonly style="min-height: 10rem; margin-top: 0.75rem;" data-i18n="json_preview_placeholder" placeholder="El contenido del archivo JSON aparecerá aquí."></textarea>
+              <p data-i18n="json_import_warning" style="margin:0.5rem 0 0; color:#f59e0b; font-size:0.9rem; line-height:1.4;">La importación se aplica en RAM. Guarda en Flash si quieres que los cambios sean permanentes.</p>
+              <button id="btnApplyJson" class="btn-secondary" type="button" data-i18n="json_import_action">Importar JSON</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
       
   <div id="toast" class="toast"></div>
 
@@ -1140,6 +1219,7 @@
         btn_connect: "Conectar",
         btn_disconnect: "Desconectar",
         btn_read: "Leer Config",
+        btn_json: "Importar / Exportar",
         btn_defaults: "Por Defecto",
         btn_save: "Guardar en Flash",
         btn_reconnect: "Reconectar",
@@ -1278,7 +1358,40 @@
         opt_lb_8: "8: Desvanecimiento entre Favoritos",
         lbl_lb_breath: "Efecto Respiración (Sólo para Modo 0 y Favoritos 1 - 4)",
         lbl_lb_matrix: "Matriz de Colores Favoritos",
+
+        lbl_dpad_shortcut: "Cambio de perfil",
+        lbl_create_shortcut: "Modo Lightbar",
+        lbl_options_shortcut: "Efecto Respiración",
+        lbl_l1_shortcut: "Modo Gatillo Izquierdo",
+        lbl_r1_shortcut: "Modo Gatillo Derecho",
+        lbl_triangle_shortcut: "Apagar Mando",
         
+        lbl_circle_shortcut: "Suspender Windows",
+        lbl_square_shortcut: "Mute Audio",
+        lbl_ls_shortcut: "Volumen +/-",
+        lbl_rs_shortcut: "Controlar Fuerza Háptica",
+        lbl_mute_shortcut: "Modo Configuración",
+        json_title: "📦 Exportar / Importar JSON",
+        json_mode_label: "Modo",
+        json_export_tab: "Exportar",
+        json_import_tab: "Importar",
+        json_export_desc: "Lee la configuración del dispositivo y descarga un archivo JSON con la configuración global y los 4 perfiles.",
+        json_export_action: "Exportar JSON",
+        json_import_file: "Cargar archivo JSON",
+        json_import_action: "Importar JSON",
+        json_preview_placeholder: "El contenido del archivo JSON aparecerá aquí.",
+        json_import_warning: "La importación se aplica en RAM. Guarda en Flash si quieres que los cambios sean permanentes.",
+        msg_json_export_ok: "JSON exportado correctamente.",
+        msg_json_import_ok: "JSON importado y aplicado correctamente. Guarda en Flash si quieres conservarlo.",
+        msg_json_invalid: "El archivo JSON no tiene el formato esperado.",
+        lbl_disabled_shortcut: "Deshabilitado",
+        lbl_enabled_shortcut: "Habilitado",
+        lbl_volume_host: "Controlando Volumen de Windows",
+        lbl_volume_ds: "Controlando Volumen del DualSense",
+        lbl_mute_hold_a: "Mantener por ",
+        lbl_mute_hold_b: " milisegundos para activar modo configuración",
+        lbl_mute_instant: "Presionar para activar modo configuración",
+
         log_title: "🖥️ Monitor WebHID",
         placeholder_log: "Los buffers transmitidos aparecerán aquí en formato hexadecimal...",
         msg_err_webhid: "WebHID no soportado — Utiliza navegadores basados en Chromium.",
@@ -1306,6 +1419,7 @@
         btn_connect: "Connect",
         btn_disconnect: "Disconnect",
         btn_read: "Read Settings",
+        btn_json: "Import / Export",
         btn_defaults: "Defaults",
         btn_save: "Save to Flash",
         btn_reconnect: "Reconnect",
@@ -1443,9 +1557,41 @@
         opt_lb_6: "6: Battery Level",
         opt_lb_7: "7: Rainbow",
         opt_lb_8: "8: Fade between Favorites",
-        lbl_lb_breath: "Breathing Animation (Only for Mode 0 and Favotites 1 - 4)",
+        lbl_lb_breath: "Breathing Animation (Only for Mode 0 and Favorites 1 - 4)",
         lbl_lb_matrix: "Favorite Colors Matrix",
-        
+        lbl_dpad_shortcut: "Profile Switch",
+        lbl_create_shortcut: "Lightbar Mode",
+        lbl_options_shortcut: "Breathing Effect",
+        lbl_l1_shortcut: "Left Trigger Mode",
+        lbl_r1_shortcut: "Right Trigger Mode",
+        lbl_triangle_shortcut: "Turn Off Controller",
+        lbl_circle_shortcut: "Sleep Windows",
+        lbl_square_shortcut: "Mute Audio",
+        lbl_ls_shortcut_host: "Control Host Volume",
+        lbl_ls_shortcut_ds: "Control DualSense Volume",
+        lbl_rs_shortcut: "Control Haptic Feedback",
+        lbl_mute_shortcut: "Configuration Mode",
+        json_title: "📦 Export / Import JSON",
+        json_mode_label: "Mode",
+        json_export_tab: "Export",
+        json_import_tab: "Import",
+        json_export_desc: "Read the device configuration and download a JSON file with the global configuration and the 4 profiles.",
+        json_export_action: "Export JSON",
+        json_import_file: "Load JSON file",
+        json_import_action: "Import JSON",
+        json_preview_placeholder: "The JSON file content will appear here.",
+        json_import_warning: "The import is applied to RAM. Save to Flash if you want the changes to be permanent.",
+        msg_json_export_ok: "JSON exported successfully.",
+        msg_json_import_ok: "JSON imported and applied successfully. Save to Flash if you want to keep it.",
+        msg_json_invalid: "The JSON file does not match the expected format.",
+        lbl_disabled_shortcut: "Disabled",
+        lbl_enabled_shortcut: "Enabled",
+        lbl_volume_host: "Controlling Windows Volume",
+        lbl_volume_ds: "Controlling DualSense Volume",
+        lbl_mute_hold_a: "Hold for ",
+        lbl_mute_hold_b: " milliseconds to activate configuration mode",
+        lbl_mute_instant: "Press to activate configuration mode",
+
         log_title: "🖥️ WebHID Monitor",
         placeholder_log: "Transmitted buffers will appear here in hexadecimal format...",
         msg_err_webhid: "WebHID not supported — Please use a Chromium-based browser.",
@@ -1457,11 +1603,11 @@
         msg_recon_ok: "USB Reconnect command dispatched.",
         msg_recon_err: "Failed to reconnect:",
         msg_def_ok: "Default values loaded. Click 'Save to Flash' to apply them.",
-        msg_confirm_flash: "¿Are you sure you want to overwrite the current configuration in Flash? This cannot be undone.",
-        msg_confirm_def: "¿Are you sure you want to load the default values? Unsaved changes will be lost.",
-        msg_confirm_recon: "¿Are you sure you want to reconnect the dongle? Unsaved changes will be lost.",
-        msg_confirm_disconnect: "¿Are you sure you want to disconnect the dongle? Unsaved changes will be lost.",
-        msg_confirm_read: "¿Are you sure you want to read the dongle configuration? Unsaved changes will be lost.",
+        msg_confirm_flash: "Are you sure you want to overwrite the current configuration in Flash? This cannot be undone.",
+        msg_confirm_def: "Are you sure you want to load the default values? Unsaved changes will be lost.",
+        msg_confirm_recon: "Are you sure you want to reconnect the dongle? Unsaved changes will be lost.",
+        msg_confirm_disconnect: "Are you sure you want to disconnect the dongle? Unsaved changes will be lost.",
+        msg_confirm_read: "Are you sure you want to read the dongle configuration? Unsaved changes will be lost.",
         msg_yes: "Yes",
         msg_no: "No"
       }
@@ -1477,6 +1623,8 @@
       });
       const logArea = $('hexLog');
       if (logArea) logArea.placeholder = i18n[lang].placeholder_log;
+      const jsonPreview = $('jsonFilePreview');
+      if (jsonPreview) jsonPreview.placeholder = i18n[lang].json_preview_placeholder || jsonPreview.placeholder;
       if (device) $('btnConnect').textContent = i18n[currentLang].btn_disconnect;
       else {
         $('btnConnect').textContent = i18n[currentLang].btn_connect;
@@ -1650,7 +1798,7 @@
 
     document.addEventListener('click', () => { 
       $('langMenu').classList.remove('show'); 
-      $('profileMenu').classList.remove('show'); 
+      //$('profileMenu').classList.remove('show'); 
     });
 
     // ── // ── LÓGICA PARA EDITAR NOMBRE DE PERFIL ──
@@ -1774,6 +1922,7 @@
       
       $('configForm').style.display = displayStyle;
       $('btnRead').style.display = inlineStyle;
+      $('btnJson').style.display = inlineStyle;
       $('btnDefaults').style.display = inlineStyle;
       $('btnSave').style.display = inlineStyle;
       $('btnReconnect').style.display = inlineStyle;
@@ -2069,6 +2218,237 @@
       logBufferToConsole(`OUT (0xF6) -> Cmd 0x05 [Escribir Perfil ${index} RAM]`, 0xF6, reqBuf);
     }
 
+    function boolFromJson(value) {
+      return value === true || value === 1 || value === '1';
+    }
+
+    function numberFromJson(value, fallback = 0) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function collectGlobalSnapshot() {
+      return {
+        haptics_gain: numberFromJson($('haptics_gain').value, 1.5),
+        inactive_time: numberFromJson($('inactive_time').value, 30),
+        disable_inactive_disconnect: $('disable_inactive_disconnect').checked,
+        disable_pico_led: $('disable_pico_led').checked,
+        polling_rate_mode: numberFromJson($('polling_rate_mode').value, 0),
+        audio_buffer_length: numberFromJson($('audio_buffer_length').value, 64),
+        controller_mode: numberFromJson($('controller_mode').value, 2),
+        auto_haptics_enable: numberFromJson($('auto_haptics_enable').value, 1),
+        auto_haptics_gain: numberFromJson($('auto_haptics_gain').value, 100),
+        auto_haptics_lowpass_hz: numberFromJson($('auto_haptics_lowpass_hz').value, 80),
+        enable_poweroff_shortcut: $('enable_poweroff_shortcut').checked,
+        wake_enable: $('wake_enable').checked,
+        enable_host_sleep: $('enable_host_sleep').checked,
+        speaker_volume: numberFromJson($('speaker_volume').value, 0),
+        headset_volume: numberFromJson($('headset_volume').value, 0),
+        auto_mute_mode: $('auto_mute_mode').checked,
+        hold_mute_time: numberFromJson($('hold_mute_time').value, 0),
+        enable_host_volume_control: $('enable_host_volume_control').checked
+      };
+    }
+
+    function collectProfileSnapshot() {
+      return {
+        lightbar_mode: numberFromJson($('lightbar_mode').value, 0),
+        fav_color_0: $('fav_color_0').value,
+        fav_color_1: $('fav_color_1').value,
+        fav_color_2: $('fav_color_2').value,
+        fav_color_3: $('fav_color_3').value,
+        lightbar_breathing: $('lightbar_breathing').checked,
+        trigger_left_mode: numberFromJson($('trigger_left_mode').value, 0),
+        trigger_right_mode: numberFromJson($('trigger_right_mode').value, 0),
+        feedback_start_point: numberFromJson($('feedback_start_point').value, 0),
+        feedback_force: numberFromJson($('feedback_force').value, 0),
+        trigger_start_point: numberFromJson($('trigger_start_point').value, 0),
+        trigger_wall_point: numberFromJson($('trigger_wall_point').value, 0),
+        trigger_break_force: numberFromJson($('trigger_break_force').value, 0),
+        vibration_start_point: numberFromJson($('vibration_start_point').value, 0),
+        vibration_frequency: numberFromJson($('vibration_frequency').value, 0),
+        vibration_force: numberFromJson($('vibration_force').value, 0),
+        wall_start_point: numberFromJson($('wall_start_point').value, 0),
+        gyro_activation_button: numberFromJson($('gyro_activation_button').value, 0),
+        gyro_dead_zone: numberFromJson($('gyro_dead_zone').value, 42.5),
+        max_degrees_per_second: numberFromJson($('max_degrees_per_second').value, 100),
+        gyro_multiplier: numberFromJson($('gyro_multiplier').value, 1),
+        invert_gyro_x: $('invert_gyro_x').checked,
+        invert_gyro_y: $('invert_gyro_y').checked,
+        rumble_act_pres: $('rumble_act_pres').checked,
+        rumble_trigger_strength: numberFromJson($('rumble_trigger_strength').value, 100),
+        rumble_trigger_freq: numberFromJson($('rumble_trigger_freq').value, 60),
+        trigger_rumble_mode: numberFromJson($('trigger_rumble_mode').value, 2),
+        profile_name: lblProfileName.innerText.trim()
+      };
+    }
+
+    function applyGlobalSnapshot(snapshot) {
+      setFieldValue('haptics_gain', snapshot.haptics_gain ?? 1.5);
+      setFieldValue('inactive_time', snapshot.inactive_time ?? 30);
+      $('disable_inactive_disconnect').checked = boolFromJson(snapshot.disable_inactive_disconnect);
+      $('disable_pico_led').checked = boolFromJson(snapshot.disable_pico_led);
+      setFieldValue('polling_rate_mode', snapshot.polling_rate_mode ?? 0);
+      setFieldValue('audio_buffer_length', snapshot.audio_buffer_length ?? 64);
+      setFieldValue('controller_mode', snapshot.controller_mode ?? 2);
+      setFieldValue('auto_haptics_enable', snapshot.auto_haptics_enable ?? 1);
+      setFieldValue('auto_haptics_gain', snapshot.auto_haptics_gain ?? 100);
+      setFieldValue('auto_haptics_lowpass_hz', snapshot.auto_haptics_lowpass_hz ?? 80);
+      $('enable_poweroff_shortcut').checked = boolFromJson(snapshot.enable_poweroff_shortcut);
+      $('wake_enable').checked = boolFromJson(snapshot.wake_enable);
+      $('enable_host_sleep').checked = boolFromJson(snapshot.enable_host_sleep);
+      setFieldValue('speaker_volume', snapshot.speaker_volume ?? 0);
+      setFieldValue('headset_volume', snapshot.headset_volume ?? 0);
+      $('auto_mute_mode').checked = boolFromJson(snapshot.auto_mute_mode);
+      setFieldValue('hold_mute_time', snapshot.hold_mute_time ?? 0);
+      $('enable_host_volume_control').checked = boolFromJson(snapshot.enable_host_volume_control);
+    }
+
+    function applyProfileSnapshot(snapshot) {
+      setFieldValue('lightbar_mode', snapshot.lightbar_mode ?? 0);
+      setFieldValue('fav_color_0', snapshot.fav_color_0 ?? '#00ddff');
+      setFieldValue('fav_color_1', snapshot.fav_color_1 ?? '#ff0011');
+      setFieldValue('fav_color_2', snapshot.fav_color_2 ?? '#bfff00');
+      setFieldValue('fav_color_3', snapshot.fav_color_3 ?? '#ffffff');
+      $('lightbar_breathing').checked = boolFromJson(snapshot.lightbar_breathing);
+      setFieldValue('trigger_left_mode', snapshot.trigger_left_mode ?? 0);
+      setFieldValue('trigger_right_mode', snapshot.trigger_right_mode ?? 0);
+      setFieldValue('feedback_start_point', snapshot.feedback_start_point ?? 0);
+      setFieldValue('feedback_force', snapshot.feedback_force ?? 0);
+      setFieldValue('trigger_start_point', snapshot.trigger_start_point ?? 0);
+      setFieldValue('trigger_wall_point', snapshot.trigger_wall_point ?? 0);
+      setFieldValue('trigger_break_force', snapshot.trigger_break_force ?? 0);
+      setFieldValue('vibration_start_point', snapshot.vibration_start_point ?? 0);
+      setFieldValue('vibration_frequency', snapshot.vibration_frequency ?? 0);
+      setFieldValue('vibration_force', snapshot.vibration_force ?? 0);
+      setFieldValue('wall_start_point', snapshot.wall_start_point ?? 0);
+      setFieldValue('gyro_activation_button', snapshot.gyro_activation_button ?? 0);
+      setFieldValue('gyro_dead_zone', snapshot.gyro_dead_zone ?? 42.5);
+      setFieldValue('max_degrees_per_second', snapshot.max_degrees_per_second ?? 100);
+      setFieldValue('gyro_multiplier', snapshot.gyro_multiplier ?? 1);
+      $('invert_gyro_x').checked = boolFromJson(snapshot.invert_gyro_x);
+      $('invert_gyro_y').checked = boolFromJson(snapshot.invert_gyro_y);
+      $('rumble_act_pres').checked = boolFromJson(snapshot.rumble_act_pres);
+      setFieldValue('rumble_trigger_strength', snapshot.rumble_trigger_strength ?? 100);
+      setFieldValue('rumble_trigger_freq', snapshot.rumble_trigger_freq ?? 60);
+      setFieldValue('trigger_rumble_mode', snapshot.trigger_rumble_mode ?? 2);
+      lblProfileName.innerText = snapshot.profile_name ?? 'Perfil';
+      updateInfoTabLabels();
+    }
+
+    function setJsonModalMode(mode) {
+      const exportPanel = $('jsonExportPanel');
+      const importPanel = $('jsonImportPanel');
+      const exportBtn = $('btnJsonModeExport');
+      const importBtn = $('btnJsonModeImport');
+      const isExport = mode === 'export';
+
+      exportPanel.style.display = isExport ? 'block' : 'none';
+      importPanel.style.display = isExport ? 'none' : 'block';
+      if(isExport){
+        exportBtn.className = "btn-primary active";
+        importBtn.className = "btn-primary";
+      }
+      else
+      {
+        exportBtn.className = "btn-primary";
+        importBtn.className = "btn-primary active";
+      }
+      
+    }
+
+    function downloadJsonFile(payload) {
+      const jsonText = JSON.stringify(payload, null, 2);
+      const blob = new Blob([jsonText], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      const datePart = new Date().toISOString().replace(/[:.]/g, '-');
+      anchor.href = url;
+      anchor.download = `omnisense-config-${datePart}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function exportConfigToJson() {
+      if (!device) return;
+
+      const selectedProfile = currentProfile;
+      const snapshot = {
+        schema: 'OmniSense-Config-Web',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        global: null,
+        profiles: []
+      };
+
+      try {
+        await readGlobalConfig();
+        snapshot.global = collectGlobalSnapshot();
+
+        for (let i = 0; i < 4; i++) {
+          await wait(100);
+          await assignProfileIndexToRead(i);
+          await wait(150);
+          await readProfileConfig(i);
+          snapshot.profiles.push({ index: i, ...collectProfileSnapshot() });
+        }
+
+        await wait(100);
+        await assignProfileIndexToRead(selectedProfile);
+        await wait(150);
+        await readProfileConfig(selectedProfile);
+
+        downloadJsonFile(snapshot);
+        toast(t('msg_json_export_ok'));
+      } catch (error) {
+        toast(`${t('msg_json_invalid')} ${error.message}`, false);
+      }
+    }
+
+    async function importConfigFromJson(snapshot) {
+      if (!device) return;
+
+      if (!snapshot || !snapshot.global || !Array.isArray(snapshot.profiles) || snapshot.profiles.length < 4) {
+        throw new Error(t('msg_json_invalid'));
+      }
+
+      const selectedProfile = currentProfile;
+
+      applyGlobalSnapshot(snapshot.global);
+      await saveGlobalToRAM();
+      await wait(100);
+
+      for (let i = 0; i < 4; i++) {
+        const profile = snapshot.profiles[i];
+        applyProfileSnapshot(profile);
+        await saveProfileToRAM(i);
+        await wait(100);
+      }
+
+      await wait(100);
+      await assignProfileIndexToRead(selectedProfile);
+      await wait(150);
+      await readProfileConfig(selectedProfile);
+
+      toast(t('msg_json_import_ok'));
+    }
+
+    async function handleJsonImportFile() {
+      const fileInput = $('jsonFileInput');
+      const preview = $('jsonFilePreview');
+      const file = fileInput.files && fileInput.files[0];
+
+      if (!file) {
+        preview.value = '';
+        preview.placeholder = t('json_preview_placeholder');
+        return;
+      }
+
+      preview.value = await file.text();
+    }
+
     async function forceReconnect() {
       if (!device) return;
       try {
@@ -2118,6 +2498,37 @@
       const confirmed = await askConfirmation('msg_confirm_read');
       if (confirmed) await readConfig();
     });
+    $('btnJson').addEventListener('click', () => {
+      setJsonModalMode('export');
+      $('jsonFileInput').value = '';
+      $('jsonFilePreview').value = '';
+      $('jsonFilePreview').placeholder = t('json_preview_placeholder');
+      $('modal-json-config').classList.add('active');
+    });
+    $('btnJsonModeExport').addEventListener('click', () => setJsonModalMode('export'));
+    $('btnJsonModeImport').addEventListener('click', () => setJsonModalMode('import'));
+    $('jsonFileInput').addEventListener('change', handleJsonImportFile);
+    $('btnGenerateJson').addEventListener('click', async (e) => {
+      e.currentTarget.closest('.modal-overlay').classList.remove('active');
+      const confirmed = await askConfirmation('msg_confirm_read');
+      if (confirmed) await exportConfigToJson();
+    });
+    $('btnApplyJson').addEventListener('click', async (e) => {
+      e.currentTarget.closest('.modal-overlay').classList.remove('active');
+      try {
+        const file = $('jsonFileInput').files && $('jsonFileInput').files[0];
+        if (!file) {
+          toast(t('msg_json_invalid'), false);
+          return;
+        }
+
+        const text = await file.text();
+        const snapshot = JSON.parse(text);
+        await importConfigFromJson(snapshot);
+      } catch (error) {
+        toast(`${t('msg_json_invalid')} ${error.message}`, false);
+      }
+    });
     $('btnDefaults').addEventListener('click', async () => {
       const confirmed = await askConfirmation('msg_confirm_def');
       if (confirmed) setDefaults();
@@ -2126,17 +2537,17 @@
       const confirmed = await askConfirmation('msg_confirm_flash');
       if (confirmed) await saveConfig();
     });
-    $('btnSaveBottom').addEventListener('click', async () => {
+    /*$('btnSaveBottom').addEventListener('click', async () => {
       const confirmed = await askConfirmation('msg_confirm_flash');
       if (confirmed) await saveConfig();
-    });
+    });*/
     $('btnReconnect').addEventListener('click', async () => {
       const confirmed = await askConfirmation('msg_confirm_recon');
       if (confirmed) await forceReconnect();
     });
 
     // Inicializar idioma en la primera carga
-    setLanguage('es');
+    setLanguage('en');
 
     // ── GESTIÓN DE LAS VENTANAS EMERGENTES (MODALES) ──
     const modalOverlays = document.querySelectorAll('.modal-overlay');
@@ -2147,7 +2558,12 @@
     const followLabelMap = {
       'modal-profile-triggers': $('follow-label-triggers'),
       'modal-profile-gyro': $('follow-label-gyro'),
-      'modal-profile-lightbar': $('follow-label-lightbar')
+      'modal-profile-lightbar': $('follow-label-lightbar'),
+      'shortcut-circle': $('follow-label-circle'),
+      'shortcut-triangle': $('follow-label-triangle'),
+      'shortcut-square': $('follow-label-square'),
+      'shortcut-lstick': $('follow-label-lstick'),
+      'shortcut-mute': $('follow-label-mute')
     };
 
     function hideAllFollowLabels() {
@@ -2274,39 +2690,71 @@
       syncTriggerLabel('lbl-right-trigger', 'trigger_right_mode');
       syncTriggerLabel('lbl-gyro', 'gyro_activation_button');
       syncTriggerLabel('lbl-lightbar', 'lightbar_mode');
-      // 1. Atajo Triángulo (Apagar Host)
+
+      // 1. Atajo Triángulo (Apagar Controlador)
       const chkPoweroff = $('enable_poweroff_shortcut').checked;
       const lblTriangle = $('lbl-triangle');
+      const lblPoweroffControllerStatus = $('lbl-turn-off-controller-status');
       if (chkPoweroff) {
-        lblTriangle.textContent = "Triángulo: Apagar (ON)";
+        //lblTriangle.textContent = t("lbl_triangle_sc_enabled");
         lblTriangle.className = "info-label active-state";
+        lblPoweroffControllerStatus.textContent = t("lbl_enabled_shortcut");
       } else {
-        lblTriangle.textContent = "Triángulo: Apagar (OFF)";
+        //lblTriangle.textContent = t("lbl_triangle_sc_disabled");
         lblTriangle.className = "info-label inactive-state";
+        lblPoweroffControllerStatus.textContent = t("lbl_disabled_shortcut");
       }
 
       // 2. Atajo Círculo (Dormir Host)
       const chkSleep = $('enable_host_sleep').checked;
       const lblCircle = $('lbl-circle');
+      const lblSleepHostStatus = $('lbl-sleep-host-status');
       if (chkSleep) {
-        lblCircle.textContent = "Círculo: Dormir Host (ON)";
+        //lblCircle.textContent = t("lbl_circle_shortcut_enabled");
         lblCircle.className = "info-label active-state";
+        lblSleepHostStatus.textContent = t("lbl_enabled_shortcut");
       } else {
-        lblCircle.textContent = "Círculo: Dormir Host (OFF)";
+        //lblCircle.textContent = t("lbl_circle_shortcut_disabled");
         lblCircle.className = "info-label inactive-state";
+        lblSleepHostStatus.textContent = t("lbl_disabled_shortcut");
       }
 
       // 3. Joystick Izquierdo (Volumen Host vs Mando)
       const chkHostVol = $('enable_host_volume_control').checked;
       const lblStick = $('lbl-left-stick');
+      const lblSquare = $('lbl-square');
+      const lblMuteAudioStatus = $('lbl-mute-audio-status');
+      const lblVolumeStatus = $('lbl-volume-status');
       if (chkHostVol) {
-        lblStick.textContent = "LS: Volumen (HOST WINDOWS)";
-        lblStick.style.borderColor = "#38bdf8"; // Azul
-        lblStick.style.color = "#38bdf8";
+        //lblStick.textContent = t("lbl_ls_shortcut_host");
+        //lblStick.style.borderColor = "#38bdf8"; // Azul
+        lblStick.style.color = "#38bdf8"; // Azul
+        //lblSquare.textContent = t("lbl_square_shortcut_host");
+        //lblSquare.style.borderColor = "#38bdf8"; // Azul
+        lblSquare.style.color = "#38bdf8"; // Azul
+        lblMuteAudioStatus.textContent = t("lbl_volume_host");
+        lblVolumeStatus.textContent = t("lbl_volume_host");
       } else {
-        lblStick.textContent = "LS: Volumen (MANDO)";
-        lblStick.style.borderColor = "#f59e0b"; // Naranja
-        lblStick.style.color = "#f59e0b";
+        //lblStick.textContent = t("lbl_ls_shortcut_ds");
+        //lblStick.style.borderColor = "#f59e0b"; // Naranja
+        lblStick.style.color = "#f59e0b"; // Naranja
+        //lblSquare.textContent = t("lbl_square_shortcut_ds");
+        //lblSquare.style.borderColor = "#f59e0b"; // Naranja
+        lblSquare.style.color = "#f59e0b"; // Naranja
+        lblMuteAudioStatus.textContent = t("lbl_volume_ds");
+        lblVolumeStatus.textContent = t("lbl_volume_ds");
+      } 
+
+      //4. Atajo Mute (Config Mode)
+      const msToHold = parseInt($('hold_mute_time').value, 10);
+      const lblConfigModeHold = $('lbl-config-mode-hold');
+
+      if (msToHold > 0) {
+        lblConfigModeHold.textContent = `${t("lbl_mute_hold_a")}${msToHold}${t("lbl_mute_hold_b")}`;
+        //lblConfigModeHold.className = "info-label active-state";
+      } else {
+        lblConfigModeHold.textContent = t("lbl_mute_instant");
+        //lblConfigModeHold.className = "info-label inactive-state";
       }
     }
 
