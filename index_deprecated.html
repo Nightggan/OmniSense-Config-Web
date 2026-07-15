@@ -1,0 +1,1796 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1120" />
+  <title>OmniSense Dongle Config</title>
+  <style>
+    /* ── Upstream CSS ─────────────────────── */
+    @layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000}}}@layer tables{@media (max-width:480px){.responsive-table{display:block;width:100%}.responsive-table tbody,.responsive-table td,.responsive-table tr{display:block;width:100%}.responsive-table tr{margin-bottom:1rem;border:1px solid #334155;border-radius:.375rem;padding:.5rem}.responsive-table td{text-align:right;padding-left:50%;position:relative}.responsive-table td:before{content:attr(data-label);position:absolute;left:.5rem;width:45%;text-align:left;font-weight:600;color:#94a3b8}}}
+    :root{--background:#0b1120;--foreground:#f8fafc;--card:#1e293b;--card-foreground:#f8fafc;--popover:#0b1120;--popover-foreground:#f8fafc;--primary:#3b82f6;--primary-foreground:#f8fafc;--secondary:#334155;--secondary-foreground:#f8fafc;--muted:#334155;--muted-foreground:#94a3b8;--accent:#334155;--accent-foreground:#f8fafc;--destructive:#ef4444;--destructive-foreground:#f8fafc;--border:#334155;--input:#334155;--ring:#1d4ed8;--radius:.5rem; --font-main: 'Space Grotesk', sans-serif; --accent-sec: #22C55E; --accent-sec-hover: #4ADE80; --accent-sec-border: #15803D;}
+    * {
+      box-sizing: border-box;
+      border-color: var(--border);
+      font-family: var(--font-main);
+    }
+    
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        margin: 0;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    button, input, select, textarea {
+      font-family: var(--font-main) !important;
+    }
+    
+    .container{width:100%;max-width:50rem;display:flex;flex-direction:column;gap:1.5rem}
+    .card{background-color:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);padding:1.5rem}
+    .card-clear{padding-top:1.5rem;padding-bottom:1.5rem}
+    .card-title{font-size:1.25rem;font-weight:600;margin:0 0 1.5rem 0;display:flex;align-items:center;gap:.5rem}
+    .grid{display:grid;grid-template-columns:1fr;gap:1.25rem}
+    @media (min-width:640px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-col-span-2{grid-column:span 2/span 2}}
+    .form-item{display:flex;flex-direction:column;gap:.375rem}
+    .form-item-row{display:flex;flex-direction:row;align-items:center;justify-content:between;gap:.5rem}
+    label{font-size:.875rem;font-weight:500;color:#cbd5e1}
+    input[type=number],select{background-color:#0f172a;color:var(--foreground);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .75rem;font-size:.875rem;width:100%;outline:none;transition:border-color .15s ease;}
+    input[type=number]:focus,select:focus{border-color:var(--primary);}
+    input[type=checkbox]{height:1rem;width:1rem;accent-color:var(--primary);}
+    .checkbox-container{display:flex;align-items:center;gap:.5rem;user-select:none;cursor:pointer}
+    .btn-container{display:flex;flex-wrap:wrap;gap:.75rem}
+    button{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);font-size:.875rem;font-weight:500;padding:.5rem 1rem;cursor:pointer;outline:none;transition:all .15s ease;border:1px solid transparent}
+    .btn-primary{background-color:var(--primary);color:var(--primary-foreground)}
+    .btn-primary:hover{background-color:#2563eb}
+    .btn-secondary{background-color:var(--secondary);color:var(--secondary-foreground);border-color:var(--border)}
+    .btn-secondary:hover{background-color:#475569}
+    .btn-destructive{background-color:var(--destructive);color:var(--destructive-foreground)}
+    .btn-destructive:hover{background-color:#dc2626}
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background-color:#10b981;color:#fff;padding:.75rem 1.25rem;border-radius:var(--radius);box-shadow:0 4px 6px rgba(0,0,0,.1);display:none;z-index:50;font-size:.875rem;font-weight:500}
+    .toast.error{background-color:var(--destructive)}
+    .warning-banner{background-color:#7c2d12;border:1px solid #ea580c;color:#ffedd5;padding:.75rem 1rem;border-radius:var(--radius);font-size:.875rem;margin-bottom:1rem;display:none}
+    .fav-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.5rem}
+    .fav-color-item{display:flex;flex-direction:column;align-items:center;gap:.25rem}
+    .fav-color-item label{font-size:.75rem}
+    input[type=color]{background:none;border:1px solid var(--border);border-radius:var(--radius);width:100%;height:2.2rem;cursor:pointer;padding:0;}
+    
+    /* ── Consola Hex ── */
+    .hex-console { background-color: #090d16; font-family: monospace; color: #38bdf8; padding: 0.75rem; border-radius: var(--radius); border: 1px solid #1e293b; width: 100%; height: 120px; resize: none; font-size: 0.813rem; line-height: 1.4; outline: none; }
+
+    /* ── Estilos de Slider Moderno ── */
+    .slider-header { display: flex; flex-direction: column; gap: 0.1rem; }
+    .slider-sub { font-size: 0.75rem; color: #64748b; }
+    .slider-row { display: flex; align-items: center; gap: 1.5rem; width: 100%; margin-top: 0.5rem; }
+    
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #334155; border-radius: 3px; }
+    input[type=range]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #f8fafc; cursor: pointer; -webkit-appearance: none; margin-top: -6px; box-shadow: 0 0 0 3px #1e293b; }
+    input[type=range]:focus { outline: none; }
+    input[type=range]:focus::-webkit-slider-runnable-track { background: #475569; }
+    
+    .slider-number { width: 75px !important; text-align: center; background-color: #0f172a !important; border: 1px solid #334155 !important; font-variant-numeric: tabular-nums; }
+    
+    /* ── HEADER Y MENÚS DESPLEGABLES CUSTOM ── */
+    .header-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; padding-bottom: 1rem; border-bottom: 1px solid #1e293b; }
+    .header-bar-tabs { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; padding-bottom: 0.25rem; border-bottom: 1px solid #1e293b; }
+    .title-group { display: flex; flex-direction: column; flex-shrink: 0; }
+    .super-title { font-size: 0.7rem; font-weight: 700; color: #64748b; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+    .main-title { font-size: clamp(1.8rem, 5vw, 2.75rem); font-weight: 700; color: #ffffff; margin: 0; white-space: nowrap; line-height: 1.1; letter-spacing: -0.02em; }
+    .sub-title { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 700; color: #ffffff; margin: 0; white-space: nowrap; line-height: 1.1; letter-spacing: -0.02em; text-align: center; }
+    .header-controls { display: flex; align-items: center; gap: 0.75rem; }
+    .custom-dropdown-container { position: relative; }
+    
+    .pill-btn { display: flex; align-items: center; gap: 0.4rem; background: #1e293b; border: 1px solid #334155; border-radius: 9999px; padding: 0.5rem 1rem; color: #f8fafc; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .pill-btn:hover { background: #334155; }
+    .pill-btn svg { width: 16px; height: 16px; opacity: 0.8; }
+    
+    .custom-menu { position: absolute; top: calc(100% + 0.5rem); right: 0; background: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 0.5rem; min-width: 160px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.3); display: none; flex-direction: column; gap: 0.25rem; z-index: 100; }
+    .custom-menu.show { display: flex; animation: fadeIn 0.15s ease-out; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; border-radius: 0.25rem; color: #cbd5e1; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: background 0.15s; }
+    .menu-item:hover { background: #334155; }
+    .menu-item.active { color: #10b981; }
+    .menu-item-right { display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.75rem; }
+    .menu-item.active .menu-item-right { color: #10b981; }
+    .check-icon { display: none; width: 14px; height: 14px; }
+    .menu-item.active .check-icon { display: block; }
+
+    /* ── TABS (Pestañas) ── */
+    .tabs-list {
+      display: flex;
+      background-color: #0f172a;
+      padding: 0.375rem;
+      border-radius: var(--radius);
+      gap: 0.25rem;
+    }
+    .tabs-list-green {
+      display: flex;
+      background-color: #0f172a;
+      padding: 0.375rem;
+      border-radius: var(--radius);
+      gap: 0.25rem;
+    }
+
+    .tab-trigger {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+        
+    }
+    .tab-trigger:hover {
+      color: #cbd5e1;
+    }
+    .tab-trigger.active {
+      background-color: var(--primary);
+      color: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    .tab-trigger-general {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-trigger-general:hover {
+      color: #cbd5e1;
+    }
+    .tab-trigger-general.active {
+      background-color: var(--card);
+      color: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    .tab-trigger-profile {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-trigger-profile:hover {
+      color: #cbd5e1;
+    }
+    .tab-trigger-profile.active {
+      background-color: var(--card);
+      color: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    }
+    .tab-trigger-trigger-mode {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-trigger-trigger-mode:hover {
+      color: #cbd5e1;
+    }
+    .tab-trigger-trigger-mode.active {
+      background-color: var(--card);
+      color: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInTab 0.2s ease-out;
+    }
+    .tab-content.active {
+      display: flex;
+    }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-content-general {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInTab 0.2s ease-out;
+    }
+    .tab-content-general.active {
+      display: flex;
+    }
+
+    .tab-content-profile {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInTab 0.2s ease-out;
+    }
+    .tab-content-profile.active {
+      display: flex;
+    }
+    .tab-content-trigger-mode {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInTab 0.2s ease-out;
+    }
+    .tab-content-trigger-mode.active {
+      display: flex;
+    }
+    
+    /* Estilos del separador de perfil */
+    .profile-separator {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div class="header-bar">
+      <div class="title-group">
+        <span class="super-title">WEBHID</span>
+        <h1 class="main-title" data-i18n="app_title">OmniSense Dongle</h1>
+      </div>
+      
+      <div class="header-controls">
+        <div class="custom-dropdown-container">
+          <button id="langBtn" class="pill-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="currentLangText">ES</span>
+          </button>
+          <div id="langMenu" class="custom-menu">
+            <div class="menu-item lang-item active" data-lang="es">
+              <span>Español</span>
+              <div class="menu-item-right">
+                <span>ES</span>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+            <div class="menu-item lang-item" data-lang="en">
+              <span>English</span>
+              <div class="menu-item-right">
+                <span>EN</span>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="reconnectWarning" class="warning-banner" data-i18n="warn_reconnect">
+      ⚠️ Configuración guardada en la Flash. Debes reconectar el adaptador para aplicar los cambios globales de emulación de audio/mandos.
+    </div>
+
+    <div class="card">
+      <div class="grid" style="grid-template-columns: auto 1fr; align-items: center;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+          <h2 class="card-title"  data-i18n="status_title">🔌 Estado del Dongle</h2>
+        </div>
+        <div style="margin:0 0 1.5rem 0;">
+          <span id="statusText" style="font-weight:500;color:#94a3b8;" data-i18n="status_disconnected">Desconectado</span>
+        </div>
+      </div>
+      
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        
+        <div class="btn-container">
+          <button id="btnConnect" class="btn-primary" data-i18n="btn_connect">Conectar</button>
+          <button id="btnRead" class="btn-secondary" style="display:none" data-i18n="btn_read">Leer Config</button>
+          <button id="btnDefaults" class="btn-secondary" style="display:none" data-i18n="btn_defaults">Por Defecto</button>
+          <button id="btnSave" class="btn-primary" style="display:none" data-i18n="btn_save">Guardar en Flash</button>
+          <button id="btnReconnect" class="btn-destructive" style="display:none" data-i18n="btn_reconnect">Forzar Reconexión</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="configForm" style="display:none;flex-direction:column;gap:1.5rem;">
+      
+      <div class="tabs-list">
+          <button class="tab-trigger active" data-tab="tabGlobal" data-i18n="tab_global">Configuración Global</button>
+          <button class="tab-trigger" data-tab="tabProfiles" data-i18n="tab_profiles">Configuración de Perfiles</button>
+          <button class="tab-trigger" data-tab="tabInfo" data-i18n="tab_info">Información</button>  
+      </div>
+      
+      <div class="header-bar-tabs">
+      </div>
+
+      <div id="tabGlobal" class="tab-content active">
+        <div class="grid-col-span-2">
+          <div>
+            <h2 class="sub-title" style="align-self: center; width: 100%;" data-i18n="global_config_title">Ajuste de Perfiles</h2>
+          </div>
+        </div>
+        <div class="tabs-list">
+          <button class="tab-trigger-general active" data-tab="tabHaptics" data-i18n="tab_haptics">Hápticas</button>
+          <button class="tab-trigger-general" data-tab="tabAudio" data-i18n="tab_audio">Audio</button>
+          <button class="tab-trigger-general" data-tab="tabSystem" data-i18n="tab_system">Sistema</button>
+        </div>
+        <div id="tabHaptics" class="tab-content-general active">
+          <div class="card">
+            <h2 class="card-title" data-i18n="haptics_title">🔊 Retroalimentación Audio Háptica Global</h2>
+            <div class="grid">
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="haptics_gain" data-i18n="lbl_haptics_gain">Ganancia Háptica General</label>
+                  <span class="slider-sub" data-i18n="sub_haptics_gain">Multiplicador global [1.0 - 2.0]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="haptics_gain_slider" min="1.0" max="2.0" step="0.05" value="1.50">
+                  <input type="number" id="haptics_gain" min="1.0" max="2.0" step="0.05" value="1.50" class="slider-number">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="dsp_title">🤖 Auto-Hápticas DSP</h2>
+            <div class="grid">
+              <div class="form-item grid-col-span-2">
+                <label for="auto_haptics_enable" data-i18n="lbl_dsp_mode">Modo de Operación Auto-Háptica</label>
+                <select id="auto_haptics_enable">
+                  <option value="0" data-i18n="opt_dsp_0">Deshabilitado (Solo usar nativo)</option>
+                  <option value="1" data-i18n="opt_dsp_1">1: Modo Mezcla (Añadir vibración DSP)</option>
+                  <option value="2" data-i18n="opt_dsp_2">2: Modo Reemplazo (Usar solo DSP)</option>
+                </select>
+              </div>
+
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="auto_haptics_gain" data-i18n="lbl_dsp_gain">Ganancia Auto Háptica</label>
+                  <span class="slider-sub" data-i18n="sub_dsp_gain">Porcentaje a señal derivada [0 - 200]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="auto_haptics_gain_slider" min="0" max="200" step="1" value="100">
+                  <input type="number" id="auto_haptics_gain" min="0" max="200" step="1" value="100" class="slider-number">
+                </div>
+              </div>
+
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="auto_haptics_lowpass_hz" data-i18n="lbl_dsp_lp">Filtro Pasabajo Auto Hápticas</label>
+                  <span class="slider-sub" data-i18n="sub_dsp_lp">Corte LP en Hz [20 - 400]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="auto_haptics_lowpass_hz_slider" min="20" max="400" step="1" value="80">
+                  <input type="number" id="auto_haptics_lowpass_hz" min="20" max="400" step="1" value="80" class="slider-number">
+                </div>
+              </div>
+
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="audio_buffer_length" data-i18n="lbl_buffer">Longitud del Búfer de Audio Háptico</label>
+                  <span class="slider-sub" data-i18n="sub_buffer">Bytes PCM por paquete [16 - 128]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="audio_buffer_length_slider" min="16" max="128" step="1" value="64">
+                  <input type="number" id="audio_buffer_length" min="16" max="128" step="1" value="64" class="slider-number">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div id="tabAudio" class="tab-content-general">
+          <div class="card">
+            <h2 class="card-title" data-i18n="sound_title">🔊 Configuracion de sonido</h2>
+            <div class="grid">
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="speaker_volume" data-i18n="lbl_speaker_vol">Volumen Maestro del Altavoz</label>
+                  <span class="slider-sub" data-i18n="sub_speaker_vol">Decibelios [-100 - 0]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="speaker_volume_slider" min="0" max="100" step="1" value="0">
+                  <input type="number" id="speaker_volume" min="0" max="100" step="1" value="0" class="slider-number">
+                </div>
+              </div>
+              
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="headset_volume" data-i18n="lbl_headset_vol">Volumen Maestro de Audífonos</label>
+                  <span class="slider-sub" data-i18n="sub_speaker_vol">[0 - 100]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="headset_volume_slider" min="0" max="100" step="1" value="0">
+                  <input type="number" id="headset_volume" min="0" max="100" step="1" value="0" class="slider-number">
+                </div>
+              </div>
+
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="enable_host_volume_control" />
+                  <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
+                </label>
+              </div>
+
+              <div class="form-item-row grid-col-span-2" style="margin-bottom: 0.5rem;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="auto_mute_mode" />
+                  <span data-i18n="lbl_auto_mute">Silenciar Altavoz del Mando Automáticamente (Modos 1 y 2)</span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div id="tabSystem" class="tab-content-general">
+          <div class="card">
+            <h2 class="card-title" data-i18n="sys_title">⚙️ Sistema & Emulación</h2>
+            <div class="grid">
+              <div class="form-item">
+                <label for="controller_mode" data-i18n="lbl_emu_mode">Perfil Emulado USB</label>
+                <select id="controller_mode">
+                  <option value="0">0: DualSense</option>
+                  <option value="1">1: DualSense Edge</option>
+                  <option value="2" data-i18n="opt_emu_auto">2: Auto (Por Defecto)</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label for="polling_rate_mode" data-i18n="lbl_poll">Frecuencia USB (Polling Rate)</label>
+                <select id="polling_rate_mode">
+                  <option value="0" data-i18n="opt_poll_0">250Hz - Balanceado</option>
+                  <option value="1" data-i18n="opt_poll_1">500Hz - Competitivo</option>
+                  <option value="2" data-i18n="opt_poll_2">1000Hz - Real Time</option>
+                </select>
+              </div>
+              
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="inactive_time" data-i18n="lbl_inactive">Tiempo de Apagado por Inactividad</label>
+                  <span class="slider-sub" data-i18n="sub_inactive">Minutos antes de desconexión BT [5 - 60]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="inactive_time_slider" min="5" max="60" step="1" value="30">
+                  <input type="number" id="inactive_time" min="5" max="60" step="1" value="30" class="slider-number">
+                </div>
+              </div>
+
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between; margin-top:0.5rem;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="disable_inactive_disconnect" />
+                  <span data-i18n="lbl_chk_inact">Deshabilitar Suspensión por Inactividad</span>
+                </label>
+                
+              </div>
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="disable_pico_led" />
+                  <span data-i18n="lbl_chk_led">Apagar LED del Dongle</span>
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="wake_enable" />
+                  <span data-i18n="lbl_chk_wake">Despertar Host por Mando</span>
+                </label>
+              </div>
+              
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title" data-i18n="con_title">⚙️ Modo Configuración por Control</h2>
+            <div class="grid">            
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label for="hold_mute_time" data-i18n="lbl_hold_mute">Tiempo para entrar en modo</label>
+                  <span class="slider-sub" data-i18n="sub_hold_mute">Minutos antes de desconexión BT [5 - 60]</span>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="hold_mute_time_slider" min="0" max="3000" step="50" value="0">
+                  <input type="number" id="hold_mute_time" min="0" max="3000" step="50" value="0" class="slider-number">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title" data-i18n="shortc_title">⚙️ Atajos de sistema</h2>
+            <div class="grid">            
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="enable_host_sleep" />
+                  <span data-i18n="lbl_sleep_host">Activar atajo para Suspender Host (Sólo Windows)</span>
+                </label>
+              </div>
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="enable_poweroff_shortcut" />
+                  <span data-i18n="lbl_chk_po">Activar atajo para Apagar</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="tabProfiles" class="tab-content">
+        
+        <div class="grid-col-span-2">
+          <div>
+            <h2 class="sub-title" style="align-self: center; width: 100%;" data-i18n="profile_config_selected_title">Ajuste de Perfiles</h2>
+          </div>
+        </div>
+        <div class="profile-separator card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 1.2rem 1.5rem; gap: 1rem;">
+          
+          <div style="display: flex; align-items: center; min-height: 40px;">
+            
+            <div id="readModeContainer" style="display: flex; align-items: center; gap: 0.75rem;">
+              <h2 id="profileNameDisplay" class="card-title" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.02em;">Perfil 1</h2>
+              <button id="btnEditProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #64748b; cursor: pointer; display: flex; align-items: center; transition: color 0.2s;" title="Editar Nombre" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">
+                <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+              </button>
+            </div>
+
+            <div id="profileNameEditContainer" style="display: none; align-items: center; gap: 0.5rem; background: #0f172a; border-radius: var(--radius); border: 1px solid #38bdf8; padding: 0.25rem 0.5rem;">
+              <input type="text" id="inputProfileName" maxlength="18" autocomplete="off" style="background: transparent; color: white; border: none; outline: none; font-size: 1.8rem; font-weight: 700; width: 180px; padding: 0; font-family: var(--font-main);" placeholder="Nombre...">
+              
+              <button id="btnSaveProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #10b981; cursor: pointer; display: flex; align-items: center;" title="Guardar">
+                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+              </button>
+              
+              <button id="btnCancelProfileName" style="background: transparent; border: none; padding: 0.25rem; color: #ef4444; cursor: pointer; display: flex; align-items: center;" title="Cancelar">
+                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            
+          </div>
+
+          <div class="custom-dropdown-container">
+            <button id="profileBtn" class="pill-btn" style="background:#0f172a; border-color:#38bdf8; font-size: 1rem; padding: 0.6rem 1.2rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span id="currentProfileText">Perfil 1</span>
+            </button>
+            <div id="profileMenu" class="custom-menu">
+              <div class="menu-item profile-item active" data-index="0"><span>Perfil 1</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="1"><span>Perfil 2</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="2"><span>Perfil 3</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <div class="menu-item profile-item" data-index="3"><span>Perfil 4</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs-list-green">
+          <button class="tab-trigger-profile active" data-tab="tabTriggers" data-i18n="tab_triggers">Gatillos</button>
+          <button class="tab-trigger-profile" data-tab="tabGyro" data-i18n="tab_gyro">Giroscopio</button>
+          <button class="tab-trigger-profile" data-tab="tabLightbar" data-i18n="tab_lightbar">Lightbar</button>
+        </div>
+
+        <div id="tabTriggers" class="tab-content-profile active">
+          <div class="card">
+            <h2 class="card-title" data-i18n="trigger_title">🔫 Modos de Gatillo Adaptativo</h2>
+            <div class="grid">
+              <div class="form-item">
+                <label for="trigger_left_mode" data-i18n="lbl_trigger_l">Gatillo Izquierdo (L2)</label>
+                <select id="trigger_left_mode">
+                  <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
+                  <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
+                  <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
+                  <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
+                  <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
+                  <option value="5" data-i18n="opt_trig_5">5: Modo Vibración a Gatillos</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label for="trigger_right_mode" data-i18n="lbl_trigger_r">Gatillo Derecho (R2)</label>
+                <select id="trigger_right_mode">
+                  <option value="0" data-i18n="opt_trig_0">0: Juego Nativo</option>
+                  <option value="1" data-i18n="opt_trig_1">1: Modo Rígido</option>
+                  <option value="2" data-i18n="opt_trig_2">2: Modo Disparo</option>
+                  <option value="3" data-i18n="opt_trig_3">3: Modo Metralleta</option>
+                  <option value="4" data-i18n="opt_trig_4">4: Modo Gatillo Rápido</option>
+                  <option value="5" data-i18n="opt_trig_5">5: Modo Vibración a Gatillos</option>
+                </select>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="card">
+            <div class="grid-col-span-2">
+              <h2 class="card-title">  </h2>
+              <h2 class="card-title" data-i18n="trigger_config_title">Configuración de modos</h2>
+              <div class="tabs-list">
+                <button class="tab-trigger-trigger-mode active" data-tab="tabTriggerMode1" data-i18n="tab_trigger1">Modo 1</button>
+                <button class="tab-trigger-trigger-mode" data-tab="tabTriggerMode2" data-i18n="tab_trigger2">Modo 2</button>
+                <button class="tab-trigger-trigger-mode" data-tab="tabTriggerMode3" data-i18n="tab_trigger3">Modo 3</button>
+                <button class="tab-trigger-trigger-mode" data-tab="tabTriggerMode4" data-i18n="tab_trigger4">Modo 4</button>
+                <button class="tab-trigger-trigger-mode" data-tab="tabTriggerMode5" data-i18n="tab_trigger5">Modo 5</button>
+              </div>
+            </div>
+            <div id="tabTriggerMode1" class="tab-content-trigger-mode active">
+              <div class="card-clear">
+                <h2 class="card-title"> </h2>
+                <h2 class="card-title" data-i18n="adv_feedback_title">⚡ Modo 1: Rígido (Fuerza Constante)</h2>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_feedback">Afecta la resistencia base de los gatillos adaptativos.</p>
+                <div class="grid">
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_fsp">Punto de Inicio</label></div>
+                    <div class="slider-row"><input type="range" id="feedback_start_point_slider" min="0" max="255" step="1" value="0"><input type="number" min="0" max="255" id="feedback_start_point" class="slider-number"></div>
+                  </div>
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_ff">Fuerza Aplicada</label></div>
+                    <div class="slider-row"><input type="range" id="feedback_force_slider" min="0" max="255" step="1" value="200"><input type="number" min="0" max="255" id="feedback_force" class="slider-number"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tabTriggerMode2" class="tab-content-trigger-mode">
+              <div class="card-clear">
+                <h2 class="card-title"> </h2>
+                <h2 class="card-title" data-i18n="adv_weapon_title">🎯 Modo 2: Disparo (Gatillo de arma)</h2>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_weapon">Define el comportamiento del 'clic' del gatillo.</p>
+                <div class="grid">
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_tsp">Punto de Inicio</label></div>
+                    <div class="slider-row"><input type="range" id="trigger_start_point_slider" min="0" max="255" step="1" value="20"><input type="number" min="0" max="255" id="trigger_start_point" class="slider-number"></div>
+                  </div>
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_twp">Punto de Resistencia (Muro)</label></div>
+                    <div class="slider-row"><input type="range" id="trigger_wall_point_slider" min="0" max="255" step="1" value="45"><input type="number" min="0" max="255" id="trigger_wall_point" class="slider-number"></div>
+                  </div>
+                  <div class="form-item grid-col-span-2">
+                    <div class="slider-header"><label data-i18n="lbl_tbf">Fuerza de Quiebre (Break Force)</label></div>
+                    <div class="slider-row"><input type="range" id="trigger_break_force_slider" min="0" max="255" step="1" value="255"><input type="number" min="0" max="255" id="trigger_break_force" class="slider-number"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tabTriggerMode3" class="tab-content-trigger-mode">
+              <div class="card-clear">
+                <h2 class="card-title"> </h2>
+                <h2 class="card-title" data-i18n="adv_vib_title">📳 Modo 3: Metralleta (Vibración del gatillo)</h2>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_vib">Ajustes para el retroceso automático del Modo Metralleta.</p>
+                <div class="grid">
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_vsp">Inicio de Vibración</label></div>
+                    <div class="slider-row"><input type="range" id="vibration_start_point_slider" min="32" max="255" step="1" value="32"><input type="number" min="32" max="255" id="vibration_start_point" class="slider-number"></div>
+                  </div>
+                  <div class="form-item">
+                    <div class="slider-header">
+                      <label data-i18n="lbl_vf">Frecuencia de Vibración</label>
+                    </div>
+                    <div class="slider-row"><input type="range" id="vibration_frequency_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_frequency" class="slider-number"></div>
+                  </div>
+                  <div class="form-item grid-col-span-2">
+                    <div class="slider-header"><label data-i18n="lbl_vfo">Fuerza de Vibración</label></div>
+                    <div class="slider-row"><input type="range" id="vibration_force_slider" min="0" max="255" step="1" value="6"><input type="number" min="0" max="255" id="vibration_force" class="slider-number"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tabTriggerMode4" class="tab-content-trigger-mode">
+              <div class="card-clear">
+                <h2 class="card-title"> </h2>
+                <h2 class="card-title" data-i18n="adv_hai_title">📳 Modo 4: Gatillo rápido (Recorrido corto)</h2>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_hai">Ajustar largo del recorrido del gatillo.</p>
+                <div class="grid-col-span-2">
+                  <div class="form-item">
+                    <div class="slider-header"><label data-i18n="lbl_hws">Inicio del muro</label></div>
+                    <div class="slider-row"><input type="range" id="wall_start_point_slider" min="60" max="100" step="2" value="50"><input type="number" min="60" max="100" id="wall_start_point" class="slider-number"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tabTriggerMode5" class="tab-content-trigger-mode">
+              <div class="card-clear">
+                <h2 class="card-title"> </h2>
+                <h2 class="card-title" data-i18n="rumble_trigger_title">📳 Modo 5: Vibración a Gatillo</h2>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="rumble_trigger_desc">Ajustar largo del recorrido del gatillo.</p>
+                <div class="grid">
+
+                  <div class="form-item grid-col-span-2">
+                    <label for="rumble_trigger_mode" data-i18n="lbl_rumble_trigger">Modo de Funcionamiento</label>
+                    <select id="trigger_rumble_mode">
+                      <option value="0" data-i18n="opt_rum_trig_0">Gatillo Izquierdo</option>
+                      <option value="1" data-i18n="opt_rum_trig_1">Gatillo Derecho</option>
+                      <option value="2" data-i18n="opt_rum_trig_2">Ambos</option>
+                    </select>
+                  </div>
+                  <div class="grid-col-span-2">
+                    <div class="form-item">
+                      <div class="slider-header"><label data-i18n="lbl_rumble_trigger_strength">Multiplicador de Vibración</label></div>
+                      <div class="slider-row"><input type="range" id="rumble_trigger_strength_slider" min="0" max="100" step="2" value="100"><input type="number" min="0" max="100" id="rumble_trigger_strength" class="slider-number"></div>
+                    </div>
+                    <div class="form-item">
+                      <div class="slider-header"><label data-i18n="lbl_rumble_trigger_freq">Frecuencia</label></div>
+                      <div class="slider-row"><input type="range" id="rumble_trigger_freq_slider" min="0" max="255" step="1" value="60"><input type="number" min="0" max="255" id="rumble_trigger_freq" class="slider-number"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                    <label class="checkbox-container">
+                      <input type="checkbox" id="rumble_act_pres" />
+                      <span data-i18n="lbl_rum_act_press">Activar sólo bajo presión</span>
+                    </label>
+                  </div> 
+                  
+                  
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div id="tabGyro" class="tab-content-profile">
+          <div class="card">
+            <h2 class="card-title" data-i18n="gyro_title">🔫 Modo Giroscopio y Activación</h2>
+            <div class="grid">
+              <div class="form-item grid-col-span-2">
+                <label for="gyro_activation_button" data-i18n="lbl_gyro_l">Botón de Activación</label>
+                <select id="gyro_activation_button" style="width: 50%;">
+                  <option value="0" data-i18n="opt_gyro_0">0: Deshabilitado</option>
+                  <option value="1" data-i18n="opt_gyro_1">1: Habilitado siempre</option>
+                  <option value="2" data-i18n="opt_gyro_2">2: L2</option>
+                  <option value="3" data-i18n="opt_gyro_3">3: R2</option>
+                  <option value="4" data-i18n="opt_gyro_4">4: L1</option>
+                  <option value="5" data-i18n="opt_gyro_5">5: R1</option>
+                  <option value="6" data-i18n="opt_gyro_6">6: L3</option>
+                  <option value="7" data-i18n="opt_gyro_7">7: R3</option>
+                  <option value="8" data-i18n="opt_gyro_8">8: Square</option>
+                  <option value="9" data-i18n="opt_gyro_9">9: Cross</option>
+                  <option value="10" data-i18n="opt_gyro_10">10: Circle</option>
+                  <option value="11" data-i18n="opt_gyro_11">11: Triangle</option>
+                </select>
+              </div>
+
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_agyd">Zona Muerta Salida Giroscopio a Joystick</label>
+                </div>
+                <div class="slider-row"><input type="range" id="gyro_dead_zone_slider" min="0" max="100" step="0.5" value="42.5"><input type="number" min="0" max="100" step="0.5" id="gyro_dead_zone" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_agyd"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_agyd">Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.</p></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_msdps">Máximos Grados/Segundo</label>
+                </div>
+                <div class="slider-row"><input type="range" id="max_degrees_per_second_slider" min="50" max="500" step="10" value="100"><input type="number" min="50" max="500" id="max_degrees_per_second" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_msdps"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_msdps">Valor máximo de grados por segundo [50 - 500]</p></div>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <div class="slider-header">
+                  <label data-i18n="lbl_gymul">Multiplicador Giroscopio</label>
+                </div>
+                <div class="slider-row"><input type="range" id="gyro_multiplier_slider" min="0.5" max="10" step="0.5" value="1"><input type="number" min="0.5" max="10" step="0.5" id="gyro_multiplier" class="slider-number"></div>
+                <div></div>
+                <div class="slider-sub" data-i18n="sub_gymul"><p style="font-size: 0.85rem; color: #94a3b8; margin-top: -1rem; margin-bottom: 1rem;" data-i18n="desc_gymul">Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del controlador.</p></div>
+              </div>
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="invert_gyro_x" />
+                  <span data-i18n="lbl_gyro_invx">Invertir Eje X</span>
+                </label>
+              </div>
+              <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="invert_gyro_y" />
+                  <span data-i18n="lbl_gyro_invy">Despertar Host por Mando</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
+        <div id="tabLightbar" class="tab-content-profile">
+          <div class="card">
+            <h2 class="card-title" data-i18n="lb_title">💡 Lightbar</h2>
+            <div class="grid">
+              <div class="form-item">
+                <label for="lightbar_mode" data-i18n="lbl_lb_mode">Comportamiento del Color</label>
+                <select id="lightbar_mode">
+                  <option value="0" data-i18n="opt_lb_0">0: Controlado por Host (Nativo)</option>
+                  <option value="1" data-i18n="opt_lb_1">1: Apagado Total</option>
+                  <option value="2" data-i18n="opt_lb_2">2: Favorito 1</option>
+                  <option value="3" data-i18n="opt_lb_3">3: Favorito 2</option>
+                  <option value="4" data-i18n="opt_lb_4">4: Favorito 3</option>
+                  <option value="5" data-i18n="opt_lb_5">5: Favorito 4</option>
+                  <option value="6" data-i18n="opt_lb_6">6: Nivel de Batería</option>
+                  <option value="7" data-i18n="opt_lb_7">7: Arcoíris</option>
+                  <option value="8" data-i18n="opt_lb_8">8: Desvanecimiento entre Favoritos</option>
+                </select>
+              </div>
+              <div class="form-item grid-col-span-2" style="justify-content:center;">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="lightbar_breathing" />
+                  <span data-i18n="lbl_lb_breath">Efecto Respiración (Sólo para Modo 0 y Favoritos 1 - 4)</span>
+                </label>
+              </div>
+              <div class="form-item grid-col-span-2">
+                <label data-i18n="lbl_lb_matrix">Matriz de Colores Favoritos</label>
+                <div class="fav-color-grid">
+                  <div class="fav-color-item"><label>FAV 0</label><input type="color" id="fav_color_0" value="#00ddff" /></div>
+                  <div class="fav-color-item"><label>FAV 1</label><input type="color" id="fav_color_1" value="#ff0011" /></div>
+                  <div class="fav-color-item"><label>FAV 2</label><input type="color" id="fav_color_2" value="#bfff00" /></div>
+                  <div class="fav-color-item"><label>FAV 3</label><input type="color" id="fav_color_3" value="#ffffff" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="log_title">🖥️ Monitor WebHID</h2>
+        <textarea id="hexLog" class="hex-console" readonly placeholder="Los buffers transmitidos aparecerán aquí en formato hexadecimal..."></textarea>
+      </div>
+      
+      <button id="btnSaveBottom" class="btn-primary" style="align-self: center; width: 100%; padding: 0.75rem; font-size: 1rem; margin-top: 0.5rem;" data-i18n="btn_save">Guardar en Flash</button>
+
+      
+    </div>
+      
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // ── 1. DEFINICIÓN DE ESTADO GLOBAL ──
+    const $ = id => document.getElementById(id);
+    let device = null;
+    let currentLang = 'es';
+    let currentProfile = 0; // Estado del perfil seleccionado (0-3)
+    let currentProfileOffset = 1;
+    const SONY_VID = 0x054C;
+    const DS5_PID  = 0x0CE6;
+    const DSE_PID  = 0x0DF2;
+
+    // ── 2. DICCIONARIO I18N ──
+    const i18n = {
+      es: {
+        app_title: "OmniSense Dongle",
+        warn_reconnect: "Configuración guardada en la Flash",
+        status_title: "Estado del Dongle",
+        status_disconnected: "Desconectado",
+        btn_connect: "Conectar",
+        btn_disconnect: "Desconectar",
+        btn_read: "Leer Config",
+        btn_defaults: "Por Defecto",
+        btn_save: "Guardar en Flash",
+        btn_reconnect: "Reconectar",
+        
+        tab_global: "General",
+        tab_profiles: "Perfiles",
+        tab_info: "Información",
+        tab_haptics: "Hápticas",
+        tab_audio: "Audio",
+        tab_system: "Sistema",
+        haptics_title: "🔊 Retroalimentación Háptica Global",
+        sound_title: "🔊 Configuración de Sonido Global",
+        lbl_haptics_gain: "Ganancia Háptica General",
+        sub_haptics_gain: "Multiplicador global [1.0 - 2.0]",
+        lbl_buffer: "Longitud del Búfer de Audio Háptico",
+        sub_buffer: "Bytes PCM por paquete [16 - 128]",
+        
+        dsp_title: "🤖 Auto-Hápticas DSP",
+        lbl_dsp_mode: "Modo de Operación Auto-Háptica",
+        opt_dsp_0: "0: Deshabilitado (Solo usar nativo)",
+        opt_dsp_1: "1: Modo Mezcla (Añadir vibración DSP)",
+        opt_dsp_2: "2: Modo Reemplazo (Usar solo DSP)",
+        lbl_auto_mute: "Silenciar Altavoz del Mando Automáticamente en modo audio-hápticas 1 y 2",
+        lbl_dsp_gain: "Ganancia Auto Háptica",
+        sub_dsp_gain: "Porcentaje a señal derivada [0 - 200]",
+        lbl_dsp_lp: "Filtro Pasabajo Auto Hápticas",
+        sub_dsp_lp: "Corte LP en Hz [20 - 400]",
+        lbl_speaker_vol: "Volumen Maestro del Altavoz",
+        sub_speaker_vol: "[0 - 100]",
+        lbl_headset_vol: "Volumen Maestro de Audífonos",
+        con_title: "Modo Configuración",
+        lbl_hold_mute: "Tiempo para cambiar de modo",
+        sub_hold_mute: "Cuantos milisegundos sosteniendo el botón mute para iniciar modo configuración",
+
+        sys_title: "⚙️ Sistema & Emulación",
+        lbl_emu_mode: "Perfil Emulado USB",
+        opt_emu_auto: "2: Auto (Por Defecto)",
+        lbl_poll: "Frecuencia USB (Polling Rate)",
+        opt_poll_0: "250Hz - Balanceado",
+        opt_poll_1: "500Hz - Competitivo",
+        opt_poll_2: "1000Hz - Real Time",
+        lbl_inactive: "Tiempo de Apagado por Inactividad",
+        sub_inactive: "Minutos antes de desconexión BT [5 - 60]",
+        lbl_chk_inact: "Deshabilitar Suspensión por Inactividad",
+        lbl_chk_po: "Activar atajo para apagar control (Triángulo)",
+        lbl_chk_led: "Apagar LED del Dongle",
+        lbl_chk_wake: "Despertar Host por Mando",
+        lbl_sleep_host: "Activar atajo para Suspender Windows (Círculo) ",
+        lbl_host_volume: "Controlar volumen de Windows en lugar del parlante interno (LS)",
+        shortc_title: "Atajos de sistema",
+        sec_profiles: "👤 Perfiles de Mando",
+        profile_lbl: "Perfil",
+        global_config_title: "Ajustes Globales",
+        profile_config_selected_title: "Ajuste de Perfiles",
+        trigger_title: "🔫 Modo de Gatillo Aplicado",
+        lbl_trigger_l: "Gatillo Izquierdo (L2)",
+        lbl_trigger_r: "Gatillo Derecho (R2)",
+        opt_trig_0: "0: Juego Nativo",
+        opt_trig_1: "1: Rígido",
+        opt_trig_2: "2: Disparo",
+        opt_trig_3: "3: Metralleta",
+        opt_trig_4: "4: Gatillo Rápido",
+        opt_trig_5: "5: Vibración a Gatillo",
+        trigger_config_title: "⚙️ Parámetros por Modos",
+        tab_trigger1: "Modo 1",
+        tab_trigger2: "Modo 2",
+        tab_trigger3: "Modo 3",
+        tab_trigger4: "Modo 4",
+        tab_trigger5: "Modo 5",
+        adv_feedback_title: "⚡ Rígido (Fuerza Constante)",
+        desc_feedback: "Afecta la resistencia base de los gatillos adaptativos.",
+        adv_weapon_title: "🎯 Disparo (Gatillo de arma)",
+        desc_weapon: "Define el comportamiento del 'clic' del gatillo.",
+        adv_vib_title: "📳 Metralleta (Vibración del gatillo)",
+        desc_vib: "Ajustes para el retroceso automático del Modo Metralleta.",
+        adv_hai_title: "🎯 Gatillo Rápido (Recorrido corto)",
+        desc_hai: "Ajustar largo del recorrido del gatillo.",
+        rumble_trigger_title: "📳 Vibración a Gatillos",
+        rumble_trigger_desc: "Duplica los efectos de vibración clásicos y los envía a los gatillos",
+        lbl_rum_act_press: "Activar sólo bajo presión",
+        lbl_rumble_trigger: "Modo de funcionamiento",
+        lbl_rumble_trigger_strength: "Multiplicador de Vibración",
+        lbl_rumble_trigger_freq: "Frecuencia aplicada",
+        opt_rum_trig_0: "Gatillo Izquierdo",
+        opt_rum_trig_1: "Gatillo Derecho",
+        opt_rum_trig_2: "Ambos",
+        lbl_fsp: "Punto de Inicio",
+        lbl_ff: "Fuerza Aplicada",
+        lbl_tsp: "Punto de Inicio",
+        lbl_twp: "Punto de Resistencia (Muro)",
+        lbl_tbf: "Fuerza de Quiebre (Break Force)",
+        lbl_vsp: "Inicio de Vibración",
+        lbl_vf: "Frecuencia de Vibración",
+        lbl_vfo: "Fuerza de Vibración",
+        lbl_hws: "Inicio del Muro",
+
+        lbl_gyro_l: "Botón de Activación",
+        opt_gyro_0: "Deshabilitado",
+        opt_gyro_1: "Habilitado siempre",
+        opt_gyro_2: "L2",
+        opt_gyro_3: "R2",
+        opt_gyro_4: "L1",
+        opt_gyro_5: "R1",
+        opt_gyro_6: "L3",
+        opt_gyro_7: "R3",
+        opt_gyro_8: "Cuadrado",
+        opt_gyro_9: "Cruz",
+        opt_gyro_10: "Círculo",
+        opt_gyro_11: "Triángulo",
+        lbl_agyd: "Zona Muerta Giroscopio a Joystick",
+        lbl_msdps: "Máximos Grados/Segundo",
+        sub_agyd: "Este valor determina la salida mínima que el joystick enviará al deslizarlo. Lo ideal es ajustarlo de modo que la zona muerta integrada en el juego quede compensada con exactitud. Sube este valor hasta que los movimientos lentos no se detengan ni den tirones, sino que proporcionen un movimiento limpio. Bájalo si los movimientos pequeños son demasiado grandes.",
+        sub_msdps: "Valor máximo de grados por segundo. Este valor implica a que velocidad tendrás que girar el control para llegar a un empuje del 100% del análogo derecho en cualquier dirección.",
+        lbl_gymul: "Multiplicador Giroscopio",
+        sub_gymul: "Este valor determina el multiplicador del giroscopio. Aumenta este valor para obtener una respuesta más sensible al movimiento del control.",
+        lbl_gyro_invx: "Invertir Eje X",
+        lbl_gyro_invy: "Invertir Eje Y",
+        lb_title: "💡 Lightbar",
+        lbl_lb_mode: "Comportamiento del Color",
+        opt_lb_0: "0: Controlado por Host (Nativo)",
+        opt_lb_1: "1: Apagado Total",
+        opt_lb_2: "2: Favorito 1",
+        opt_lb_3: "3: Favorito 2",
+        opt_lb_4: "4: Favorito 3",
+        opt_lb_5: "5: Favorito 4",
+        opt_lb_6: "6: Nivel de Batería",
+        opt_lb_7: "7: Arcoíris",
+        opt_lb_8: "8: Desvanecimiento entre Favoritos",
+        lbl_lb_breath: "Efecto Respiración (Sólo para Modo 0 y Favoritos 1 - 4)",
+        lbl_lb_matrix: "Matriz de Colores Favoritos",
+        
+        log_title: "🖥️ Monitor WebHID",
+        placeholder_log: "Los buffers transmitidos aparecerán aquí en formato hexadecimal...",
+        msg_err_webhid: "WebHID no soportado — Utiliza navegadores basados en Chromium.",
+        msg_conn_fail: "Conexión fallida:",
+        msg_read_ok: "Configuración leída con éxito.",
+        msg_read_err: "Error al leer config:",
+        msg_save_ok: "¡Configuración guardada en Flash!",
+        msg_save_err: "Error al salvar en Flash:",
+        msg_recon_ok: "Orden de reconexión USB despachada.",
+        msg_recon_err: "Fallo al reconectar:",
+        msg_def_ok: "Valores por defecto cargados. Haz clic en 'Guardar en Flash' para aplicarlos."
+      },
+      en: {
+        app_title: "OmniSense Dongle",
+        warn_reconnect: "Settings saved to Flash",
+        status_title: "Dongle Status",
+        status_disconnected: "Disconnected",
+        btn_connect: "Connect",
+        btn_disconnect: "Disconnect",
+        btn_read: "Read Settings",
+        btn_defaults: "Defaults",
+        btn_save: "Save to Flash",
+        btn_reconnect: "Reconnect",
+        
+        tab_global: "General",
+        tab_profiles: "Profiles",
+        tab_info: "Information",
+        tab_haptics: "Haptics",
+        tab_audio: "Audio",
+        tab_system: "System",
+        haptics_title: "🔊 Global Haptic Feedback",
+        sound_title: "🔊 Global Sound Settings",
+        lbl_haptics_gain: "Global Haptics Gain",
+        sub_haptics_gain: "Global multiplier [1.0 - 2.0]",
+        lbl_buffer: "Haptics Audio Buffer Length",
+        sub_buffer: "PCM bytes per BT packet [16 - 128]",
+        
+        dsp_title: "🤖 Auto-Haptics DSP",
+        lbl_dsp_mode: "Auto-Haptics Operation Mode",
+        opt_dsp_0: "0: Disabled (Use native only)",
+        opt_dsp_1: "1: Mix Mode (Add DSP feedback)",
+        opt_dsp_2: "2: Replace Mode (Use DSP only)",
+        lbl_auto_mute: "Auto Mute Controller Speaker in Auto-Haptics Modes 1 and 2",
+        lbl_dsp_gain: "Auto Haptics Gain",
+        sub_dsp_gain: "Percent applied to derived signal [0 - 200]",
+        lbl_dsp_lp: "Auto Haptics Lowpass Filter",
+        sub_dsp_lp: "LP cutoff in Hz [20 - 400]",
+        lbl_speaker_vol: "Master Speaker Volume",
+        sub_speaker_vol: "[0 - 100]",
+        lbl_headset_vol: "Master Headset Volume",
+        con_title: "Configuration Mode",
+        lbl_hold_mute: "Time to switch mode",
+        sub_hold_mute: "How many milliseconds to hold the mute button to start the configuration mode",
+        
+        sys_title: "⚙️ System & Emulation",
+        lbl_emu_mode: "USB Emulated Profile",
+        opt_emu_auto: "2: Auto (Default)",
+        lbl_poll: "USB Polling Rate",
+        opt_poll_0: "250Hz - Balanced",
+        opt_poll_1: "500Hz - Competitive",
+        opt_poll_2: "1000Hz - Real Time",
+        lbl_inactive: "Idle Power-Off Time",
+        sub_inactive: "Minutes before BT disconnect [5 - 60]",
+        lbl_chk_inact: "Disable Auto-Suspend on Idle",
+        lbl_chk_po: "Enable Controller Power-Off Shortcut (Triangle)",
+        lbl_chk_led: "Turn off Dongle LED entirely",
+        lbl_chk_wake: "Wake Host with Dongle",
+        lbl_sleep_host: "Enable Sleep Windows Shortcut (Circle)",
+        lbl_host_volume: "Control Windows volume instead of internal speaker (LS)",
+        shortc_title: "System Shortcuts",
+        sec_profiles: "👤 Controller Profiles",
+        profile_lbl: "Profile",
+        global_config_title: "Global Settings",
+        profile_config_selected_title: "Profile Settings",
+        trigger_title: "🔫 Trigger Modes Applied",
+        lbl_trigger_l: "Left Trigger (L2)",
+        lbl_trigger_r: "Right Trigger (R2)",
+        opt_trig_0: "0: Native Game",
+        opt_trig_1: "1: Resistance Mode",
+        opt_trig_2: "2: Weapon Click",
+        opt_trig_3: "3: Machine Gun",
+        opt_trig_4: "4: Hair Trigger",
+        opt_trig_5: "5: Rumble to Trigger",
+        trigger_config_title: "⚙️ Mode Parameters",
+        tab_trigger1: "Mode 1",
+        tab_trigger2: "Mode 2",
+        tab_trigger3: "Mode 3",
+        tab_trigger4: "Mode 4",
+        tab_trigger5: "Mode 5",
+        adv_feedback_title: "⚡ Resistance (Constant Force)",
+        desc_feedback: "Affects the base resistance of the adaptive triggers.",
+        adv_weapon_title: "🎯 Weapon Click Point",
+        desc_weapon: "Defines the 'click' behavior of the trigger.",
+        adv_vib_title: "📳 Machine Gun Effect (Vibration)",
+        desc_vib: "Settings for the automatic recoil of the Machine Gun mode.",
+        adv_hai_title: "🎯 Hair Trigger (Short Travel)",
+        desc_hai: "Adjust trigger travel length.",
+        rumble_trigger_title: "📳 Rumble to Triggers",
+        rumble_trigger_desc: "Duplicate the rumble signal and derives it to the triggers",
+        lbl_rum_act_press: "Activate only on pressure",
+        lbl_rumble_trigger: "Working mode",
+        lbl_rumble_trigger_strength: "Rumble Multiplier",
+        lbl_rumble_trigger_freq: "Frequency Applied",
+        opt_rum_trig_0: "Left Trigger",
+        opt_rum_trig_1: "Right Trigger",
+        opt_rum_trig_2: "Both",
+        lbl_fsp: "Start Point",
+        lbl_ff: "Applied Force",
+        lbl_tsp: "Start Point",
+        lbl_twp: "Wall Resistance Point",
+        lbl_tbf: "Break Force",
+        lbl_vsp: "Vibration Start Point",
+        lbl_vf: "Vibration Frequency",
+        lbl_vfo: "Vibration Force",
+        lbl_hws: "Wall Start Point",
+
+        lbl_gyro_l: "Activation Button",
+        opt_gyro_0: "Disabled",
+        opt_gyro_1: "Always Enabled",
+        opt_gyro_2: "L2",
+        opt_gyro_3: "R2",
+        opt_gyro_4: "L1",
+        opt_gyro_5: "R1",
+        opt_gyro_6: "L3",
+        opt_gyro_7: "R3",
+        opt_gyro_8: "Square",
+        opt_gyro_9: "Cross",
+        opt_gyro_10: "Circle",
+        opt_gyro_11: "Triangle",
+        lbl_agyd: "Gyro to Joystick Dead Zone",
+        lbl_msdps: "Max Degrees/Second",
+        sub_agyd: "This value determines the minimum output that the joystick will send when sliding it. Ideally, you should adjust it so that the in-game built-in deadzone is accurately compensated. Increase this value until slow movements do not stop or stutter, but instead provide a clean movement. Lower it if small movements are too large.",
+        sub_msdps: "Maximum degrees per second. This value implies the speed at which you will need to rotate the controller to reach a 100% push of the right analog stick in any direction.",
+        lbl_gymul: "Gyro Multiplier",
+        sub_gymul: "This value determines the gyro multiplier. Increase this value to obtain a more sensitive response to controller movement.",
+        lbl_gyro_invx: "Invert X Axis",
+        lbl_gyro_invy: "Invert Y Axis",
+
+        lb_title: "💡 Lightbar",
+        lbl_lb_mode: "Color Behavior",
+        opt_lb_0: "0: Host Controlled (Native)",
+        opt_lb_1: "1: Fully Off",
+        opt_lb_2: "2: Favorite 1",
+        opt_lb_3: "3: Favorite 2",
+        opt_lb_4: "4: Favorite 3",
+        opt_lb_5: "5: Favorite 4",
+        opt_lb_6: "6: Battery Level",
+        opt_lb_7: "7: Rainbow",
+        opt_lb_8: "8: Fade between Favorites",
+        lbl_lb_breath: "Breathing Animation (Only for Mode 0 and Favotites 1 - 4)",
+        lbl_lb_matrix: "Favorite Colors Matrix",
+        
+        log_title: "🖥️ WebHID Monitor",
+        placeholder_log: "Transmitted buffers will appear here in hexadecimal format...",
+        msg_err_webhid: "WebHID not supported — Please use a Chromium-based browser.",
+        msg_conn_fail: "Connection failed:",
+        msg_read_ok: "Configuration successfully read.",
+        msg_read_err: "Error reading config:",
+        msg_save_ok: "Configuration successfully saved to Flash!",
+        msg_save_err: "Error saving to Flash:",
+        msg_recon_ok: "USB Reconnect command dispatched.",
+        msg_recon_err: "Failed to reconnect:",
+        msg_def_ok: "Default values loaded. Click 'Save to Flash' to apply them."
+      }
+    };
+
+    // ── 3. FUNCIONES DE IDIOMA, PESTAÑAS Y PERFILES ──
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[lang][key]) el.textContent = i18n[lang][key];
+      });
+      const logArea = $('hexLog');
+      if (logArea) logArea.placeholder = i18n[lang].placeholder_log;
+      if (device) $('btnConnect').textContent = i18n[currentLang].btn_disconnect;
+      else {
+        $('btnConnect').textContent = i18n[currentLang].btn_connect;
+        $('statusText').textContent = i18n[currentLang].status_disconnected;
+      }
+      $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfileOffset}`;
+      document.querySelectorAll('.profile-item span').forEach((span, idx) => {
+        span.textContent = `${t('profile_lbl')} ${idx+1}`;
+      });
+    }
+
+    const t = (key) => i18n[currentLang][key] || key;
+
+    // Dropdown Idioma
+    $('langBtn').addEventListener('click', (e) => { 
+      e.stopPropagation(); 
+      $('langMenu').classList.toggle('show'); 
+      $('profileMenu').classList.remove('show'); 
+    });
+    document.querySelectorAll('.lang-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const lang = e.currentTarget.getAttribute('data-lang');
+        setLanguage(lang);
+        document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        $('currentLangText').textContent = lang.toUpperCase();
+        $('langMenu').classList.remove('show');
+      });
+    });
+
+    // Pestañas (Tabs)
+    document.querySelectorAll('.tab-trigger').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Quitar active a todos los botones y contenidos
+        document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Poner active al seleccionado
+        e.currentTarget.classList.add('active');
+        const targetId = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    // Pestañas General (Tabs)
+    document.querySelectorAll('.tab-trigger-general').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Quitar active a todos los botones y contenidos
+        document.querySelectorAll('.tab-trigger-general').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content-general').forEach(c => c.classList.remove('active'));
+        
+        // Poner active al seleccionado
+        e.currentTarget.classList.add('active');
+        const targetId = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    // Pestañas Perfiles (Tabs)
+    document.querySelectorAll('.tab-trigger-profile').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Quitar active a todos los botones y contenidos
+        document.querySelectorAll('.tab-trigger-profile').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content-profile').forEach(c => c.classList.remove('active'));
+        
+        // Poner active al seleccionado
+        e.currentTarget.classList.add('active');
+        const targetId = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+    
+    //Pestañas Modos Gatillos
+    document.querySelectorAll('.tab-trigger-trigger-mode').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Quitar active a todos los botones y contenidos
+        document.querySelectorAll('.tab-trigger-trigger-mode').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content-trigger-mode').forEach(c => c.classList.remove('active'));
+        
+        // Poner active al seleccionado
+        e.currentTarget.classList.add('active');
+        const targetId = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    // Dropdown Perfil
+    $('profileBtn').addEventListener('click', (e) => { 
+      e.stopPropagation(); 
+      $('profileMenu').classList.toggle('show'); 
+      $('langMenu').classList.remove('show'); 
+    });
+    
+    document.querySelectorAll('.profile-item').forEach(item => {
+      item.addEventListener('click', async (e) => {
+        e.stopPropagation(); 
+        
+        const index = parseInt(e.currentTarget.getAttribute('data-index'));
+        if (index === currentProfile) {
+          $('profileMenu').classList.remove('show');
+          return;
+        }
+        
+        const prevProfile = currentProfile;
+        currentProfile = index; 
+        currentProfileOffset = currentProfile + 1;
+        // 1. Actualizar la interfaz gráfica de inmediato
+        document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        $('currentProfileText').textContent = `${t('profile_lbl')} ${currentProfileOffset}`;
+        $('profileMenu').classList.remove('show');
+
+        // 2. Procesar la comunicación de red
+        if(device) {
+          try {
+            await saveProfileToRAM(prevProfile);
+            await wait(100);
+            await assignProfileIndexToRead(currentProfile);
+            await wait(100);
+            await readProfileConfig(currentProfile);
+          } catch (err) {
+            console.error("Error al cambiar perfil", err);
+            toast(`Error de comunicación USB: ${err.message}`, false);
+          }
+        }
+      });
+    });
+
+    document.addEventListener('click', () => { 
+      $('langMenu').classList.remove('show'); 
+      $('profileMenu').classList.remove('show'); 
+    });
+
+    // ── // ── LÓGICA PARA EDITAR NOMBRE DE PERFIL ──
+    const lblProfileName = $('profileNameDisplay');
+    const btnEditName = $('btnEditProfileName');
+    const readContainer = $('readModeContainer');
+    const editContainer = $('profileNameEditContainer');
+    const inputName = $('inputProfileName');
+    const btnSaveName = $('btnSaveProfileName');
+    const btnCancelName = $('btnCancelProfileName');
+
+    btnEditName.addEventListener('click', () => {
+        inputName.value = lblProfileName.innerText;
+        readContainer.style.display = 'none'; // Ocultamos el H2
+        editContainer.style.display = 'flex'; // Mostramos el Input gigante
+        inputName.focus();
+        inputName.select();
+    });
+
+    const applyNameChange = () => {
+        let newName = inputName.value.trim().substring(0, 18);
+        if(newName === '') newName = "Perfil"; 
+        lblProfileName.innerText = newName;
+        
+        editContainer.style.display = 'none';
+        readContainer.style.display = 'flex'; // Volvemos a mostrar el H2
+    };
+
+    const cancelNameChange = () => {
+        editContainer.style.display = 'none';
+        readContainer.style.display = 'flex'; // Volvemos a mostrar el H2 sin cambios
+    };
+
+    btnSaveName.addEventListener('click', applyNameChange);
+    btnCancelName.addEventListener('click', cancelNameChange);
+    
+    inputName.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') applyNameChange();
+        if(e.key === 'Escape') cancelNameChange();
+    });
+
+    // Helpers ArrayBuffer a String y Viceversa (Se mantienen igual)
+    function readProfileNameFromDevice(dv, offset) {
+        let bytes = [];
+        for(let i = 0; i < 20; i++) {
+            let b = dv.getUint8(offset + i);
+            if(b === 0) break; // Final del string null-terminated
+            bytes.push(b);
+        }
+        return new TextDecoder().decode(new Uint8Array(bytes)) || "Perfil";
+    }
+
+    function writeProfileNameToDevice(dv, offset, text) {
+        let bytes = new TextEncoder().encode(text); 
+        for(let i = 0; i < 18; i++) {
+            if(i < bytes.length) dv.setUint8(offset + i, bytes[i]);
+            else dv.setUint8(offset + i, 0); // Fill con 0s
+        }
+    }
+
+
+    // ── 4. LÓGICA DE UI Y SLIDERS ──
+    const sliderFields = [
+      'haptics_gain', 'audio_buffer_length', 'auto_haptics_gain', 'auto_haptics_lowpass_hz', 
+      'hold_mute_time',
+      'inactive_time', 'speaker_volume', 'headset_volume', 'feedback_start_point', 'feedback_force',
+      'trigger_start_point', 'trigger_wall_point', 'trigger_break_force',
+      'vibration_start_point', 'vibration_frequency', 'vibration_force', 'wall_start_point', 'gyro_dead_zone',
+      'max_degrees_per_second', 'gyro_multiplier', 'rumble_trigger_freq', 'rumble_trigger_strength'
+    ];
+    
+    sliderFields.forEach(id => {
+      const num = $(id); const slider = $(id + '_slider');
+      if (num && slider) {
+        slider.addEventListener('input', () => { num.value = slider.value; });
+        num.addEventListener('input', () => { slider.value = num.value; });
+      }
+    });
+
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    function setFieldValue(id, val) {
+      if ($(id)) $(id).value = val;
+      if ($(id + '_slider')) $(id + '_slider').value = val;
+    }
+
+    function toast(msg, isSuccess = true) {
+      const el = $('toast'); el.textContent = msg;
+      if (isSuccess) el.classList.remove('error'); else el.classList.add('error');
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function setConnected(conn, label) {
+      $('statusText').textContent = conn ? label : t('status_disconnected');
+      $('statusText').style.color = conn ? '#10b981' : '#94a3b8';
+      $('btnConnect').textContent = conn ? t('btn_disconnect') : t('btn_connect');
+      
+      const displayStyle = conn ? 'flex' : 'none';
+      const inlineStyle = conn ? 'inline-flex' : 'none';
+      
+      $('configForm').style.display = displayStyle;
+      $('btnRead').style.display = inlineStyle;
+      $('btnDefaults').style.display = inlineStyle;
+      $('btnSave').style.display = inlineStyle;
+      $('btnReconnect').style.display = inlineStyle;
+      
+      if (!conn) { $('reconnectWarning').style.display = 'none'; $('hexLog').value = ''; }
+    }
+
+    const hexToRgb = hex => {
+      const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return m ? { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) } : null;
+    };
+    const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+
+    function logBufferToConsole(direction, reportId, buffer) {
+      let hexString = Array.from(buffer).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+      let timestamp = new Date().toLocaleTimeString();
+      let logLine = `[${timestamp}] ${direction} -> Report ID: 0x${reportId.toString(16).toUpperCase()} | Bytes (${buffer.length}): ${hexString}\n`;
+      $('hexLog').value = logLine + $('hexLog').value;
+    }
+
+    // ── 5. COMUNICACIÓN WEBHID (LECTURA Y ESCRITURA) ──
+
+    function setDefaults() {
+      // Globales
+      setFieldValue('haptics_gain', '1.50');
+      setFieldValue('audio_buffer_length', 64);
+      setFieldValue('auto_haptics_enable', 1);
+      setFieldValue('auto_haptics_gain', 100);
+      setFieldValue('auto_haptics_lowpass_hz', 80);
+      setFieldValue('speaker_volume', 0);
+      setFieldValue('headset_volume', 0);
+      setFieldValue('controller_mode', 2);
+      setFieldValue('polling_rate_mode', 0);
+      setFieldValue('hold_mute_time', 0);
+      setFieldValue('inactive_time', 30);
+      $('disable_inactive_disconnect').checked = false;
+      $('enable_poweroff_shortcut').checked = true;
+      $('enable_host_sleep').checked = false;
+      $('disable_pico_led').checked = false;
+      $('wake_enable').checked = false;
+      $('enable_host_volume_control').checked = false;
+      $('auto_mute_mode').checked = false;
+
+      // Perfil
+      setFieldValue('trigger_left_mode', 0);
+      setFieldValue('trigger_right_mode', 0);
+      setFieldValue('lightbar_mode', 0);
+      $('lightbar_breathing').checked = true;
+      setFieldValue('fav_color_0', '#00ddff');
+      setFieldValue('fav_color_1', '#ff0011');
+      setFieldValue('fav_color_2', '#bfff00');
+      setFieldValue('fav_color_3', '#ffffff');
+      
+      // Nuevos triggers params
+      setFieldValue('feedback_start_point', 0);
+      setFieldValue('feedback_force', 200);
+      setFieldValue('trigger_start_point', 20);
+      setFieldValue('trigger_wall_point', 45);
+      setFieldValue('trigger_break_force', 255);
+      setFieldValue('vibration_start_point', 32);
+      setFieldValue('vibration_frequency', 36);
+      setFieldValue('vibration_force', 255);
+      setFieldValue('wall_start_point', 97);
+      setFieldValue('trigger_rumble_mode', 2);
+      setFieldValue('rumble_trigger_strength', 100);
+      setFieldValue('rumble_trigger_freq', 60);
+      $('rumble_act_pres').checked = false;
+      // Nuevos Gyro params
+      setFieldValue('gyro_activation_button', 0);
+      setFieldValue('gyro_dead_zone', 42.5);
+      setFieldValue('max_degrees_per_second', 100);
+      setFieldValue('gyro_multiplier', 1.0);
+      $('invert_gyro_x').checked = false;
+      $('invert_gyro_y').checked = false;      
+      // Reseteo visual de nombre
+      lblProfileName.innerText = `Perfil de Juego ${currentProfileOffset}`;
+
+      toast(t('msg_def_ok'), true);
+    }
+
+    // Leer la configuración completa (Global + Perfil actual)
+    async function readConfig() {
+      if (!device) return;
+      try {
+        await readGlobalConfig();
+        await wait(100);
+        await assignProfileIndexToRead(currentProfile);
+        await wait(150);
+        await readProfileConfig(currentProfile);
+        toast(t('msg_read_ok'));
+      } catch (e) { 
+        toast(`${t('msg_read_err')} ${e.message}`, false); 
+      }
+    }
+
+    async function readGlobalConfig() {
+      const view = await device.receiveFeatureReport(0xF7);
+      const data = new Uint8Array(view.buffer, 1);
+      logBufferToConsole("IN (0xF7) <- Global Config", 0xF7, data);
+      
+      let dv = new DataView(data.buffer, data.byteOffset);
+      
+      setFieldValue('haptics_gain', dv.getFloat32(0, true).toFixed(2));
+      setFieldValue('inactive_time', dv.getUint8(4));
+      $('disable_inactive_disconnect').checked  = dv.getUint8(5) === 1;
+      $('disable_pico_led').checked             = dv.getUint8(6) === 1;
+      setFieldValue('polling_rate_mode', dv.getUint8(7));
+      setFieldValue('audio_buffer_length', dv.getUint8(8));
+      setFieldValue('controller_mode', dv.getUint8(9));
+      setFieldValue('auto_haptics_enable', dv.getUint8(10));
+      setFieldValue('auto_haptics_gain', dv.getUint8(11));
+      setFieldValue('auto_haptics_lowpass_hz', dv.getUint16(12, true));
+      $('enable_poweroff_shortcut').checked     = dv.getUint8(14) === 1;
+      $('wake_enable').checked                  = dv.getUint8(15) === 1;
+      $('enable_host_sleep').checked     = dv.getUint8(16) === 1;
+      setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0));
+      setFieldValue('headset_volume', dv.getFloat32(21, true).toFixed(0));
+      $('auto_mute_mode').checked               = dv.getUint8(25) === 1;
+      setFieldValue('hold_mute_time', dv.getUint16(26, true));
+      $('enable_host_volume_control').checked = dv.getUint8(28) === 1;
+      
+    }
+
+    async function assignProfileIndexToRead(index){
+      const buf = new ArrayBuffer(2);
+      const dvS = new DataView(buf);
+
+      dvS.setUint8(0, 0x07); // Cmd 0x07: Profile Index Set
+      dvS.setUint8(1, index); // Index to Buffer[1]
+      const reqBuf = new Uint8Array(63);
+      reqBuf.set(new Uint8Array(buf));
+      await device.sendFeatureReport(0xF6, reqBuf);
+      logBufferToConsole(`OUT (0xF6) -> Cmd 0x07 [Petición Perfil] ${index}`, 0xF6, reqBuf);
+      
+    }
+    
+    async function readProfileConfig(index) {
+      // 2. Leer la respuesta
+      const view = await device.receiveFeatureReport(0xF5);
+      const data = new Uint8Array(view.buffer, 1);
+      logBufferToConsole(`IN (0xF5) <- Datos Perfil ${index}`, 0xF5, data);
+      
+      let dv = new DataView(data.buffer, data.byteOffset);
+
+      // Mapeo directo a la estructura Profile_Config_body
+      setFieldValue('lightbar_mode', dv.getUint8(0));
+
+      const r = [dv.getUint8(1), dv.getUint8(2), dv.getUint8(3), dv.getUint8(4)];
+      const g = [dv.getUint8(5), dv.getUint8(6), dv.getUint8(7), dv.getUint8(8)];
+      const b = [dv.getUint8(9), dv.getUint8(10), dv.getUint8(11), dv.getUint8(12)];
+
+      setFieldValue('fav_color_0', rgbToHex(r[0], g[0], b[0]));
+      setFieldValue('fav_color_1', rgbToHex(r[1], g[1], b[1]));
+      setFieldValue('fav_color_2', rgbToHex(r[2], g[2], b[2]));
+      setFieldValue('fav_color_3', rgbToHex(r[3], g[3], b[3]));
+
+      $('lightbar_breathing').checked       = dv.getUint8(13) === 1;
+      setFieldValue('trigger_left_mode', dv.getUint8(14));
+      setFieldValue('trigger_right_mode', dv.getUint8(15));
+      
+      setFieldValue('feedback_start_point', dv.getUint8(16));
+      setFieldValue('feedback_force', dv.getUint8(17));
+      setFieldValue('trigger_start_point', dv.getUint8(18));
+      setFieldValue('trigger_wall_point', dv.getUint8(19));
+      setFieldValue('trigger_break_force', dv.getUint8(20));
+      setFieldValue('vibration_start_point', dv.getUint8(21));
+      setFieldValue('vibration_frequency', dv.getUint8(22));
+      setFieldValue('vibration_force', dv.getUint8(23));
+      setFieldValue('wall_start_point', dv.getUint8(24));
+
+      // Ajuste de Gyro
+      setFieldValue('gyro_activation_button', dv.getUint8(25));
+      setFieldValue('gyro_dead_zone', dv.getFloat32(26, true));
+      setFieldValue('max_degrees_per_second', dv.getUint16(30, true));
+      setFieldValue('gyro_multiplier', dv.getFloat32(32, true));
+      $('invert_gyro_x').checked       = dv.getUint8(36) === 1;
+      $('invert_gyro_y').checked       = dv.getUint8(37) === 1;
+      
+      $('rumble_act_pres').checked       = dv.getUint8(38) === 1;
+      setFieldValue('rumble_trigger_strength', dv.getUint8(39));
+      setFieldValue('rumble_trigger_freq', dv.getUint8(40));
+      setFieldValue('trigger_rumble_mode', dv.getUint8(41));
+      
+      lblProfileName.innerText = readProfileNameFromDevice(dv, 42);
+    }
+
+    // Proceso completo de guardado: Global -> Profile -> Flash
+    async function saveConfig() {
+      if (!device) return;
+      try {
+        await saveGlobalToRAM();
+        await wait(100);
+        await saveProfileToRAM(currentProfile);
+        
+        // Comando Flash (0x02)
+        const flashBuf = new Uint8Array(63);
+        flashBuf[0] = 0x02;
+        await device.sendFeatureReport(0xF6, flashBuf);
+        logBufferToConsole("OUT (0xF6) -> Cmd 0x02 [Guardar a Flash]", 0xF6, flashBuf);
+
+        toast(t('msg_save_ok'));
+        $('reconnectWarning').style.display = 'block';
+      } catch (e) { toast(`${t('msg_save_err')} ${e.message}`, false); }
+    }
+
+    async function saveGlobalToRAM() {
+      const buf = new ArrayBuffer(30);
+      const dv = new DataView(buf);
+
+      dv.setUint8(0, 0x01); // Cmd 0x01: Global config update
+      dv.setFloat32(1, parseFloat($('haptics_gain').value), true);
+      dv.setUint8(5, parseInt($('inactive_time').value, 10));
+      dv.setUint8(6, $('disable_inactive_disconnect').checked ? 1 : 0);
+      dv.setUint8(7, $('disable_pico_led').checked ? 1 : 0);
+      dv.setUint8(8, parseInt($('polling_rate_mode').value, 10));
+      dv.setUint8(9, parseInt($('audio_buffer_length').value, 10));
+      dv.setUint8(10, parseInt($('controller_mode').value, 10));
+      dv.setUint8(11, parseInt($('auto_haptics_enable').value, 10));
+      dv.setUint8(12, parseInt($('auto_haptics_gain').value, 10));
+      dv.setUint16(13, parseInt($('auto_haptics_lowpass_hz').value, 10), true);
+      dv.setUint8(15, $('enable_poweroff_shortcut').checked ? 1 : 0);
+      dv.setUint8(16, $('wake_enable').checked ? 1 : 0);
+      dv.setUint8(17, $('enable_host_sleep').checked ? 1 : 0);
+      dv.setFloat32(18, parseFloat($('speaker_volume').value), true);
+      dv.setFloat32(22, parseFloat($('headset_volume').value), true);
+      dv.setUint8(26, $('auto_mute_mode').checked ? 1 : 0);
+      dv.setUint16(27, parseInt($('hold_mute_time').value, 10), true);
+      dv.setUint8(29, $('enable_host_volume_control').checked ? 1 : 0);
+      
+      const reqBuf = new Uint8Array(63);
+      reqBuf.set(new Uint8Array(buf));
+      await device.sendFeatureReport(0xF6, reqBuf);
+      logBufferToConsole("OUT (0xF6) -> Cmd 0x01 [Escribir Global RAM]", 0xF6, reqBuf);
+    }
+
+    async function saveProfileToRAM(index) {
+      
+      // NUEVO: Array extendido a 50 bytes para abarcar los 12 chars del profile_name
+      const buf = new ArrayBuffer(62);
+      const dv = new DataView(buf);
+
+      dv.setUint8(0, 0x05); // Cmd 0x05: Profile config update
+      dv.setUint8(1, index); // Índice del perfil
+
+      dv.setUint8(2, parseInt($('lightbar_mode').value, 10));
+
+      const c0 = hexToRgb($('fav_color_0').value);
+      const c1 = hexToRgb($('fav_color_1').value);
+      const c2 = hexToRgb($('fav_color_2').value);
+      const c3 = hexToRgb($('fav_color_3').value);
+
+      dv.setUint8(3, c0.r); dv.setUint8(4, c1.r); dv.setUint8(5, c2.r); dv.setUint8(6, c3.r);
+      dv.setUint8(7, c0.g); dv.setUint8(8, c1.g); dv.setUint8(9, c2.g); dv.setUint8(10, c3.g);
+      dv.setUint8(11, c0.b); dv.setUint8(12, c1.b); dv.setUint8(13, c2.b); dv.setUint8(14, c3.b);
+
+      dv.setUint8(15, $('lightbar_breathing').checked ? 1 : 0);
+      dv.setUint8(16, parseInt($('trigger_left_mode').value, 10));
+      dv.setUint8(17, parseInt($('trigger_right_mode').value, 10));
+
+      dv.setUint8(18, parseInt($('feedback_start_point').value, 10));
+      dv.setUint8(19, parseInt($('feedback_force').value, 10));
+      dv.setUint8(20, parseInt($('trigger_start_point').value, 10));
+      dv.setUint8(21, parseInt($('trigger_wall_point').value, 10));
+      dv.setUint8(22, parseInt($('trigger_break_force').value, 10));
+      dv.setUint8(23, parseInt($('vibration_start_point').value, 10));
+      
+      // Ajuste de offsets eliminando end_point
+      dv.setUint8(24, parseInt($('vibration_frequency').value, 10));
+      dv.setUint8(25, parseInt($('vibration_force').value, 10));
+      dv.setUint8(26, parseInt($('wall_start_point').value, 10));
+
+      // Ajuste de Gyro
+      dv.setUint8(27, parseInt($('gyro_activation_button').value, 10));
+      dv.setFloat32(28, parseFloat($('gyro_dead_zone').value), true);
+      dv.setUint16(32, parseInt($('max_degrees_per_second').value, 10), true);
+      dv.setFloat32(34, parseFloat($('gyro_multiplier').value), true);
+      dv.setUint8(38, $('invert_gyro_x').checked ? 1 : 0);
+      dv.setUint8(39, $('invert_gyro_y').checked ? 1 : 0);
+
+      dv.setUint8(40, $('rumble_act_pres').checked ? 1 : 0);
+      dv.setUint8(41, parseInt($('rumble_trigger_strength').value, 10));
+      dv.setUint8(42, parseInt($('rumble_trigger_freq').value, 10));
+      dv.setUint8(43, parseInt($('trigger_rumble_mode').value, 10));
+
+      // NUEVO: Insertamos los 20 bytes del string en el offset final
+      writeProfileNameToDevice(dv, 44, lblProfileName.innerText);
+
+      const reqBuf = new Uint8Array(63);
+      reqBuf.set(new Uint8Array(buf));
+      await device.sendFeatureReport(0xF6, reqBuf);
+      logBufferToConsole(`OUT (0xF6) -> Cmd 0x05 [Escribir Perfil ${index} RAM]`, 0xF6, reqBuf);
+    }
+
+    async function forceReconnect() {
+      if (!device) return;
+      try {
+        const reqBuf = new Uint8Array(63); reqBuf[0] = 0x03;
+        await device.sendFeatureReport(0xF6, reqBuf);
+        logBufferToConsole("OUT (0xF6) -> Cmd 0x03 [Reconexión]", 0xF6, reqBuf);
+        toast(t('msg_recon_ok'));
+        $('reconnectWarning').style.display = 'none';
+      } catch (e) { toast(`${t('msg_recon_err')} ${e.message}`, false); }
+    }
+
+    // ── 6. CONEXIÓN INICIAL ──
+    $('btnConnect').addEventListener('click', async () => {
+      if (device) {
+        await device.close(); device = null; setConnected(false); return;
+      }
+      if (!navigator.hid) {
+        toast(t('msg_err_webhid'), false); return;
+      }
+      try {
+        const filters = [ { vendorId: SONY_VID, productId: DS5_PID }, { vendorId: SONY_VID, productId: DSE_PID } ];
+        const devices = await navigator.hid.requestDevice({ filters });
+        if (!devices.length) return;
+        
+        // --- NUEVA LÓGICA DE SELECCIÓN ---
+        // Como ahora es un dispositivo compuesto, el array trae 2 dispositivos.
+        // Filtramos para elegir el dispositivo que NO sea el de volumen (Usage Page 12 / 0x0C)
+        let selectedDevice = devices.find(d => 
+          d.collections && d.collections.some(c => c.usagePage !== 12)
+        );
+        
+        // Fallback por si acaso
+        device = selectedDevice || devices[0];
+        // ---------------------------------
+
+        await device.open();
+        const label = `${device.productName} (${device.vendorId.toString(16).toUpperCase()}:${device.productId.toString(16).toUpperCase()})`;
+        setConnected(true, label);
+        device.addEventListener('inputreport', () => {});
+        await readConfig();
+      } catch (e) { toast(`${t('msg_conn_fail')} ${e.message}`, false); }
+    });
+
+    $('btnRead').addEventListener('click', readConfig);
+    $('btnDefaults').addEventListener('click', setDefaults); 
+    $('btnSave').addEventListener('click', saveConfig);
+    $('btnSaveBottom').addEventListener('click', saveConfig); 
+    $('btnReconnect').addEventListener('click', forceReconnect);
+
+    // Inicializar idioma en la primera carga
+    setLanguage('es');
+  </script>
+</body>
+</html>
