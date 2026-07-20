@@ -11,7 +11,7 @@
   <style>
     /* ── Upstream CSS ─────────────────────── */
     @layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000}}}@layer tables{@media (max-width:480px){.responsive-table{display:block;width:100%}.responsive-table tbody,.responsive-table td,.responsive-table tr{display:block;width:100%}.responsive-table tr{margin-bottom:1rem;border:1px solid #334155;border-radius:.375rem;padding:.5rem}.responsive-table td{text-align:right;padding-left:50%;position:relative}.responsive-table td:before{content:attr(data-label);position:absolute;left:.5rem;width:45%;text-align:left;font-weight:600;color:#94a3b8}}}
-    :root{--background:#0b1120;--foreground:#f8fafc;--card:#1e293b;--card-foreground:#f8fafc;--popover:#0b1120;--popover-foreground:#f8fafc;--primary:#475569;--primary-foreground:#f8fafc;--secondary:#334155;--secondary-foreground:#f8fafc;--muted:#334155;--muted-foreground:#94a3b8;--accent:#334155;--accent-foreground:#f8fafc;--destructive:#ef4444;--destructive-foreground:#f8fafc;--border:#334155;--input:#334155;--ring:#1d4ed8;--radius:.5rem; --font-main: 'Space Grotesk', sans-serif; --accent-sec: #22C55E; --accent-sec-hover: #4ADE80; --accent-sec-border: #15803D;}
+    :root{--background:#0b1120;--warning:#bba800 ;--foreground:#f8fafc;--card:#1e293b;--card-foreground:#f8fafc;--popover:#0b1120;--popover-foreground:#f8fafc;--primary:#475569;--primary-foreground:#f8fafc;--secondary:#334155;--secondary-foreground:#f8fafc;--muted:#334155;--muted-foreground:#94a3b8;--accent:#334155;--accent-foreground:#f8fafc;--destructive:#ef4444;--destructive-foreground:#f8fafc;--border:#334155;--input:#334155;--ring:#1d4ed8;--radius:.5rem; --font-main: 'Space Grotesk', sans-serif; --accent-sec: #22C55E; --accent-sec-hover: #4ADE80; --accent-sec-border: #15803D;}
     * {
       box-sizing: border-box;
       border-color: var(--border);
@@ -55,6 +55,7 @@
     .btn-destructive:hover{background-color:#dc2626}
     .toast{position:fixed;bottom:1.5rem;right:1.5rem;background-color:#10b981;color:#fff;padding:.75rem 1.25rem;border-radius:var(--radius);box-shadow:0 4px 6px rgba(0,0,0,.1);display:none;z-index:50;font-size:.875rem;font-weight:500}
     .toast.error{background-color:var(--destructive)}
+    .toast.warning{background-color:var(--warning)}
     .warning-banner{background-color:#7c2d12;border:1px solid #ea580c;color:#ffedd5;padding:.75rem 1rem;border-radius:var(--radius);font-size:.875rem;margin-bottom:1rem;display:none}
     .fav-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.5rem}
     .fav-color-item{display:flex;flex-direction:column;align-items:center;gap:.25rem}
@@ -390,6 +391,11 @@
     .info-label.inactive-state {
       color: #ef4444;
     }
+
+    .invisible {
+      display: none !important;
+      appearance: none !important;
+    }
   </style>
 </head>
 <body>
@@ -397,7 +403,7 @@
     
     <div class="header-bar">
       <div class="title-group">
-        <span class="super-title">WEBHID</span>
+        <span class="super-title"><label id="so_version_label">WEBHID</label></span>
         <h1 class="main-title" data-i18n="app_title">OmniSense Dongle</h1>
       </div>
       <div style="margin:0 0 0.4rem 0; align-self:flex-end; width: 100%;">
@@ -755,9 +761,9 @@
               </div>
             </div>
 
-            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+            <div id="host-volume-control-row" class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
               <label class="checkbox-container">
-                <input type="checkbox" id="enable_host_volume_control" />
+                <input class="" type="checkbox" id="enable_host_volume_control" />
                 <span data-i18n="lbl_host_volume">Controlar volumen del host en lugar del parlante interno</span>
               </label>
             </div>
@@ -847,7 +853,7 @@
         <div class="card">
           <h2 class="card-title" data-i18n="shortc_title">⚙️ Atajos de sistema</h2>
           <div class="grid">            
-            <div class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
+            <div id="enable-host-sleep-row" class="form-item-row grid-col-span-2" style="display:flex; justify-content:space-between;">
               <label class="checkbox-container">
                 <input type="checkbox" id="enable_host_sleep" />
                 <span data-i18n="lbl_sleep_host">Activar atajo para Suspender Host (Sólo Windows)</span>
@@ -1215,6 +1221,8 @@
 
   <script>
     // ── 1. DEFINICIÓN DE ESTADO GLOBAL ──
+    let so_version = 0;
+    let config_version = 7;
     const $ = id => document.getElementById(id);
     let device = null;
     let currentLang = 'es';
@@ -1426,6 +1434,8 @@
         msg_confirm_recon: "¿Estás seguro de que deseas reconectar el dongle? Se perderán los cambios no guardados.",
         msg_confirm_disconnect: "¿Estás seguro de que deseas desconectar el dongle? Se perderán los cambios no guardados.",
         msg_confirm_read: "¿Estás seguro de que deseas leer la configuración del dongle? Se perderán los cambios no guardados.",
+        msg_config_version_mismatch: "Versión Incorrecta. Por favor actualiza el firmware del dongle a la última versión.",
+        msg_json_config_version_mismatch: "El JSON corresponde a una versión anterior. Comprueba los valores de los campos antes de guardar en flash.",
         msg_yes: "Sí",
         msg_no: "No"
       },
@@ -1630,6 +1640,8 @@
         msg_confirm_recon: "Are you sure you want to reconnect the dongle? Unsaved changes will be lost.",
         msg_confirm_disconnect: "Are you sure you want to disconnect the dongle? Unsaved changes will be lost.",
         msg_confirm_read: "Are you sure you want to read the dongle configuration? Unsaved changes will be lost.",
+        msg_config_version_mismatch: "Version Mismatch. Please update the dongle firmware to the latest version.",
+        msg_json_config_version_mismatch: "The JSON corresponds to an older version. Check the field values before saving to flash.",
         msg_yes: "Yes",
         msg_no: "No"
       }
@@ -1929,7 +1941,20 @@
 
     function toast(msg, isSuccess = true) {
       const el = $('toast'); el.textContent = msg;
-      if (isSuccess) el.classList.remove('error'); else el.classList.add('error');
+      if (isSuccess){
+        el.classList.remove('error');
+        el.classList.remove('warning');
+      } else {
+        el.classList.add('error');
+        el.classList.remove('warning');
+      }
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function toastWarn(msg) {
+      const el = $('toast'); el.textContent = msg;
+      el.classList.add('warning');
       el.style.display = 'block';
       setTimeout(() => { el.style.display = 'none'; }, 3000);
     }
@@ -1969,7 +1994,7 @@
 
     function setDefaults() {
       // Globales
-      setFieldValue('haptics_gain', '1.50');
+      setFieldValue('haptics_gain', '1.00');
       setFieldValue('audio_buffer_length', 64);
       setFieldValue('auto_haptics_enable', 1);
       setFieldValue('auto_haptics_gain', 100);
@@ -2027,16 +2052,20 @@
       toast(t('msg_def_ok'), true);
     }
 
+    let valid_global_config = false;
+    let config_version_dongle = 0;
     // Leer la configuración completa (Global + Perfil actual)
     async function readConfig() {
       if (!device) return;
       try {
         await readGlobalConfig();
         await wait(100);
-        await assignProfileIndexToRead(currentProfile);
-        await wait(150);
-        await readProfileConfig(currentProfile);
-        toast(t('msg_read_ok'));
+        if(valid_global_config){
+          await assignProfileIndexToRead(currentProfile);
+          await wait(150);
+          await readProfileConfig(currentProfile);
+          toast(t('msg_read_ok'));
+        }
       } catch (e) { 
         toast(`${t('msg_read_err')} ${e.message}`, false); 
       }
@@ -2048,27 +2077,34 @@
       logBufferToConsole("IN (0xF7) <- Global Config", 0xF7, data);
       
       let dv = new DataView(data.buffer, data.byteOffset);
-      
-      setFieldValue('haptics_gain', dv.getFloat32(0, true).toFixed(2));
-      setFieldValue('inactive_time', dv.getUint8(4));
-      $('disable_inactive_disconnect').checked  = dv.getUint8(5) === 1;
-      $('disable_pico_led').checked             = dv.getUint8(6) === 1;
-      setFieldValue('polling_rate_mode', dv.getUint8(7));
-      setFieldValue('audio_buffer_length', dv.getUint8(8));
-      setFieldValue('controller_mode', dv.getUint8(9));
-      setFieldValue('auto_haptics_enable', dv.getUint8(10));
-      setFieldValue('auto_haptics_gain', dv.getUint8(11));
-      setFieldValue('auto_haptics_lowpass_hz', dv.getUint16(12, true));
-      $('enable_poweroff_shortcut').checked     = dv.getUint8(14) === 1;
-      $('wake_enable').checked                  = dv.getUint8(15) === 1;
-      $('enable_host_sleep').checked     = dv.getUint8(16) === 1;
-      setFieldValue('speaker_volume', dv.getFloat32(17, true).toFixed(0));
-      setFieldValue('headset_volume', dv.getFloat32(21, true).toFixed(0));
-      $('auto_mute_mode').checked               = dv.getUint8(25) === 1;
-      setFieldValue('hold_mute_time', dv.getUint16(26, true));
-      $('enable_host_volume_control').checked = dv.getUint8(28) === 1;
-      setFieldValue('rumble_haptics_mode', dv.getUint8(29));
-      updateInfoTabLabels();
+      so_version = dv.getUint8(0);
+      config_version_dongle = dv.getUint8(1);
+      if(config_version_dongle !== config_version) {
+        toast(`⚠️ ${t('msg_config_version_mismatch')}`, false);
+      }
+      else {
+        valid_global_config = true;
+        setFieldValue('haptics_gain', dv.getFloat32(2, true).toFixed(2));
+        setFieldValue('inactive_time', dv.getUint8(6));
+        $('disable_inactive_disconnect').checked  = dv.getUint8(7) === 1;
+        $('disable_pico_led').checked             = dv.getUint8(8) === 1;
+        setFieldValue('polling_rate_mode', dv.getUint8(9));
+        setFieldValue('audio_buffer_length', dv.getUint8(10));
+        setFieldValue('controller_mode', dv.getUint8(11));
+        setFieldValue('auto_haptics_enable', dv.getUint8(12));
+        setFieldValue('auto_haptics_gain', dv.getUint8(13));
+        setFieldValue('auto_haptics_lowpass_hz', dv.getUint16(14, true));
+        $('enable_poweroff_shortcut').checked     = dv.getUint8(16) === 1;
+        $('wake_enable').checked                  = dv.getUint8(17) === 1;
+        $('enable_host_sleep').checked     = dv.getUint8(18) === 1;
+        setFieldValue('speaker_volume', dv.getFloat32(19, true).toFixed(0));
+        setFieldValue('headset_volume', dv.getFloat32(23, true).toFixed(0));
+        $('auto_mute_mode').checked               = dv.getUint8(27) === 1;
+        setFieldValue('hold_mute_time', dv.getUint16(28, true));
+        $('enable_host_volume_control').checked = dv.getUint8(30) === 1;
+        setFieldValue('rumble_haptics_mode', dv.getUint8(31));
+        updateInfoTabLabels();
+      }
     }
 
     async function assignProfileIndexToRead(index){
@@ -2249,9 +2285,10 @@
       const parsed = Number(value);
       return Number.isFinite(parsed) ? parsed : fallback;
     }
-
+    let config_version_import_mismatch = false;
     function collectGlobalSnapshot() {
       return {
+        config_version: config_version,
         haptics_gain: numberFromJson($('haptics_gain').value, 1.5),
         inactive_time: numberFromJson($('inactive_time').value, 30),
         disable_inactive_disconnect: $('disable_inactive_disconnect').checked,
@@ -2307,6 +2344,9 @@
     }
 
     function applyGlobalSnapshot(snapshot) {
+      if(config_version_dongle !== snapshot.config_version) {
+        config_version_import_mismatch = true;
+      }
       setFieldValue('haptics_gain', snapshot.haptics_gain ?? 1.5);
       setFieldValue('inactive_time', snapshot.inactive_time ?? 30);
       $('disable_inactive_disconnect').checked = boolFromJson(snapshot.disable_inactive_disconnect);
@@ -2454,8 +2494,13 @@
       await assignProfileIndexToRead(selectedProfile);
       await wait(150);
       await readProfileConfig(selectedProfile);
-
-      toast(t('msg_json_import_ok'));
+      if(config_version_import_mismatch) {
+        toastWarn(`⚠️ ${t('msg_json_config_version_mismatch')}`);
+        config_version_import_mismatch = false;
+      } else {
+        toast(`✅ ${t('msg_json_import_ok')}`);
+      }
+      // toast(t('msg_json_import_ok'));
     }
 
     async function handleJsonImportFile() {
@@ -2524,10 +2569,12 @@
         device = selectedDevice;
 
         await device.open();
-        const label = `${device.productName} (${device.vendorId.toString(16).toUpperCase()}:${device.productId.toString(16).toUpperCase()})`;
-        setConnected(true, label);
-        device.addEventListener('inputreport', () => {});
         await readConfig();
+        if (valid_global_config){
+          const label = `${device.productName} (${device.vendorId.toString(16).toUpperCase()}:${device.productId.toString(16).toUpperCase()})`;
+          setConnected(true, label);
+          device.addEventListener('inputreport', () => {});
+        }
       } catch (e) { toast(`${t('msg_conn_fail')} ${e.message}`, false); }
     });
 
@@ -2726,6 +2773,19 @@
 
     // ── LÓGICA DINÁMICA DE LA PESTAÑA INFORMACIÓN ──
     function updateInfoTabLabels() {
+      const control_host_volume = document.getElementById('host-volume-control-row');
+      const control_host_sleep = document.getElementById('enable-host-sleep-row');
+            
+      if(so_version == 1){
+        $('so_version_label').textContent = `Linux Version`;
+        control_host_volume.classList.add('invisible');
+        control_host_sleep.classList.add('invisible');
+      }else if(so_version == 2){
+        control_host_volume.classList.remove('invisible');
+        control_host_sleep.classList.remove('invisible');
+        $('so_version_label').textContent = `Windows Version`;
+      }
+      
       syncProfileNameLabel();
       syncTriggerLabel('lbl-left-trigger', 'trigger_left_mode');
       syncTriggerLabel('lbl-right-trigger', 'trigger_right_mode');
@@ -2820,9 +2880,6 @@
     $('trigger_right_mode').addEventListener('change', updateInfoTabLabels);
     $('gyro_activation_button').addEventListener('change', updateInfoTabLabels);
     $('lightbar_mode').addEventListener('change', updateInfoTabLabels);
-
-    // Inyectar updateInfoTabLabels al final de tu función de lectura de WebHID
-    // Busca tu función readGlobalConfig() y añádele updateInfoTabLabels() al final.
   </script>
 </body>
 </html>
