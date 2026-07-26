@@ -1221,7 +1221,7 @@
 
   <script>
     // ── 1. DEFINICIÓN DE ESTADO GLOBAL ──
-    let so_version = 0;
+    let so_version = 2;
     let config_version = 7;
     const $ = id => document.getElementById(id);
     let device = null;
@@ -2777,13 +2777,13 @@
       const control_host_sleep = document.getElementById('enable-host-sleep-row');
             
       if(so_version == 1){
-        $('so_version_label').textContent = `Linux Version`;
+        $('so_version_label').textContent = `No-Extra HID Version`;
         control_host_volume.classList.add('invisible');
         control_host_sleep.classList.add('invisible');
       }else if(so_version == 2){
         control_host_volume.classList.remove('invisible');
         control_host_sleep.classList.remove('invisible');
-        $('so_version_label').textContent = `Windows Version`;
+        $('so_version_label').textContent = `Extra HID Version`;
       }
       
       syncProfileNameLabel();
